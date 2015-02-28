@@ -1,0 +1,6 @@
+" This is a good place for global settings that plugins depend on, since these
+" will get loaded BEFORE the plugins
+"
+
+" Remap leader to <space>
+let mapleader = "\<Space>"

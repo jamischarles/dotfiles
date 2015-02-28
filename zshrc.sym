@@ -1,0 +1,220 @@
+# Path to your oh-my-zsh configuration.
+ZSH=$HOME/.oh-my-zsh
+
+# Set name of the theme to load.
+# Look in ~/.oh-my-zsh/themes/
+# Optionally, if you set this to "random", it'll load a random theme each
+# time that oh-my-zsh is loaded.
+ZSH_THEME="jamis-doubleend"
+#ZSH_THEME="jamis" #agnostic
+
+
+
+
+# Set to this to use case-sensitive completion
+# CASE_SENSITIVE="true"
+
+# Comment this out to disable bi-weekly auto-update checks
+# DISABLE_AUTO_UPDATE="true"
+
+# Uncomment to change how many often would you like to wait before auto-updates occur? (in days)
+# export UPDATE_ZSH_DAYS=13
+
+# Uncomment following line if you want to disable colors in ls
+# DISABLE_LS_COLORS="true"
+
+# Uncomment following line if you want to disable autosetting terminal title.
+# DISABLE_AUTO_TITLE="true"
+
+# Uncomment following line if you want red dots to be displayed while waiting for completion
+COMPLETION_WAITING_DOTS="true"
+
+# Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
+# Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
+# Example format: plugins=(rails git textmate ruby lighthouse)
+plugins=(git sublime atom brew notify grunt globalias sfffe) # zsh-notify
+
+# https://github.com/robbyrussell/oh-my-zsh/blob/master/plugins/sfffe/sfffe.plugin.zsh
+
+source $ZSH/oh-my-zsh.sh #runs oh-my-zsh and loads env vars into memory
+
+# from git plugin
+# gr - git remote
+
+# TODO: Prefer abbreviations to aliases. That way you learn it, and it hides the magic.
+
+# Example aliases
+alias zshconfig="vi ~/.zshrc" #open with sublime
+# alias ohmyzsh="mate ~/.oh-my-zsh"
+# down here to override the defaults
+alias fs="foreman start"
+
+# All these are now in the abbreviations at the end of the file
+#alias gb="git branch -v"
+#alias gc="git commit -v"
+#alias gd="git diff"
+#alias gch="git checkout" # branch switching
+#alias gsgd="git stash && git stash drop"
+#alias gr="git remote -v" # overrides the git plugin shortcut
+#alias gl="git l" # overrides the git plugin shortcut
+#alias gll="git ll" # overrides the git plugin shortcut? Maybe. Not sure.
+
+# TODO: use this to make special icons for these commands, like the GIT ones... That could be really cool...
+
+# TODO: use this to make special icons for these commands, like the GIT ones... That could be really cool...
+alias gp="echo 'git pull --rebase upstream develop' ; git pull --rebase upstream develop; growlImg 'Git Pull' ' ' github.png"
+# alias gpm="git push origin master"
+alias gs="git status -sb; growlImg 'Status' ' ' github.png"
+
+#NUKE it all, rebase, and reinstall node modules
+alias nuke="gp ; echo 'rm -rf node_modules && npm i';  rm -rf node_modules && npm i; growlImg 'Nuke Done'   'git pull; rm -rf node_module; npm install'   npm.png"
+
+# sudo last command (move these down lower if there's a conflict.)
+alias please='eval "sudo $(fc -ln -1)"'
+
+# atom sugar since atom isn't working (plugin gives us 'at')
+alias atom='at'
+
+#overriding the 'gd' set by the git plugin... I could extract all this to be a plugin...
+# alias gd='growlnotify $(fc -ln -1)' #Can we extract the previous command from this?
+
+
+
+#mocks mode
+alias mock='NODE_ENV=test node .'
+
+# alias growl="echo -l root | terminal-notifier -sound default"
+
+#same as alias? take the 1st param $1 and pipe to another command. Terminal notifier in this case.
+#
+# NOTIFICATIONS on job completion
+#All 3 of these seem to work... I want these to be autoatmic though...
+#
+#
+# testing () { echo "$1" | awk -F"[;&]" 'print $1' | echo}
+testing () { echo "$@"}
+testing2 () { echo "$1" | !!:p && $(fc -ln -1) }
+
+# Is this the best we can do? http://superuser.com/questions/206370/growl-notifications-for-shell-task-completion
+function gn {
+  # /usr/local/bin/growlnotify Finished -m "$@"
+  $@ # execute cmd line
+  output="$@"
+  growlnotify Finished -m $output -a iterm #notify what we just executed and stringify it
+}
+
+
+#not working :(
+alias gne="$@; growlnotify Finished -m '$@' -a iterm"
+
+
+
+
+#TODO: gng. Easy way to pass in the img or something... Another small abstraction layer?
+
+growl () { echo $1 | growlnotify --title $1 --app iterm -m $2 } #requires growlnotify
+
+# params: $1 title  $2 msg  $3 imageName
+growlImg () { echo $2 | growlnotify --image ~/github/growlnotify-icons/images/$3  -t $1 -m $2 }
+
+#Q: What's the difference between aliasing and actually having these functions in here?
+
+# growl() { echo -e $'\e]9;'${1}'\007' ; return ; } #http://aming-blog.blogspot.com/2011/01/growl-notification-from-iterm-2.html
+# growl () { echo $1 | growlnotify -m $1 } #requires growlnotify
+# growl () { echo $1 | terminal-notifier -sound default }  #requires terminal-notifier
+
+
+
+# Customize to your needs...
+
+### Added by Jamis for NVM stuff
+# export NVM_DIR=~/.nvm #keep node installs when you upgrade NVM
+source $(brew --prefix nvm)/nvm.sh
+
+#NPM
+export PATH=/usr/local/share/npm/bin:$PATH.
+
+#brew
+export PATH=/usr/local/bin:$PATH
+
+# zsh-notify plugin timeout. What's the threshold for activating the stuff...
+# FIXME: Not sure this is even working.
+export NOTIFY_COMMAND_COMPLETE_TIMEOUT=3
+
+
+# COMMAND LINE SYNTAX HIGHLIGHTING
+# vimpager works great instead of less, but not sure about a pager in general
+export PAGER=vimpager # good for less replacement
+#export ACK_PAGER=vimpager
+#http://unix.stackexchange.com/questions/19439/how-can-i-display-syntax-highlighting-on-a-file
+alias pcat="pygmentize -f terminal -O style=native -g" # good for cat replacement
+#alias pcat="pygmentize -f terminal256 -O style=native -g"
+
+export ACK_PAGER='pygmentize -f terminal256'
+
+alias c='pygmentize -O style=monokai -f console256 -g'
+#alias c='pygmentize -O style=monokai -f console256 -g'
+#alias c='pygmentize -O style=solarized -f console256 -g'
+
+#ack <searchterm> | c
+
+
+
+### Add PATH for Sublime
+#export PATH="~/bin:$PATH"
+
+# ZSH abbreviations. Now you can use space to auto-expand. This is AWESOME!!!
+#  http://zshwiki.org/home/examples/zleiab
+setopt extendedglob
+
+typeset -Ag abbreviations
+abbreviations=(
+  "nuke"  "git pull --rebase upstream develop && rm -rf node_modules && npm i"
+  "gp"    "git pull --rebase"
+  "gpu"   "git pull --rebase upstream"
+  "gs"    "git status -s"
+  "gb"    "git branch -v"
+  "gbd"    "git branch -d"
+  "gbD"    "git branch -D"
+  "gc"    "git commit -v"
+  "gd"    "git diff"
+  "gds"    "git diff --staged"
+  "gch"   "git checkout"
+  "grm"    "git remote -v"
+  "gr"    "git reset"
+  "grh"    "git reset --hard HEAD^"
+  "grs"    "git reset --soft HEAD^"
+  "gl"    "git l" # l is aliased in ~/.gitconfig
+  "gll"   "git ll" #ll is aliased in ~/.gitconfig
+  "ac"    "ack -i -C 5 "  # this will use the .ackrc file. Use --noenv to ignore those presets (like to search node_modules)
+  "acn"    "ack --noignore-dir=node_modules -C 5 _C_ node_modules"  # this will use the .ackrc file. Use --noenv to ignore those presets (like to search node_modules)
+  "Im"    "| more"
+  "Ig"    "| grep"
+  "Ip"    "| $PAGER"
+)
+
+#1) Find the cursor, and move it using that
+#2) use the vi find char trick...
+# http://script.wikidot.com/shell:shell-script-for-while-loop-syntax
+
+
+
+magic-abbrev-expand() {
+    local MATCH
+    LBUFFER=${LBUFFER%%(#m)[_a-zA-Z0-9]#}
+    command=${abbreviations[$MATCH]}
+    LBUFFER+=${command:-$MATCH}
+    [[ "${command}" =~ "_C_" ]] && RBUFFER=${LBUFFER[(ws:_C_:)2]}
+    [[ "${command}" =~ "_C_" ]] && LBUFFER=${LBUFFER[(ws:_C_:)1]}
+    zle self-insert
+}
+
+no-magic-abbrev-expand() {
+  LBUFFER+=' '
+}
+
+zle -N magic-abbrev-expand
+zle -N no-magic-abbrev-expand
+bindkey " " magic-abbrev-expand
+bindkey "^x " no-magic-abbrev-expand
+bindkey -M isearch " " self-insert

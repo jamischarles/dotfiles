@@ -1,0 +1,24 @@
+[user]
+	name = Jamis Charles
+	email = jacharles@paypal.com
+[mergetool]
+	keepBackup = true
+[color]
+	ui = true
+[alias]
+  l = log --graph --pretty=format:'%C(yellow)%h%C(cyan)%d%Creset %s %C(white)- %an, %ar%Creset'
+  ll = log --stat --abbrev-commit
+[url "https://"]
+	insteadOf = git://
+[core]
+	excludesfile = /Users/jacharles/.gitignore_global
+	editor = /usr/bin/vim
+[filter "media"]
+	clean = git-media-clean %f
+	smudge = git-media-smudge %f
+[help]
+	autocorrect = 1
+[rerere]
+	enabled = 1
+[pull]
+	rebase = true
