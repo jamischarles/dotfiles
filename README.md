@@ -1,3 +1,3 @@
 # dotfiles
-TODO:
-[ ] Replace Janus with Vundle
+TODO:  
+- [ ] Replace Janus with Vundle
