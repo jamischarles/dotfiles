@@ -97,8 +97,16 @@ autocmd FileType * autocmd BufWritePre <buffer> StripWhitespace
 nnoremap <C-n> <C-E>
 nnoremap <C-e> <C-Y>
 
+
+" BUFFER MAGIC
 " Close buffer with <leader>q
 nmap <leader>q :bp <BAR> bd #<CR>
+
+" Split to the right. Just use 1st buffer. Type in number after this
+nmap <leader>v :vert belowright sb
+
+
+
 
 " File-wide replace
 nnoremap <leader>sr :%s/
@@ -126,7 +134,8 @@ nnoremap <leader>sv :source ~.vimrc.after<cr>
 
 " UNIMPAIRED - Map newline in normal mode to Cmd-Enter - Normal/Insert mode.
 nmap <D-CR> <Plug>unimpairedBlankDown
-"imap <D-CR>o   # consider this for insert mode... Doesn't make sense...
+" For insert, it neeeds to insert below cursor, NOT above
+"imap <D-CR>O   # consider this for insert mode... Doesn't make sense...
 "imap <C-o> <esc>o " Maps Ctrl o to newline in insert mode
 " Cmd shift Enter inserts newline ABOVE current line
 nmap <D-S-CR> <Plug>unimpairedBlankUp
