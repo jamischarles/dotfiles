@@ -1,0 +1,388 @@
+""
+"" Basic Setup from Janus https://github.com/carlhuda/janus/blob/master/janus/vim/core/before/plugin/settings.vim
+""
+
+set nocompatible      " Use vim, no vi defaults
+set number            " Show line numbers
+set ruler             " Show line and column number
+syntax enable         " Turn on syntax highlighting allowing local overrides
+set encoding=utf-8    " Set default encoding to UTF-8
+
+" Most of these are from https://github.com/gmarik/Vundle.vim
+
+filetype off                  " required for Vundle
+
+" VUNDLE START ***********
+"
+" set the runtime path to include Vundle and initialize
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+" alternatively, pass a path where Vundle should install plugins
+"call vundle#begin('~/some/path/here')
+
+" let Vundle manage Vundle, required
+Plugin 'gmarik/Vundle.vim'
+
+" TODO: group these into sensible groupings
+Plugin 'tpope/vim-fugitive'   		" Git commands in Vim. Consider https://github.com/carlhuda/janus/blob/master/janus/vim/tools/janus/after/plugin/fugitive.vim
+Plugin 'airblade/vim-gitgutter'		" Git gutter
+Plugin 'kien/ctrlp.vim'       		" Fuzzy file finder
+Plugin 'scrooloose/nerdtree'  		" File tree  Consider https://github.com/carlhuda/janus/blob/master/janus/vim/tools/janus/after/plugin/nerdtree.vim
+Plugin 'scrooloose/nerdcommenter' 	" Awesome commenting
+Plugin 'scrooloose/syntastic'		" Syntax checker
+Plugin 'tpope/vim-unimpaired'		" Buffer switching
+
+Plugin 'ervandew/supertab'		" Sweet tab completion
+" Plugin 'garbas/vim-snipmate'		" Snippet framework
+Plugin 'vim-scripts/ZoomWin'		" Zoom current buffer window <ld> zw
+Plugin 'bronson/vim-trailing-whitespace' "Trail whitespace finder
+
+Plugin 'Raimondi/delimitMate' 		" quote, bracket, etc autocompletion
+Plugin 't9md/vim-textmanip'		" Move selected text around easily
+Plugin 'ntpeters/vim-better-whitespace'	" Strip whitespace on save
+
+Plugin 'bling/vim-airline' 		" Status bar (bottom)
+Plugin 'altercation/vim-colors-solarized' " Color scheme
+
+Plugin 'jooize/vim-colemak' 		" Remap keyboard shortcuts to colemak
+
+call vundle#end()            " required
+filetype plugin indent on    " required
+" To ignore plugin indent changes, instead use:
+"filetype plugin on
+
+" Brief help
+" :PluginList       - lists configured plugins
+" :PluginInstall    - installs plugins; append `!` to update or just :PluginUpdate
+" :PluginSearch foo - searches for foo; append `!` to refresh local cache
+" :PluginClean      - confirms removal of unused plugins; append `!` to auto-approve removal
+"
+" VUNDLE END --
+"
+" ********************************************
+" COLOR THEME & FONTS ************************
+" ********************************************
+if has("gui_macvim") " Only on macvim
+	" This MUST be defined BEFORE the colorscheme. No idea why. Also, seems like
+	" terminal vim doesn't handle the contrast variation very well, so let's leave
+	" it in here.
+	let g:solarized_contrast="high"
+	let g:solarized_visibility="low"
+	"
+	colorscheme solarized
+	set background=dark"
+
+
+
+	set guifont=Menlo:h15
+	set lines=999 columns=9999
+
+
+    " clear SignColumn (Use guibg for sign bg, and guifg)
+    "https://github.com/airblade/vim-gitgutter#sign-column, and
+    "https://github.com/airblade/vim-gitgutter/issues/164
+    highlight clear SignColumn
+    highlight GitGutterAdd ctermfg=green guifg=darkgreen
+    highlight GitGutterChange ctermfg=yellow guifg=darkyellow
+    highlight GitGutterDelete ctermfg=red guifg=darkred
+    highlight GitGutterChangeDelete ctermfg=yellow guifg=darkyellow
+
+endif
+"
+" COLORS END --
+"
+"
+" ********************************************
+" BASE SETTINGS ************************
+" ********************************************
+""
+"" Whitespace (from Janus)
+""
+
+set nowrap                        " don't wrap lines
+set tabstop=2                     " a tab is two spaces
+set shiftwidth=2                  " an autoindent (with <<) is two spaces
+set expandtab                     " use spaces, not tabs
+set list                          " Show invisible characters
+set backspace=indent,eol,start    " backspace through everything in insert mode
+
+" Strip whitespace on save for all files
+autocmd FileType * autocmd BufWritePre <buffer> StripWhitespace
+
+"
+" INDENTATION
+" Indentation defaults: TODO: Get these from editorconfig
+autocmd FileType * set tabstop=4|set shiftwidth=4
+set expandtab
+set autoindent                  " Automatic indention
+
+set scrolloff=5                 " Don't get too close to the edge!
+
+" HIDDEN CHARS
+" Use the same symbols as TextMate for tabstops and EOLs
+" and have some indent guides
+set listchars=tab:\|\ ,eol:¬,trail:·
+" Toggle hidden chars
+nmap <leader>l :set list!<CR>
+"
+"
+
+" GIT COMMIT
+" Git commit defaults. This runs these commands on vim startup (for the
+" gitcommit file type instead of in the editor)
+autocmd Filetype gitcommit setlocal spell textwidth=72
+
+
+""
+"" SEARCHING (from Janus)
+""
+
+set hlsearch    " highlight matches
+set incsearch   " incremental searching
+set ignorecase  " searches are case insensitive...
+set smartcase   " ... unless they contain at least one capital letter
+
+""
+"" Backup and swap files (from Janus)
+""
+
+set backupdir^=~/.vim/_backup//    " where to put backup files.
+set directory^=~/.vim/_temp//      " where to put swap files.
+
+""
+"" STATUSLINE (from Janus)  https://github.com/carlhuda/janus/blob/master/janus/vim/core/before/plugin/statusline.vim
+""
+
+if has("statusline") && !&cp
+  set laststatus=2  " always show the status bar
+
+  " Start the status line
+  set statusline=%f\ %m\ %r
+  set statusline+=Line:%l/%L[%p%%]
+  set statusline+=Col:%v
+  set statusline+=Buf:#%n
+  set statusline+=[%b][0x%B]
+endif
+
+""
+"" SAVING (from Janus) https://github.com/carlhuda/janus/blob/master/janus/vim/core/before/plugin/autocmds.vim
+""
+if has("autocmd")
+  if exists("g:autosave_on_blur")
+    au FocusLost * silent! wall
+  endif
+endif
+
+
+" ********************************************
+" KEYBOARD REMAPPING ************************
+" ********************************************
+
+" Remap leader to <space>
+let mapleader = "\<Space>"
+
+" ESCAPE VISUAL / NORMAL MODE with ,, Consider ,n ,. ,m ,e or something more
+" rapid
+" don't move cursor -1 on esc. Not sure if this works
+inoremap <Esc> <Esc>`^
+" End insert mode with ,, and don't -1
+inoremap ,, <ESC>`^
+" Same with visual mode
+vnoremap ,, <ESC>`^
+" Shift Enter -> esc, AND don't minus-1 on esc
+" inoremap <S-CR> <Esc>`^
+
+
+" Q: DO I EVER USE THIS? CONSIDER REPLACING WITH MOVE UP / DOWN
+" SCROLL up/down 1 row with Ctrl-n Ctrl-e in NORMAL Mode
+" Consider jumping 5 with shift...
+" http://stackoverflow.com/questions/3776117/what-is-the-difference-between-the-remap-noremap-nnoremap-and-vnoremap-mapping
+nnoremap <C-n> <C-E>
+nnoremap <C-e> <C-Y>
+
+" SAVE - DO I USE THIS?
+" nnoremap <Leader>w :w<CR>
+
+" SAVE TO EXIT
+" Disable MacVim keybinding for cmd save
+if has("gui_macvim") && has("gui_running")
+    macmenu File.Save key=<nop>
+endif
+
+" On save with CMD -S, exit insert mode
+imap <D-S> <Esc>`^
+"inoremap <D-s> <ESC>:w<CR>i  "insertmode
+" Save but stay exited
+inoremap <D-s> <ESC>:w<CR>  "insert mode
+"nnoremap <D-s> :w<CR>        "normalmode
+
+
+" CLOSE BUFFER with <leader>q
+nmap <leader>q :bp <BAR> bd #<CR>
+
+" SEARCH/REPLACE
+nnoremap <leader>sr :%s/
+
+" OPEN VIMRC
+nnoremap <leader>ev <C-w>v<C-w>l<C-w>L:e ~/.vimrc.after<cr>
+nnoremap <leader>sv :source ~.vimrc.after<cr>
+
+
+" TEXTMATE STYLE NEWLINES in braces (http://stackoverflow.com/questions/6066372/make-vim-curly-braces-square-braces-parens-act-like-textmate)
+" Doesn't work. Is something overriding it?!?... Try w/o plugins
+" It works when you type BRACKET then ENTER
+inoremap {<cr> {<cr>}<c-o><s-o>
+inoremap [<cr> [<cr>]<c-o><s-o>
+inoremap (<cr> (<cr>)<c-o><s-o>
+
+
+
+" Shortcuts from JANUS https://github.com/carlhuda/janus/blob/master/janus/vim/core/before/plugin/mappings.vim
+if has("gui_macvim") && has("gui_running")
+
+  " Map command-[ and command-] to indenting or outdenting
+  " while keeping the original selection in visual mode
+  vmap <D-]> >gv
+  vmap <D-[> <gv
+
+  nmap <D-]> >>
+  nmap <D-[> <<
+
+  omap <D-]> >>
+  omap <D-[> <<
+
+  imap <D-]> <Esc>>>i
+  imap <D-[> <Esc><<i
+
+
+  " Bubble single lines Q: DOES THIS EVEN WORK? A: NO...
+"  nmap <D-Up> [e
+  "nmap <D-Down> ]e
+  "nmap <D-k> [e
+  "nmap <D-j> ]e
+
+    " Map Command-# to switch tabs
+  map  <D-0> 0gt
+  imap <D-0> <Esc>0gt
+  map  <D-1> 1gt
+  imap <D-1> <Esc>1gt
+  map  <D-2> 2gt
+  imap <D-2> <Esc>2gt
+  map  <D-3> 3gt
+  imap <D-3> <Esc>3gt
+  map  <D-4> 4gt
+  imap <D-4> <Esc>4gt
+  map  <D-5> 5gt
+  imap <D-5> <Esc>5gt
+  map  <D-6> 6gt
+  imap <D-6> <Esc>6gt
+  map  <D-7> 7gt
+  imap <D-7> <Esc>7gt
+  map  <D-8> 8gt
+  imap <D-8> <Esc>8gt
+  map  <D-9> 9gt
+  imap <D-9> <Esc>9gt
+else
+
+endif
+
+
+
+" COLEMAK FIXES
+" vim-colemak gets word, eow keys wrong. Swap them.
+nnoremap y e|xnoremap y e|onoremap y e|
+nnoremap Y E|xnoremap Y E|onoremap Y E|
+nnoremap u w|xnoremap u w|onoremap u w|
+nnoremap U W|xnoremap U W|onoremap U W|
+
+" https://github.com/jooize/vim-colemak - Q: DOES THIS EVEN WORK? MAYBE AN
+" ORDER PROBLEM?
+" Fix for colemak.vim keymap collision. tpope/vim-fugitive's maps y<C-G>
+" and colemak.vim maps 'y' to 'w' (word). In combination this stalls 'y'
+" because Vim must wait to see if the user wants to press <C-G> as well.
+augroup RemoveFugitiveMappingForColemak
+    autocmd!
+    autocmd BufEnter * silent! execute "nunmap <buffer> <silent> y<C-G>"
+augroup END
+
+
+" BUFFER NAVIGATION - http://c7.se/switching-to-vundle/
+"noremap <tab> <c-w><c-w>
+noremap <tab> ]b
+" Toggle between last two buffers
+nnoremap <leader><leader> <C-^>
+
+
+" ********************************************
+" PLUGIN SETTINGS ************************
+" ********************************************
+
+" NERDCommenter mappings (from Janus) https://github.com/carlhuda/janus/blob/master/janus/vim/tools/janus/after/plugin/NERD_commenter.vim
+if has("gui_macvim") && has("gui_running")
+  map <D-/> <plug>NERDCommenterToggle<CR>
+  imap <D-/> <Esc><plug>NERDCommenterToggle<CR>i  "Enter insert again when you're done
+else
+  map <leader>/ <plug>NERDCommenterToggle<CR>
+endif
+
+" CTRL-P Settings (Janus) https://github.com/carlhuda/janus/blob/master/janus/vim/tools/janus/after/plugin/ctrlp.vim
+"" Ctrl-p ignore node_modules (too much)
+" Ignore some folders and files for CtrlP indexing | https://coderwall.com/p/hk_bwg/how-to-speed-up-ctrlp
+" after modifying this, run :CtrlPClearAllCaches to clear the cache. If you want to be sure, delete the .cache/ctrlp dir in your home dir.
+let g:ctrlp_map = ''
+let g:ctrlp_custom_ignore = {
+  \ 'dir':  '\.git$\|node_modules$',
+  \ 'file': '\.so$\|\.dat$|\.DS_Store$'
+  \ }
+"
+" Map cmd t to open ctrl P
+if has("gui_macvim") && has("gui_running")
+  map <D-t> :CtrlP<CR>
+  imap <D-t> <ESC>:CtrlP<CR>
+endif
+
+
+" ZOOMwin
+nmap <leader>zw :ZoomWin<CR>
+
+" EASYMOTION to be <leader> s - REMOVE
+" map <Leader> <Plug>(easymotion-prefix)
+
+"
+" Show tabs & buffers at the top
+let g:airline#extensions#tabline#enabled = 1
+
+
+" UNIMPAIRED - Map newline in normal mode to Cmd-Enter - Normal/Insert mode.
+nmap <D-CR> <Plug>unimpairedBlankDown
+"imap <D-CR>o   # consider this for insert mode... Doesn't make sense...
+"imap <C-o> <esc>o " Maps Ctrl o to newline in insert mode
+" Cmd shift Enter inserts newline ABOVE current line
+nmap <D-S-CR> <Plug>unimpairedBlankUp
+
+" Vim-TextManip. Move selection down/up   (Ctrl+n, Ctrl+e) in VISUAL MODE
+" Consider this one instead https://github.com/t9md/vim-textmanip
+" Ctrl + n,e,h,i to move selection around
+xmap <C-n> <Plug>(textmanip-move-down)
+xmap <C-e> <Plug>(textmanip-move-up)
+xmap <C-h> <Plug>(textmanip-move-left)
+xmap <C-i> <Plug>(textmanip-move-right)
+
+" map CMD (D-) + these for text duplication
+" This plugin is done REALLY well. Having these mappins is NICE
+" x is for visual, n for normal mode
+xmap <D-d> <Plug>(textmanip-duplicate-down)
+nmap <D-d> <Plug>(textmanip-duplicate-down)
+xmap <D-D> <Plug>(textmanip-duplicate-up)
+nmap <D-D> <Plug>(textmanip-duplicate-up)
+
+
+" GIT GUTTER colors
+"highlight clear SignColumn (Use guibg for sign bg, and guifg)
+"https://github.com/airblade/vim-gitgutter#sign-column, and
+"https://github.com/airblade/vim-gitgutter/issues/164
+highlight clear SignColumn
+highlight GitGutterAdd ctermfg=green guifg=darkgreen
+highlight GitGutterChange ctermfg=yellow guifg=darkyellow
+highlight GitGutterDelete ctermfg=red guifg=darkred
+highlight GitGutterChangeDelete ctermfg=yellow guifg=darkyellow
