@@ -22,3 +22,5 @@
 	enabled = 1
 [pull]
 	rebase = true
+[web]
+	browser = open
