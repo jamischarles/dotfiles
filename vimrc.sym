@@ -28,6 +28,7 @@ Plugin 'tpope/vim-fugitive'   		" Git commands in Vim. Consider https://github.c
 Plugin 'airblade/vim-gitgutter'		" Git gutter
 Plugin 'kien/ctrlp.vim'       		" Fuzzy file finder
 Plugin 'scrooloose/nerdtree'  		" File tree  Consider https://github.com/carlhuda/janus/blob/master/janus/vim/tools/janus/after/plugin/nerdtree.vim
+
 Plugin 'scrooloose/nerdcommenter' 	" Awesome commenting
 Plugin 'scrooloose/syntastic'		" Syntax checker
 Plugin 'tpope/vim-unimpaired'		" Buffer switching
@@ -45,6 +46,8 @@ Plugin 'bling/vim-airline' 		" Status bar (bottom)
 Plugin 'altercation/vim-colors-solarized' " Color scheme
 
 Plugin 'jooize/vim-colemak' 		" Remap keyboard shortcuts to colemak
+Plugin 'pangloss/vim-javascript'    " JS indentation & syntax sugar
+Plugin 'mxw/vim-jsx'                " JSX syntax highlighting
 
 call vundle#end()            " required
 filetype plugin indent on    " required
@@ -74,7 +77,8 @@ if has("gui_macvim") " Only on macvim
 
 
 
-	set guifont=Menlo:h15
+	"set guifont=Menlo:h15
+  set guifont=Menlo\ for\ Powerline:h15     " from https://github.com/abertsch/Menlo-for-Powerline
 	set lines=999 columns=9999
 
 
@@ -143,11 +147,22 @@ set ignorecase  " searches are case insensitive...
 set smartcase   " ... unless they contain at least one capital letter
 
 ""
-"" Backup and swap files (from Janus)
+"" Backup and swap files
 ""
+set backupdir=~/.vim/backup " where to put backup files.
+set directory=~/.vim/backup " where to put swap files.
 
-set backupdir^=~/.vim/_backup//    " where to put backup files.
-set directory^=~/.vim/_temp//      " where to put swap files.
+""
+"" UNDO - Save beyond closing
+""
+set hidden " persist beyond buffer switching
+" Persistent undo - http://stackoverflow.com/questions/2732267/vim-loses-undo-history-when-changing-buffers
+" Apparently you have to make the backup/undo folders for this to work :|
+
+set undofile                    " Allow persistent undo
+set undodir=~/.vim/undo         " Store undo files here. You have to make the folder if it doesn't exist
+set undoreload=10000            " 10000 levels of undo!
+set undolevels=1000
 
 ""
 "" STATUSLINE (from Janus)  https://github.com/carlhuda/janus/blob/master/janus/vim/core/before/plugin/statusline.vim
@@ -172,6 +187,7 @@ if has("autocmd")
     au FocusLost * silent! wall
   endif
 endif
+
 
 
 " ********************************************
@@ -224,8 +240,8 @@ nmap <leader>q :bp <BAR> bd #<CR>
 nnoremap <leader>sr :%s/
 
 " OPEN VIMRC
-nnoremap <leader>ev <C-w>v<C-w>l<C-w>L:e ~/.vimrc.after<cr>
-nnoremap <leader>sv :source ~.vimrc.after<cr>
+nnoremap <leader>ev <C-w>v<C-w>l<C-w>L:e ~/.vimrc<cr>
+nnoremap <leader>sv :source ~.vimrc<cr>
 
 
 " TEXTMATE STYLE NEWLINES in braces (http://stackoverflow.com/questions/6066372/make-vim-curly-braces-square-braces-parens-act-like-textmate)
@@ -235,7 +251,11 @@ inoremap {<cr> {<cr>}<c-o><s-o>
 inoremap [<cr> [<cr>]<c-o><s-o>
 inoremap (<cr> (<cr>)<c-o><s-o>
 
-
+" Add ; to eol. Goto eol, append ; then back to insert mode
+"nnoremap <leader>; $ t _
+" Replace last char with ; WHY Doesnt this work with append?
+nnoremap <leader>; $s;<esc>
+"nmap <leader>; $ i_ <esc>
 
 " Shortcuts from JANUS https://github.com/carlhuda/janus/blob/master/janus/vim/core/before/plugin/mappings.vim
 if has("gui_macvim") && has("gui_running")
@@ -325,11 +345,16 @@ else
   map <leader>/ <plug>NERDCommenterToggle<CR>
 endif
 
+
+" NERDTREE easy toggle
+map <leader>n :NERDTreeToggle<CR> :NERDTreeMirror<CR>
+"map <Leader>n <plug>NERDTreeTabsToggle<CR>
+
 " CTRL-P Settings (Janus) https://github.com/carlhuda/janus/blob/master/janus/vim/tools/janus/after/plugin/ctrlp.vim
 "" Ctrl-p ignore node_modules (too much)
 " Ignore some folders and files for CtrlP indexing | https://coderwall.com/p/hk_bwg/how-to-speed-up-ctrlp
 " after modifying this, run :CtrlPClearAllCaches to clear the cache. If you want to be sure, delete the .cache/ctrlp dir in your home dir.
-let g:ctrlp_map = ''
+"let g:ctrlp_map = ''
 let g:ctrlp_custom_ignore = {
   \ 'dir':  '\.git$\|node_modules$',
   \ 'file': '\.so$\|\.dat$|\.DS_Store$'
@@ -341,6 +366,9 @@ if has("gui_macvim") && has("gui_running")
   imap <D-t> <ESC>:CtrlP<CR>
 endif
 
+"let g:ctrlp_map = '<leader>t'
+let g:ctrlp_map = '<D-t>'
+let g:ctrlp_working_path_mode = 0
 
 " ZOOMwin
 nmap <leader>zw :ZoomWin<CR>
@@ -351,7 +379,10 @@ nmap <leader>zw :ZoomWin<CR>
 "
 " Show tabs & buffers at the top
 let g:airline#extensions#tabline#enabled = 1
+let g:airline_powerline_fonts = 1     " use nice arrow symbols etc
 
+" JSX - Allow JSX highlighting in JS files
+let g:jsx_ext_required = 0
 
 " UNIMPAIRED - Map newline in normal mode to Cmd-Enter - Normal/Insert mode.
 nmap <D-CR> <Plug>unimpairedBlankDown
@@ -386,3 +417,21 @@ highlight GitGutterAdd ctermfg=green guifg=darkgreen
 highlight GitGutterChange ctermfg=yellow guifg=darkyellow
 highlight GitGutterDelete ctermfg=red guifg=darkred
 highlight GitGutterChangeDelete ctermfg=yellow guifg=darkyellow
+
+
+
+" EXPERIMENTAL Eval if these are working or if we even want these here...
+" find merge conflict markers - from janus
+nmap <silent> <leader>fc <ESC>/\v^[<=>]{7}( .*\|$)<CR>
+
+" fix the arrows in insert in console vi
+if has("gui_macvim") && has("gui_running")
+else
+  set term=builtin_ansi
+endif
+
+
+if has("gui_macvim")
+  macmenu &File.New\ Tab key=<nop>
+  map <D-t> :CtrlP<CR>
+endif
