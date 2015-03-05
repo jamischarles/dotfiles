@@ -24,32 +24,34 @@ call vundle#begin()
 Plugin 'gmarik/Vundle.vim'
 
 " TODO: group these into sensible groupings
-Plugin 'tpope/vim-fugitive'                " Git commands in Vim. Consider https://github.com/carlhuda/janus/blob/master/janus/vim/tools/janus/after/plugin/fugitive.vim
-Plugin 'airblade/vim-gitgutter'            " Git gutter
-Plugin 'kien/ctrlp.vim'                    " Fuzzy file finder
-Plugin 'scrooloose/nerdtree'               " File tree  Consider https://github.com/carlhuda/janus/blob/master/janus/vim/tools/janus/after/plugin/nerdtree.vim
+Plugin 'tpope/vim-fugitive'                 " Git commands in Vim. Consider https://github.com/carlhuda/janus/blob/master/janus/vim/tools/janus/after/plugin/fugitive.vim
+Plugin 'airblade/vim-gitgutter'             " Git gutter
+Plugin 'kien/ctrlp.vim'                     " Fuzzy file finder
+Plugin 'scrooloose/nerdtree'                " File tree  Consider https://github.com/carlhuda/janus/blob/master/janus/vim/tools/janus/after/plugin/nerdtree.vim
 
-Plugin 'scrooloose/nerdcommenter'          " Awesome commenting
-Plugin 'scrooloose/syntastic'              " Syntax checker
-Plugin 'tpope/vim-unimpaired'              " Buffer switching
+Plugin 'scrooloose/nerdcommenter'           " Awesome commenting
+Plugin 'scrooloose/syntastic'               " Syntax checker
+Plugin 'tpope/vim-unimpaired'               " Buffer switching
+Plugin 'SirVer/ultisnips'                   " Snippet engine
+Plugin 'honza/vim-snippets'                 " Default snippet package for the utilsnips engine
 
-Plugin 'ervandew/supertab'                 " Sweet tab completion
-                                           " Plugin 'garbas/vim-snipmate'                                                                                                " Snippet framework
-Plugin 'vim-scripts/ZoomWin'               " Zoom current buffer window <ld> zw
-Plugin 'bronson/vim-trailing-whitespace'   " Trail whitespace finder
-Plugin 'godlygeek/tabular'                 " easy aligning. http://vimcasts.org/episodes/aligning-text-with-tabular-vim/
-Plugin 'tpope/vim-surround'                " easy surround with quote etc
+Plugin 'ervandew/supertab'                  " Sweet tab completion
+                                            " Plugin 'garbas/vim-snipmate'                                                                                                " Snippet framework
+Plugin 'vim-scripts/ZoomWin'                " Zoom current buffer window <ld> zw
+Plugin 'bronson/vim-trailing-whitespace'    " Trail whitespace finder
+Plugin 'godlygeek/tabular'                  " easy aligning. http://vimcasts.org/episodes/aligning-text-with-tabular-vim/
+Plugin 'tpope/vim-surround'                 " easy surround with quote etc
 
-Plugin 'Raimondi/delimitMate'              " quote, bracket, etc autocompletion
-Plugin 't9md/vim-textmanip'                " Move selected text around easily
-Plugin 'ntpeters/vim-better-whitespace'    " Strip whitespace on save
+Plugin 'Raimondi/delimitMate'               " quote, bracket, etc autocompletion
+Plugin 't9md/vim-textmanip'                 " Move selected text around easily
+Plugin 'ntpeters/vim-better-whitespace'     " Strip whitespace on save
 
-Plugin 'bling/vim-airline'                 " Status bar (bottom)
-Plugin 'altercation/vim-colors-solarized'  " Color scheme
+Plugin 'bling/vim-airline'                  " Status bar (bottom)
+Plugin 'altercation/vim-colors-solarized'   " Color scheme
 
-Plugin 'jooize/vim-colemak'                " Remap keyboard shortcuts to colemak
-Plugin 'pangloss/vim-javascript'           " JS indentation & syntax sugar
-Plugin 'mxw/vim-jsx'                       " JSX syntax highlighting
+Plugin 'jooize/vim-colemak'                 " Remap keyboard shortcuts to colemak
+Plugin 'pangloss/vim-javascript'            " JS indentation & syntax sugar
+Plugin 'mxw/vim-jsx'                        " JSX syntax highlighting
 
 call vundle#end()            " required
 filetype plugin indent on    " required
@@ -215,8 +217,9 @@ vnoremap ,, <ESC>`^
 " SCROLL up/down 1 row with Ctrl-n Ctrl-e in NORMAL Mode
 " Consider jumping 5 with shift...
 " http://stackoverflow.com/questions/3776117/what-is-the-difference-between-the-remap-noremap-nnoremap-and-vnoremap-mapping
-nnoremap <C-n> <C-E>
-nnoremap <C-e> <C-Y>
+" DELETE ME. Replaced this with text-manip move single line up/down
+"nnoremap <C-n> <C-E>
+"nnoremap <C-e> <C-Y>
 
 " SAVE - DO I USE THIS?
 " nnoremap <Leader>w :w<CR>
@@ -339,6 +342,14 @@ nnoremap <leader><leader> <C-^>
 " PLUGIN SETTINGS ************************
 " ********************************************
 
+""
+"" Util-snips. http://vimcasts.org/episodes/meet-ultisnips/
+""
+let g:UltiSnipsExpandTrigger="<tab>"
+let g:UltiSnipsJumpForwardTrigger="<tab>"    " Lets you jump to next insertion point
+let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
+
+
 " NERDCommenter mappings (from Janus) https://github.com/carlhuda/janus/blob/master/janus/vim/tools/janus/after/plugin/NERD_commenter.vim
 if has("gui_macvim") && has("gui_running")
   map <D-/> <plug>NERDCommenterToggle<CR>
@@ -348,8 +359,10 @@ else
 endif
 
 
-" NERDTREE easy toggle
+" NERDTREE easy toggle. More settings for this are in ~/.vim/plugin/nerdtree.vim
 map <leader>n :NERDTreeToggle<CR> :NERDTreeMirror<CR>
+
+
 "map <Leader>n <plug>NERDTreeTabsToggle<CR>
 
 " CTRL-P Settings (Janus) https://github.com/carlhuda/janus/blob/master/janus/vim/tools/janus/after/plugin/ctrlp.vim
@@ -386,12 +399,22 @@ let g:airline_powerline_fonts = 1     " use nice arrow symbols etc
 " JSX - Allow JSX highlighting in JS files
 let g:jsx_ext_required = 0
 
-" UNIMPAIRED - Map newline in normal mode to Cmd-Enter - Normal/Insert mode.
+""
+"" UNIMPAIRED - Map newline in normal mode to Cmd-Enter - Normal/Insert mode.
+""
 nmap <D-CR> <Plug>unimpairedBlankDown
 "imap <D-CR>o   # consider this for insert mode... Doesn't make sense...
 "imap <C-o> <esc>o " Maps Ctrl o to newline in insert mode
 " Cmd shift Enter inserts newline ABOVE current line
 nmap <D-S-CR> <Plug>unimpairedBlankUp
+
+
+" Move single line up/down in normal mode (uses unimpaired keystrokes)
+"nmap <C-e> <Plug>(textmanip-move-up)
+"nmap <C-n> <Plug>(textmanip-move-down)
+"http://vimcasts.org/episodes/bubbling-text/
+nmap <C-n> ]e
+nmap <C-e> [e
 
 " Vim-TextManip. Move selection down/up   (Ctrl+n, Ctrl+e) in VISUAL MODE
 " Consider this one instead https://github.com/t9md/vim-textmanip
