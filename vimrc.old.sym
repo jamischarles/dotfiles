@@ -1,7 +1,0 @@
-" settings that I put in here
-autocmd StdinReadPre * let s:std_in=1
-syntax on
-
-" Plugin settings
-let g:airline#extensions#tabline#enabled = 1
-let g:airline#extensions#tabline#show_tabs = 1

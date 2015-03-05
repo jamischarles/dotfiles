@@ -14,11 +14,19 @@ HERE=$(pwd)
 
 # from http://unix.stackexchange.com/questions/64459/create-symbolic-links-to-files-using-wildcards
 # symlink from nondot file in this folder to a dotfile in the home folder...
- echo 'Creating symlinks from ~/ to ~/.dotfiles/*.sym files';
+ #echo 'Creating symlinks from ~/ to ~/.dotfiles/*.sym files';
 
 # get all *.sym files in the current folder and symlink them to the home folder MINUS the .sym extension
-for FILE in *.sym; do ln -s "$HERE/$FILE" $(echo "$HOME/.$FILE" | sed 's/.sym$//'); done;
+for FILE in *.sym; do
+    echo 'Deleting and creating symlink: ' $(echo "$HOME/.$FILE" | sed 's/.sym$//');
+    rm  $(echo "$HOME/.$FILE" | sed 's/.sym$//');
+    ln -s "$HERE/$FILE" $(echo "$HOME/.$FILE" | sed 's/.sym$//');
+done;
+#for FILE in *.sym;  done;
 
-
+# symlink .vim/plugins to ~/.dotfiles/plugins
+echo 'Deleting and creating ~/.vim/plugin symlink'
+rm -rf "$HOME/.vim/plugin"
+ln -s "$HERE/plugin" "$HOME/.vim/plugin"
 
 

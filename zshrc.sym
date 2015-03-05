@@ -144,7 +144,7 @@ export NOTIFY_COMMAND_COMPLETE_TIMEOUT=3
 
 # COMMAND LINE SYNTAX HIGHLIGHTING
 # vimpager works great instead of less, but not sure about a pager in general
-export PAGER=vimpager # good for less replacement
+#export PAGER=vimpager # good for less replacement
 #export ACK_PAGER=vimpager
 #http://unix.stackexchange.com/questions/19439/how-can-i-display-syntax-highlighting-on-a-file
 alias pcat="pygmentize -f terminal -O style=native -g" # good for cat replacement
@@ -187,7 +187,8 @@ abbreviations=(
   "gl"    "git l" # l is aliased in ~/.gitconfig
   "gll"   "git ll" #ll is aliased in ~/.gitconfig
   "ac"    "ack -i -C 5 "  # this will use the .ackrc file. Use --noenv to ignore those presets (like to search node_modules)
-  "acn"    "ack --noignore-dir=node_modules -C 5 _C_ node_modules"  # this will use the .ackrc file. Use --noenv to ignore those presets (like to search node_modules)
+  "acn"   "ack --noignore-dir=node_modules -C 5 _C_ node_modules"  # this will use the .ackrc file. Use --noenv to ignore those presets (like to search node_modules)
+  'find'  "find . -name '_C_' "
   "Im"    "| more"
   "Ig"    "| grep"
   "Ip"    "| $PAGER"
