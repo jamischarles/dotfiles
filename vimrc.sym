@@ -267,8 +267,15 @@ if has("gui_macvim") && has("gui_running")
 
   " Map command-[ and command-] to indenting or outdenting
   " while keeping the original selection in visual mode
-  vmap <D-]> >gv
-  vmap <D-[> <gv
+  "vmap <D-]> >gv
+  "vmap <D-[> <gv
+  " Above was busted due to colemak remappings
+  " This solution wasn't great, b/c you lost the selection with it.
+  "vmap <D-]> >
+  "vmap <D-[> <
+  " This one seemed to work best...
+  vmap <D-[> <Plug>(textmanip-move-left)
+  vmap <D-]> <Plug>(textmanip-move-right)
 
   nmap <D-]> >>
   nmap <D-[> <<
@@ -381,7 +388,6 @@ if has("gui_macvim") && has("gui_running")
   imap <D-t> <ESC>:CtrlP<CR>
 endif
 
-"let g:ctrlp_map = '<leader>t'
 let g:ctrlp_map = '<D-t>'
 let g:ctrlp_working_path_mode = 0
 
