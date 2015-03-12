@@ -506,12 +506,13 @@ endif
 
 
 " map Delete to ESC and CTRL. HIGHLY experimental
-inoremap <BS> <ESC>`^<C->
-xnoremap <BS> <ESC>`^<C->
+" Don't think the ctrl works properly
+inoremap <BS> <ESC>`^<C>
+xnoremap <BS> <ESC>`^<C>
 "
 " Preserve backspace with SHIFT-BS
 inoremap <S-BS> <c-r>=Backspace()<CR>
-" Same with cmd backspace (del)
+" Same with cmd backspace (del). THIS WORKS!!!!
 inoremap <D-BS> <c-r>=Backspace()<CR>
 "nnoremap <S-BS> <c-r>=Backspace()<CR> "doesn't seeme to work
 
