@@ -243,11 +243,12 @@ if has("gui_macvim") && has("gui_running")
     macmenu File.Save key=<nop>
 endif
 
+" TODO: Move the duplicate from the bottom higher up
 " On save with CMD -S, exit insert mode
-imap <D-S> <Esc>`^
+"imap <D-S> <Esc>`^
 "inoremap <D-s> <ESC>:w<CR>i  "insertmode
 " Save but stay exited
-inoremap <D-s> <ESC>:w<CR>  "insert mode
+"inoremap <D-s> <ESC>:w<CR>  "insert mode
 "nnoremap <D-s> :w<CR>        "normalmode
 
 
@@ -343,6 +344,11 @@ nnoremap y e|xnoremap y e|onoremap y e|
 nnoremap Y E|xnoremap Y E|onoremap Y E|
 nnoremap u w|xnoremap u w|onoremap u w|
 nnoremap U W|xnoremap U W|onoremap U W|
+
+
+" gi should be gs for us since we use 's' for insert
+" Goes to the last insertion point and gets in insert mode
+nmap gs gi
 
 " https://github.com/jooize/vim-colemak - Q: DOES THIS EVEN WORK? MAYBE AN
 " ORDER PROBLEM?
@@ -512,9 +518,17 @@ xnoremap <BS> <ESC>`^<C>
 "
 " Preserve backspace with SHIFT-BS
 inoremap <S-BS> <c-r>=Backspace()<CR>
-" Same with cmd backspace (del). THIS WORKS!!!!
+" This feels a little dirty. Try shift at the same time...
+" If I could preserve the normal backspace key, perhaps it would simly
+" discourage me from using the del(caps) key too much in vim...
+" Same with cmd backspace (del). THIS WORKS!!!! - What does <c-r>= do?
 inoremap <D-BS> <c-r>=Backspace()<CR>
+" Am I going a little overboard here? I feel like I'm fixing things that then
+" need to be fixed. Feels like a lot of cascading effects I'm dealing with...
+" In insert mode, cmd shift Backspace will delete from the cursor to col0
+inoremap <D-S-BS> <esc>0Ds
 "nnoremap <S-BS> <c-r>=Backspace()<CR> "doesn't seeme to work
+
 
 " This forces backspace to behave properly
 " ! overrides if already exists. Helps prevent errors
