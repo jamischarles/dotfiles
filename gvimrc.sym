@@ -8,4 +8,7 @@ if has("gui_macvim")
   "https://github.com/carlhuda/janus/blob/0e34a62fac3a38ccc459bf3a6dab6ef1ec6dc9a5/janus/vim/gvimrc#L5-8
   "macmenu &File.New\ Tab key=<nop>
   macmenu &File.New\ Tab key=<D-S-t>
+
+  macmenu &File.Save key=<nop>
+
 endif

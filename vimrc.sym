@@ -24,34 +24,39 @@ call vundle#begin()
 Plugin 'gmarik/Vundle.vim'
 
 " TODO: group these into sensible groupings
-Plugin 'tpope/vim-fugitive'                 " Git commands in Vim. Consider https://github.com/carlhuda/janus/blob/master/janus/vim/tools/janus/after/plugin/fugitive.vim
-Plugin 'airblade/vim-gitgutter'             " Git gutter
-Plugin 'kien/ctrlp.vim'                     " Fuzzy file finder
-Plugin 'scrooloose/nerdtree'                " File tree  Consider https://github.com/carlhuda/janus/blob/master/janus/vim/tools/janus/after/plugin/nerdtree.vim
+Plugin 'tpope/vim-fugitive'                       " Git commands in Vim. Consider https://github.com/carlhuda/janus/blob/master/janus/vim/tools/janus/after/plugin/fugitive.vim
+Plugin 'airblade/vim-gitgutter'                   " Git gutter
+Plugin 'kien/ctrlp.vim'                           " Fuzzy file finder
+Plugin 'scrooloose/nerdtree'                      " File tree  Consider https://github.com/carlhuda/janus/blob/master/janus/vim/tools/janus/after/plugin/nerdtree.vim
 
-Plugin 'scrooloose/nerdcommenter'           " Awesome commenting
-Plugin 'scrooloose/syntastic'               " Syntax checker
-Plugin 'tpope/vim-unimpaired'               " Buffer switching
-Plugin 'SirVer/ultisnips'                   " Snippet engine
-Plugin 'honza/vim-snippets'                 " Default snippet package for the utilsnips engine
+Plugin 'scrooloose/nerdcommenter'                 " Awesome commenting
+Plugin 'scrooloose/syntastic'                     " Syntax checker
+Plugin 'tpope/vim-unimpaired'                     " Buffer switching
+Plugin 'SirVer/ultisnips'                         " Snippet engine
+Plugin 'honza/vim-snippets'                       " Default snippet package for the utilsnips engine
 
-Plugin 'ervandew/supertab'                  " Sweet tab completion
-                                            " Plugin 'garbas/vim-snipmate'                                                                                                " Snippet framework
-Plugin 'vim-scripts/ZoomWin'                " Zoom current buffer window <ld> zw
-Plugin 'bronson/vim-trailing-whitespace'    " Trail whitespace finder
-Plugin 'godlygeek/tabular'                  " easy aligning. http://vimcasts.org/episodes/aligning-text-with-tabular-vim/
-Plugin 'tpope/vim-surround'                 " easy surround with quote etc
+Plugin 'ervandew/supertab'                        " Sweet tab completion
+                                                  " Plugin 'garbas/vim-snipmate'                                                                                                " Snippet framework
+Plugin 'vim-scripts/ZoomWin'                      " Zoom current buffer window <ld> zw
+Plugin 'bronson/vim-trailing-whitespace'          " Trail whitespace finder
+Plugin 'godlygeek/tabular'                        " easy aligning. http://vimcasts.org/episodes/aligning-text-with-tabular-vim/
+Plugin 'tpope/vim-sleuth'                         " Better indentation. Give it a try... Sigh.
+Plugin 'tpope/vim-surround'                       " easy surround with quote etc
+Plugin 'jwhitley/vim-matchit'                     " better % matching. Does this even do anything? Not sure it's worth having around. REMOVE?
+"Plugin 'jeetsukumaran/vim-markology'              " Mark visualizations
+"Plugin 'gcmt/wildfire.vim'                        " smart text selection
 
-Plugin 'Raimondi/delimitMate'               " quote, bracket, etc autocompletion
-Plugin 't9md/vim-textmanip'                 " Move selected text around easily
-Plugin 'ntpeters/vim-better-whitespace'     " Strip whitespace on save
+Plugin 'Raimondi/delimitMate'                     " quote, bracket, etc autocompletion
+Plugin 't9md/vim-textmanip'                       " Move selected text around easily
+Plugin 'ntpeters/vim-better-whitespace'           " Strip whitespace on save
+Plugin 'elzr/vim-json'                            " Hide quotes, json highlighting
 
-Plugin 'bling/vim-airline'                  " Status bar (bottom)
-Plugin 'altercation/vim-colors-solarized'   " Color scheme
+Plugin 'bling/vim-airline'                        " Status bar (bottom)
+Plugin 'altercation/vim-colors-solarized'         " Color scheme
 
-Plugin 'jooize/vim-colemak'                 " Remap keyboard shortcuts to colemak
-Plugin 'pangloss/vim-javascript'            " JS indentation & syntax sugar
-Plugin 'mxw/vim-jsx'                        " JSX syntax highlighting
+Plugin 'jooize/vim-colemak'                       " Remap keyboard shortcuts to colemak
+Plugin 'pangloss/vim-javascript'                  " JS indentation & syntax sugar
+Plugin 'mxw/vim-jsx'                              " JSX syntax highlighting
 
 call vundle#end()            " required
 filetype plugin indent on    " required
@@ -110,7 +115,7 @@ endif
 set nowrap                        " don't wrap lines
 set tabstop=2                     " a tab is two spaces
 set shiftwidth=2                  " an autoindent (with <<) is two spaces
-set expandtab                     " use spaces, not tabs
+"set expandtab                     " use spaces, not tabs
 set list                          " Show invisible characters
 set backspace=indent,eol,start    " backspace through everything in insert mode
 
@@ -121,7 +126,6 @@ autocmd FileType * autocmd BufWritePre <buffer> StripWhitespace
 " INDENTATION
 " Indentation defaults: TODO: Get these from editorconfig
 autocmd FileType * set tabstop=4|set shiftwidth=4
-set expandtab
 set autoindent                  " Automatic indention
 
 set scrolloff=5                 " Don't get too close to the edge!
@@ -130,8 +134,6 @@ set scrolloff=5                 " Don't get too close to the edge!
 " Use the same symbols as TextMate for tabstops and EOLs
 " and have some indent guides
 set listchars=tab:\|\ ,eol:¬,trail:·
-" Toggle hidden chars
-nmap <leader>l :set list!<CR>
 "
 "
 
@@ -201,6 +203,9 @@ endif
 " Remap leader to <space>
 let mapleader = "\<Space>"
 
+" Toggle hidden chars
+nmap <leader>l :set list!<CR>
+
 " ESCAPE VISUAL / NORMAL MODE with ,, Consider ,n ,. ,m ,e or something more
 " rapid
 " don't move cursor -1 on esc. Not sure if this works
@@ -213,6 +218,16 @@ vnoremap ,, <ESC>`^
 " inoremap <S-CR> <Esc>`^
 
 
+""
+"" Use Tabs for doc (I use this very frequently)
+""
+" convert spaces to tabs
+command! UseTabs set noet|retab!
+" Not sure which I like better. The latter has to be highlighted... http://vim.wikia.com/wiki/Super_retab
+"command! -nargs=1 -range SuperRetab <line1>,<line2>s/\v%(^ *)@<= {<args>}/\t/g
+
+
+
 " Q: DO I EVER USE THIS? CONSIDER REPLACING WITH MOVE UP / DOWN
 " SCROLL up/down 1 row with Ctrl-n Ctrl-e in NORMAL Mode
 " Consider jumping 5 with shift...
@@ -221,8 +236,6 @@ vnoremap ,, <ESC>`^
 "nnoremap <C-n> <C-E>
 "nnoremap <C-e> <C-Y>
 
-" SAVE - DO I USE THIS?
-" nnoremap <Leader>w :w<CR>
 
 " SAVE TO EXIT
 " Disable MacVim keybinding for cmd save
@@ -259,8 +272,14 @@ inoremap (<cr> (<cr>)<c-o><s-o>
 " Add ; to eol. Goto eol, append ; then back to insert mode
 "nnoremap <leader>; $ t _
 " Replace last char with ; WHY Doesnt this work with append?
-nnoremap <leader>; $s;<esc>
-"nmap <leader>; $ i_ <esc>
+" uses A bc vim colemak hasn't remapped yet most likely
+nnoremap <leader>; A;<esc>
+" Don't use leader in insert mode, esp if it's space b/c that causes delay on
+" the space key :(
+"inoremap <leader>; <esc>A;<esc>
+" Do the same for ,
+nnoremap <leader>, A,<esc>
+"inoremap <leader>, <esc>A,<esc>
 
 " Shortcuts from JANUS https://github.com/carlhuda/janus/blob/master/janus/vim/core/before/plugin/mappings.vim
 if has("gui_macvim") && has("gui_running")
@@ -270,10 +289,8 @@ if has("gui_macvim") && has("gui_running")
   "vmap <D-]> >gv
   "vmap <D-[> <gv
   " Above was busted due to colemak remappings
-  " This solution wasn't great, b/c you lost the selection with it.
   "vmap <D-]> >
   "vmap <D-[> <
-  " This one seemed to work best...
   vmap <D-[> <Plug>(textmanip-move-left)
   vmap <D-]> <Plug>(textmanip-move-right)
 
@@ -341,8 +358,16 @@ augroup END
 " BUFFER NAVIGATION - http://c7.se/switching-to-vundle/
 "noremap <tab> <c-w><c-w>
 nnoremap <tab> :bn<CR>
+" map shift tab to backwards
+nnoremap <S-tab> :bp<CR>
 " Toggle between last two buffers
 nnoremap <leader><leader> <C-^>
+
+
+""
+"" Split Window navigation
+""
+nmap <leader>w <C-w>w
 
 
 " ********************************************
@@ -353,8 +378,9 @@ nnoremap <leader><leader> <C-^>
 "" Util-snips. http://vimcasts.org/episodes/meet-ultisnips/
 ""
 let g:UltiSnipsExpandTrigger="<tab>"
-let g:UltiSnipsJumpForwardTrigger="<tab>"    " Lets you jump to next insertion point
-let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
+"let g:UltiSnipsJumpForwardTrigger="<s-tab>"    " Lets you jump to next insertion point
+" Let's try this
+"let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
 
 
 " NERDCommenter mappings (from Janus) https://github.com/carlhuda/janus/blob/master/janus/vim/tools/janus/after/plugin/NERD_commenter.vim
@@ -402,8 +428,14 @@ nmap <leader>zw :ZoomWin<CR>
 let g:airline#extensions#tabline#enabled = 1
 let g:airline_powerline_fonts = 1     " use nice arrow symbols etc
 
-" JSX - Allow JSX highlighting in JS files
+""
+"" JSX - Allow JSX highlighting in JS files
+""
 let g:jsx_ext_required = 0
+
+" React syntactic setup - https://jaxbot.me/articles/setting-up-vim-for-react-js-jsx-02-03-2015
+let g:syntastic_javascript_checkers = ['jsxhint']
+let g:syntastic_javascript_jsxhint_exec = 'jsx-jshint-wrapper'
 
 ""
 "" UNIMPAIRED - Map newline in normal mode to Cmd-Enter - Normal/Insert mode.
@@ -433,6 +465,7 @@ xmap <C-i> <Plug>(textmanip-move-right)
 " map CMD (D-) + these for text duplication
 " This plugin is done REALLY well. Having these mappins is NICE
 " x is for visual, n for normal mode
+" TODO: Make this jump down 5 at a time with shift.
 xmap <D-d> <Plug>(textmanip-duplicate-down)
 nmap <D-d> <Plug>(textmanip-duplicate-down)
 xmap <D-D> <Plug>(textmanip-duplicate-up)
@@ -455,7 +488,10 @@ highlight GitGutterChangeDelete ctermfg=yellow guifg=darkyellow
 
 
 
+" ***********************************************************************
 " EXPERIMENTAL Eval if these are working or if we even want these here...
+" ***********************************************************************
+
 " find merge conflict markers - from janus
 nmap <silent> <leader>fc <ESC>/\v^[<=>]{7}( .*\|$)<CR>
 
@@ -465,8 +501,46 @@ else
   set term=builtin_ansi
 endif
 
+" remap X to be del left instead of delete line. DD makes more sense for that
+" anyway. Should I just fork his version of colemak at this point? FIXME
 
-if has("gui_macvim")
-  macmenu &File.New\ Tab key=<nop>
-  map <D-t> :CtrlP<CR>
-endif
+
+" map Delete to ESC and CTRL. HIGHLY experimental
+inoremap <BS> <ESC>`^<C->
+xnoremap <BS> <ESC>`^<C->
+"
+" Preserve backspace with SHIFT-BS
+inoremap <S-BS> <c-r>=Backspace()<CR>
+" Same with cmd backspace (del)
+inoremap <D-BS> <c-r>=Backspace()<CR>
+"nnoremap <S-BS> <c-r>=Backspace()<CR> "doesn't seeme to work
+
+" This forces backspace to behave properly
+" ! overrides if already exists. Helps prevent errors
+func! Backspace()
+  if col('.') == 1
+    if line('.')  != 1
+      return  "\<ESC>kA\<Del>"
+    else
+      return ""
+    endif
+  else
+    return "\<Left>\<Del>"
+  endif
+endfunc
+
+
+
+
+" Pretty sure this has to go in .gvimrc and has no effect here
+"if has("gui_macvim")
+  "macmenu &File.New\ Tab key=<nop>
+  "map <D-t> :CtrlP<CR>
+"endif
+
+
+" REMAP CMD-SAVE to esc after saving
+" This seems to work for normal and insert mode
+nnoremap <D-s> :w<CR>
+inoremap <D-s> <Esc>:w<CR>
+
