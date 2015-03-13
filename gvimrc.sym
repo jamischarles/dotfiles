@@ -11,4 +11,21 @@ if has("gui_macvim")
 
   macmenu &File.Save key=<nop>
 
+  " This needs to be in here, bc MacVim overrides it :(
+  inoremap <D-BS> <c-r>=Backspace()<CR>
+  "inoremap <D-BS> <Del>
+
 endif
+
+
+func! Backspace()
+  if col('.') == 1
+    if line('.')  != 1
+      return  "\<ESC>kA\<Del>"
+    else
+      return ""
+    endif
+  else
+    return "\<Left>\<Del>"
+  endif
+endfunc
