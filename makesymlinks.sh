@@ -24,9 +24,15 @@ for FILE in *.sym; do
 done;
 #for FILE in *.sym;  done;
 
-# symlink .vim/plugins to ~/.dotfiles/plugins
-echo 'Deleting and creating ~/.vim/plugin symlink'
-rm -rf "$HOME/.vim/plugin"
-ln -s "$HERE/plugin" "$HOME/.vim/plugin"
+# symlink .vim/plugin to ~/.dotfiles/plugin
+FOLDER='plugin'
+echo "Deleting and creating ~/.vim/$FOLDER symlink"
+rm -rf "$HOME/.vim/$FOLDER"
+ln -s "$HERE/$FOLDER" "$HOME/.vim/$FOLDER"
 
 
+# symlink .vim/after to ~/.dotfiles/after
+FOLDER='after'
+echo "Deleting and creating ~/.vim/$FOLDER symlink"
+rm -rf "$HOME/.vim/$FOLDER"
+ln -s "$HERE/$FOLDER" "$HOME/.vim/$FOLDER"
