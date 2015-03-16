@@ -1,0 +1,5 @@
+" This is for things that HAVE to be loaded after the plugins. This is kind of
+" a catch-all similar to what Janus is using. TODO: Consider moving all the
+" .vimrc stuff in here, and just make sure that it gets loaded after the
+" plugin stuff. For now, let's prefer to place specific overrides in the
+" after/plugin folder

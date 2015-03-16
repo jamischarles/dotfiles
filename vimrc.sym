@@ -117,8 +117,8 @@ endif
 ""
 
 set nowrap                        " don't wrap lines
-set tabstop=2                     " a tab is two spaces
-set shiftwidth=2                  " an autoindent (with <<) is two spaces
+set tabstop=4                     " a tab is two spaces
+set shiftwidth=4                  " an autoindent (with <<) is two spaces
 "set expandtab                     " use spaces, not tabs
 set list                          " Show invisible characters
 set backspace=indent,eol,start    " backspace through everything in insert mode
@@ -231,6 +231,7 @@ vnoremap ,, <ESC>`^
 ""
 " convert spaces to tabs
 command! UseTabs set noet|retab!
+command! ReTab set noet|retab!
 " Not sure which I like better. The latter has to be highlighted... http://vim.wikia.com/wiki/Super_retab
 "command! -nargs=1 -range SuperRetab <line1>,<line2>s/\v%(^ *)@<= {<args>}/\t/g
 
@@ -356,10 +357,10 @@ nmap gs gi
 
 " vim-colemak gets word, eow keys wrong. Swap them.
 " TRY without. See what happens
-"nnoremap y e|xnoremap y e|onoremap y e|
-"nnoremap Y E|xnoremap Y E|onoremap Y E|
-"nnoremap u w|xnoremap u w|onoremap u w|
-"nnoremap U W|xnoremap U W|onoremap U W|
+nnoremap y e|xnoremap y e|onoremap y e|
+nnoremap Y E|xnoremap Y E|onoremap Y E|
+nnoremap u w|xnoremap u w|onoremap u w|
+nnoremap U W|xnoremap U W|onoremap U W|
 
 " Some fixes are placed in after/plugin/vim-surround
 
@@ -404,10 +405,12 @@ let g:UltiSnipsExpandTrigger="<tab>"
 
 " NERDCommenter mappings (from Janus) https://github.com/carlhuda/janus/blob/master/janus/vim/tools/janus/after/plugin/NERD_commenter.vim
 if has("gui_macvim") && has("gui_running")
-  map <D-/> <plug>NERDCommenterToggle<CR>
+  " map <D-/> <plug>NERDCommenterToggle<CR>
+  map <D-/> gcc
 
 	"Enter insert again when you're done
-  imap <D-/> <Esc><plug>NERDCommenterToggle<CR><insert>
+  " imap <D-/> <Esc><plug>NERDCommenterToggle<CR><insert>
+  imap <D-/> <Esc>gcc<insert>
 else
   map <leader>/ <plug>NERDCommenterToggle<CR>
 endif
@@ -450,7 +453,7 @@ let g:airline#extensions#tabline#enabled = 1
 let g:airline_powerline_fonts = 1     " use nice arrow symbols etc
 
 ""
-"" JSX - Allow JSX highlighting in JS files
+"" JSX - Allow JSX syntax highlighting in JS files
 ""
 let g:jsx_ext_required = 0
 
@@ -458,15 +461,16 @@ let g:jsx_ext_required = 0
 let g:syntastic_javascript_checkers = ['jsxhint']
 let g:syntastic_javascript_jsxhint_exec = 'jsx-jshint-wrapper'
 
+" Use JS syntax highlighting in .es6 files
+" au BufReadPost *.es6 set syntax=javascript
+" autocmd FileType *.es6 set filetype=javascript syntax=javascript
+" associate *.foo with php filetype
+" doesn't work :(
+" au BufRead,BufNewFile *.es6 setfiletype javascript
+" au BufRead,BufNewFile *.es6 set filetype=js
+" https://robots.thoughtbot.com/replace-coffeescript-with-es6
+autocmd BufRead,BufNewFile *.es6 setfiletype javascript
 
-""
-"" CamelCaseMotion Navigating through camelCase words. So AMAZING!!!
-""
-" next word. Respects camelCase. For end of word, use U (no big diff prior to
-" this change between the two
-map u <Plug>CamelCaseMotion_w
-" previous word
-map l <Plug>CamelCaseMotion_b
 
 ""
 "" UNIMPAIRED - Map newline in normal mode to Cmd-Enter - Normal/Insert mode.
