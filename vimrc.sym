@@ -45,6 +45,7 @@ Plugin 'godlygeek/tabular'                          " easy aligning. http://vimc
 Plugin 'tpope/vim-sleuth'                           " Better indentation. Give it a try... Sigh.
 Plugin 'tpope/vim-surround'                         " easy surround with quote etc
 Plugin 'jwhitley/vim-matchit'                       " better % matching. Does this even do anything? Not sure it's worth having around. REMOVE?
+Plugin 'terryma/vim-expand-region'
                                                     " Plugin 'jeetsukumaran/vim-markology'                                                                                        " Mark visualizations
 Plugin 'bkad/CamelCaseMotion'                       " Next word considers camelcase as part of it :). LOVE IT!!! SO AMAZING
 
@@ -53,6 +54,7 @@ Plugin 'Raimondi/delimitMate'                       " quote, bracket, etc autoco
 Plugin 't9md/vim-textmanip'                         " Move selected text around easily
 Plugin 'ntpeters/vim-better-whitespace'             " Strip whitespace on save
 Plugin 'elzr/vim-json'                              " Hide quotes, json highlighting
+Plugin 'jimmyhchan/dustjs.vim'
 Plugin 'moll/vim-node'                              " node sugar like gf, gd?
 
 Plugin 'bling/vim-airline'                          " Status bar (bottom)
@@ -471,6 +473,12 @@ let g:syntastic_javascript_jsxhint_exec = 'jsx-jshint-wrapper'
 " https://robots.thoughtbot.com/replace-coffeescript-with-es6
 autocmd BufRead,BufNewFile *.es6 setfiletype javascript
 
+
+""
+"" Vim-Expand-Region
+""
+" xnoremap <CR> <Plug>(expand_region_expand)
+" map _ <Plug>(expand_region_shrink)
 
 ""
 "" UNIMPAIRED - Map newline in normal mode to Cmd-Enter - Normal/Insert mode.
