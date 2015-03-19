@@ -24,6 +24,14 @@ for FILE in *.sym; do
 done;
 #for FILE in *.sym;  done;
 
+# symlink my zsh theme
+FILE="jamis-doubleend.zsh-theme"
+FILE_PATH="$HOME/.oh-my-zsh/themes/$FILE"
+echo "Deleting and creating $FILE_PATH symlink"
+rm "$FILE_PATH"
+ln -s "$HERE/$FILE" "$FILE_PATH"
+
+
 # symlink .vim/plugin to ~/.dotfiles/plugin
 FOLDER='plugin'
 echo "Deleting and creating ~/.vim/$FOLDER symlink"
