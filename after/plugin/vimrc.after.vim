@@ -4,6 +4,8 @@
 " plugin stuff. For now, let's prefer to place specific overrides in the
 " after/plugin folder
 "
+" THIS file will run AFTER all plugins, and AFTER all the plugin files in the
+" /after folder. So it'll override those
 "
 " COLEMAK FIXES
 " gi should be gs for us since we use 's' for insert
@@ -15,6 +17,8 @@ nmap gs gi
 " TRY without. See what happens
 nnoremap y e|xnoremap y e|onoremap y e|
 nnoremap Y E|xnoremap Y E|onoremap Y E|
-nnoremap u w|xnoremap u w|onoremap u w|
+" Use camelCaseMotion instead of this one
+" nnoremap u w|xnoremap u w|onoremap u w|
+
 nnoremap U W|xnoremap U W|onoremap U W|
 

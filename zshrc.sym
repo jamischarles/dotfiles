@@ -150,7 +150,8 @@ export NOTIFY_COMMAND_COMPLETE_TIMEOUT=3
 alias pcat="pygmentize -f terminal -O style=native -g" # good for cat replacement
 #alias pcat="pygmentize -f terminal256 -O style=native -g"
 
-export ACK_PAGER='pygmentize -f terminal256'
+# This is super buggy, so turn it off for now
+# export ACK_PAGER='pygmentize -f terminal256'
 
 alias c='pygmentize -O style=monokai -f console256 -g'
 #alias c='pygmentize -O style=monokai -f console256 -g'
@@ -189,6 +190,7 @@ abbreviations=(
   "ac"    "ack -i -C 5 "  # this will use the .ackrc file. Use --noenv to ignore those presets (like to search node_modules)
   "acn"   "ack --noignore-dir=node_modules -C 5 _C_ node_modules"  # this will use the .ackrc file. Use --noenv to ignore those presets (like to search node_modules)
   'find'  "find . -name '_C_' "
+  'NO'    "NODE_ENV=test node ."
   "Im"    "| more"
   "Ig"    "| grep"
   "Ip"    "| $PAGER"

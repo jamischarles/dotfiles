@@ -43,9 +43,9 @@ Plugin 'vim-scripts/ZoomWin'                        " Zoom current buffer window
 Plugin 'bronson/vim-trailing-whitespace'            " Trail whitespace finder
 Plugin 'godlygeek/tabular'                          " easy aligning. http://vimcasts.org/episodes/aligning-text-with-tabular-vim/
 Plugin 'tpope/vim-sleuth'                           " Better indentation. Give it a try... Sigh.
-Plugin 'tpope/vim-surround'                         " easy surround with quote etc
-Plugin 'jwhitley/vim-matchit'                       " better % matching. Does this even do anything? Not sure it's worth having around. REMOVE?
-Plugin 'terryma/vim-expand-region'
+" Plugin 'tpope/vim-surround'                         " easy surround with quote etc
+" Plugin 'jwhitley/vim-matchit'                       " better % matching. Does this even do anything? Not sure it's worth having around. REMOVE?
+" Plugin 'terryma/vim-expand-region'
                                                     " Plugin 'jeetsukumaran/vim-markology'                                                                                        " Mark visualizations
 Plugin 'bkad/CamelCaseMotion'                       " Next word considers camelcase as part of it :). LOVE IT!!! SO AMAZING
 
@@ -114,6 +114,10 @@ endif
 " ********************************************
 " BASE SETTINGS ************************
 " ********************************************
+"
+set shortmess+=A 		" Ignore 'swapfile exists' warnings
+"
+"
 ""
 "" Whitespace (from Janus)
 ""
@@ -367,9 +371,9 @@ augroup END
 
 " BUFFER NAVIGATION - http://c7.se/switching-to-vundle/
 "noremap <tab> <c-w><c-w>
-nnoremap <tab> :bn<CR>
+nnoremap <silent> <tab> :bn<CR>
 " map shift tab to backwards
-nnoremap <S-tab> :bp<CR>
+nnoremap <silent> <S-tab> :bp<CR>
 " Toggle between last two buffers
 nnoremap <leader><leader> <C-^>
 
@@ -448,7 +452,7 @@ let g:airline_powerline_fonts = 1     " use nice arrow symbols etc
 let g:jsx_ext_required = 0
 
 " React syntactic setup - https://jaxbot.me/articles/setting-up-vim-for-react-js-jsx-02-03-2015
-let g:syntastic_javascript_checkers = ['jsxhint']
+let g:syntastic_javascript_checkers = ['jsxhint', 'eslint']
 let g:syntastic_javascript_jsxhint_exec = 'jsx-jshint-wrapper'
 
 " Use JS syntax highlighting in .es6 files
