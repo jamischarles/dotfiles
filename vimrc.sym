@@ -38,6 +38,7 @@ Plugin 'SirVer/ultisnips'                           " Snippet engine
 Plugin 'honza/vim-snippets'                         " Default snippet package for the utilsnips engine
 
 Plugin 'ervandew/supertab'                          " Sweet tab completion
+Plugin 'zerowidth/vim-copy-as-rtf' " Copy to rtf (and paste code to Keynote)
                                                     " Plugin 'garbas/vim-snipmate'                                                                                                " Snippet framework
 Plugin 'vim-scripts/ZoomWin'                        " Zoom current buffer window <ld> zw
 Plugin 'bronson/vim-trailing-whitespace'            " Trail whitespace finder
@@ -59,13 +60,23 @@ Plugin 'moll/vim-node'                              " node sugar like gf, gd?
 
 Plugin 'bling/vim-airline'                          " Status bar (bottom)
 Plugin 'altercation/vim-colors-solarized'           " Color scheme
+Plugin 'tomasr/molokai' "Color scheme based on monokai
+Plugin 'lsdr/monokai'
 
 Plugin 'jooize/vim-colemak'                         " Remap keyboard shortcuts to colemak
 Plugin 'pangloss/vim-javascript'                    " JS indentation & syntax sugar
+Plugin 'groenewege/vim-less' " Less language bundle
 Plugin 'mxw/vim-jsx'                                " JSX syntax highlighting
+
+
+Plugin 'junegunn/limelight.vim' "Focus mode
 
 call vundle#end()            " required
 filetype plugin indent on    " required
+
+" enable fzf for VIM
+set rtp+=~/.fzf
+
 " To ignore plugin indent changes, instead use:
 "filetype plugin on
 
@@ -452,6 +463,7 @@ let g:airline_powerline_fonts = 1     " use nice arrow symbols etc
 let g:jsx_ext_required = 0
 
 " React syntactic setup - https://jaxbot.me/articles/setting-up-vim-for-react-js-jsx-02-03-2015
+" let g:syntastic_javascript_checkers = ['jsxhint']
 let g:syntastic_javascript_checkers = ['jsxhint', 'eslint']
 let g:syntastic_javascript_jsxhint_exec = 'jsx-jshint-wrapper'
 
@@ -546,8 +558,9 @@ endif
 
 " map Delete to ESC and CTRL. HIGHLY experimental
 " Don't think the ctrl works properly
-inoremap <BS> <ESC>`^<C>
-xnoremap <BS> <ESC>`^<C>
+inoremap <BS> <ESC>`^
+xnoremap <BS> <ESC>`^
+
 "
 " Preserve backspace with SHIFT-BS
 inoremap <S-BS> <c-r>=Backspace()<CR>

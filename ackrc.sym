@@ -24,6 +24,9 @@
 # Dust
 --type-add=dust:ext:dust
 
+# JavaScript
+--type-add=js:ext:js,es6
+
 # Property files (i18n)
 --type-add=properties:ext:properties
 --type-add=prop:ext:properties
@@ -270,9 +273,6 @@
 # Java
 # http://www.oracle.com/technetwork/java/index.html
 --type-add=java:ext:java,properties
-
-# JavaScript
---type-add=js:ext:js
 
 # JSP
 # http://www.oracle.com/technetwork/java/javaee/jsp/index.html

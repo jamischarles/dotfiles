@@ -1,3 +1,4 @@
 {
-	no-label-var: false
+	"no-label-var": false,
+	"esnext": true
 }
