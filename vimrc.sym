@@ -57,6 +57,8 @@ Plugin 'ntpeters/vim-better-whitespace'             " Strip whitespace on save
 Plugin 'elzr/vim-json'                              " Hide quotes, json highlighting
 Plugin 'jimmyhchan/dustjs.vim'
 Plugin 'moll/vim-node'                              " node sugar like gf, gd?
+Plugin 'lambdatoast/elm.vim' "Elm syntax
+Plugin 'ElmCast/elm-vim' "Elm error sugar etc
 
 Plugin 'bling/vim-airline'                          " Status bar (bottom)
 Plugin 'altercation/vim-colors-solarized'           " Color scheme
@@ -214,6 +216,22 @@ if has("autocmd")
     au FocusLost * silent! wall
   endif
 endif
+
+
+
+" ********************************************
+" MACROS
+" ********************************************
+" 1) Record
+" 2) :reg to find it
+" 3) Replace <80> with Ctrl+v Esc (in insert mode)
+" http://stackoverflow.com/questions/2943555/how-to-save-a-vim-macro-that-contains-escape-key-presses
+" TODO: Consider making a smart regex find/replace instead...
+" function() -> () =>"
+let @f = 'dw%t =>'
+
+" require statement -> import
+let @i = 'dwsimport f=dwdwsfrom xf)xn^'
 
 
 
@@ -398,6 +416,9 @@ nmap <leader>w <C-w>w
 " ********************************************
 " PLUGIN SETTINGS ************************
 " ********************************************
+" ********************************************
+" PLUGIN SETTINGS ************************
+" ********************************************
 
 ""
 "" Util-snips. http://vimcasts.org/episodes/meet-ultisnips/
@@ -457,15 +478,6 @@ nmap <leader>zw :ZoomWin<CR>
 let g:airline#extensions#tabline#enabled = 1
 let g:airline_powerline_fonts = 1     " use nice arrow symbols etc
 
-""
-"" JSX - Allow JSX syntax highlighting in JS files
-""
-let g:jsx_ext_required = 0
-
-" React syntactic setup - https://jaxbot.me/articles/setting-up-vim-for-react-js-jsx-02-03-2015
-" let g:syntastic_javascript_checkers = ['jsxhint']
-let g:syntastic_javascript_checkers = ['jsxhint', 'eslint']
-let g:syntastic_javascript_jsxhint_exec = 'jsx-jshint-wrapper'
 
 " Use JS syntax highlighting in .es6 files
 " au BufReadPost *.es6 set syntax=javascript
@@ -477,6 +489,32 @@ let g:syntastic_javascript_jsxhint_exec = 'jsx-jshint-wrapper'
 " https://robots.thoughtbot.com/replace-coffeescript-with-es6
 autocmd BufRead,BufNewFile *.es6 setfiletype javascript
 
+" Set all the .*rc files to json
+autocmd BufRead,BufNewFile .*rc setfiletype json
+" Set .vimrc as a vim file
+autocmd BufRead,BufNewFile .vimrc setfiletype vim
+
+""
+"" JSX - Allow JSX syntax highlighting in JS files
+""
+let g:jsx_ext_required = 0
+
+" React syntactic setup - https://jaxbot.me/articles/setting-up-vim-for-react-js-jsx-02-03-2015
+" Now uses eslint https://github.com/jaxbot/syntastic-react
+" let g:syntastic_javascript_checkers = ['jsxhint']
+let g:syntastic_javascript_checkers = ['eslint']
+" let g:syntastic_javascript_jsxhint_exec = 'jsx-jshint-wrapper'
+
+
+
+" set statusline+=%#warningmsg#
+" set statusline+=%{SyntasticStatuslineFlag()}
+" set statusline+=%*
+"
+" let g:syntastic_always_populate_loc_list = 1
+" let g:syntastic_auto_loc_list = 1
+" let g:syntastic_check_on_open = 1
+" let g:syntastic_check_on_wq = 0
 
 ""
 "" Vim-Expand-Region
