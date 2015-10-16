@@ -197,6 +197,7 @@ setopt extendedglob
 
 typeset -Ag abbreviations
 abbreviations=(
+  "ags"    "ag -G '.(es6|js)' "
   "nuke"  "git pull --rebase upstream develop && rm -rf node_modules && npm i"
   "gp"    "git pull --rebase"
   "gpu"   "git pull --rebase upstream"

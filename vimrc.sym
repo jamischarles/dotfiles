@@ -28,6 +28,8 @@ Plugin 'tpope/vim-fugitive'                         " Git commands in Vim. Consi
 Plugin 'airblade/vim-gitgutter'                     " Git gutter
 Plugin 'kien/ctrlp.vim'                             " Fuzzy file finder
 Plugin 'scrooloose/nerdtree'                        " File tree  Consider https://github.com/carlhuda/janus/blob/master/janus/vim/tools/janus/after/plugin/nerdtree.vim
+Plugin 'mileszs/ack.vim' " Ack in Vim. TODO: Consider trying ag instead of ack in here
+Plugin 'rking/ag.vim' " Try AG instead of ACK
 
 Plugin 'tomtom/tcomment_vim'
 "Plugin 'scrooloose/nerdcommenter'                   " Awesome commenting
@@ -175,6 +177,20 @@ set incsearch   " incremental searching
 set ignorecase  " searches are case insensitive...
 set smartcase   " ... unless they contain at least one capital letter
 
+
+""
+"" SEARCHING from ACK / AG. Use AG instead of ack for ack plugin...
+""
+if executable('ag')
+  " let g:ackprg = 'ag --vimgrep'
+  let g:ackprg = 'ag --nogroup --nocolor --column'
+endif
+
+" Map :ags to the following...
+cmap ags Ag -G '\.(js\|es6)'
+cmap agp Ag -G '\.properties'
+
+
 ""
 "" Backup and swap files
 ""
@@ -231,7 +247,7 @@ endif
 let @f = 'dw%t =>'
 
 " require statement -> import
-let @i = 'dwsimport f=dwdwsfrom xf)xn^'
+let @i = '^dwsimport f=dwdwsfrom xf)xn^'
 
 
 
