@@ -70,7 +70,7 @@ Plugin 'lsdr/monokai'
 Plugin 'jooize/vim-colemak'                         " Remap keyboard shortcuts to colemak
 Plugin 'pangloss/vim-javascript'                    " JS indentation & syntax sugar
 Plugin 'groenewege/vim-less' " Less language bundle
-Plugin 'mxw/vim-jsx'                                " JSX syntax highlighting
+" Plugin 'mxw/vim-jsx'                                " JSX syntax highlighting
 
 
 Plugin 'junegunn/limelight.vim' "Focus mode
@@ -189,6 +189,7 @@ endif
 " Map :ags to the following...
 cmap ags Ag -G '\.(js\|es6)'
 cmap agp Ag -G '\.properties'
+" -A -B after / before lines..."
 
 
 ""
@@ -494,8 +495,10 @@ nmap <leader>zw :ZoomWin<CR>
 let g:airline#extensions#tabline#enabled = 1
 let g:airline_powerline_fonts = 1     " use nice arrow symbols etc
 
-
+""
 " Use JS syntax highlighting in .es6 files
+""
+
 " au BufReadPost *.es6 set syntax=javascript
 " autocmd FileType *.es6 set filetype=javascript syntax=javascript
 " associate *.foo with php filetype
@@ -503,34 +506,58 @@ let g:airline_powerline_fonts = 1     " use nice arrow symbols etc
 " au BufRead,BufNewFile *.es6 setfiletype javascript
 " au BufRead,BufNewFile *.es6 set filetype=js
 " https://robots.thoughtbot.com/replace-coffeescript-with-es6
-autocmd BufRead,BufNewFile *.es6 setfiletype javascript
+
+" http://learnvimscriptthehardway.stevelosh.com/chapters/12.html
+" When a new file is read into buffer with .es6 extension, set file to es6,
+" and call the setEslintForEs6() function...
+autocmd BufRead,BufNewFile *.es6 call s:setupES6File() 
 
 " Set all the .*rc files to json
 autocmd BufRead,BufNewFile .*rc setfiletype json
 " Set .vimrc as a vim file
 autocmd BufRead,BufNewFile .vimrc setfiletype vim
 
+
+" Default ESLint settings for all JS files...
+let g:syntastic_javascript_checkers = ['eslint']
+" Use this executable (Hacky but needed for our setup)
+let g:syntastic_javascript_eslint_exec = '/Users/jacharles/dev/p2pnodeweb/node_modules/grunt-eslint/node_modules/.bin/eslint'
+let g:syntastic_check_on_open=0 " Don't run on open (faster)
+let g:syntastic_enable_signs=1
+" Better :sign interface symbols
+let g:syntastic_error_symbol = '✗'
+let g:syntastic_warning_symbol = '!'
+
+" http://vim.wikia.com/wiki/Filetype.vim
+" For es6 files, run this every time it gets opened, and apply these buffer " variables
+function! s:setupES6File()
+	setfiletype javascript " Set filetype
+
+	" Set the checkers for the current buffer to eslint
+	" let b:syntastic_checkers = ["eslint"] " b: means for the current buffer only...
+	" Set the arguments to pass to eslint to use the es6 ruleset...
+	let b:syntastic_javascript_eslint_args = "-c /Users/jacharles/dev/p2pnodeweb/.eslintes6rc"
+endfunction
+
+
 ""
 "" JSX - Allow JSX syntax highlighting in JS files
 ""
-let g:jsx_ext_required = 0
+" let g:jsx_ext_required = 0
 
 " React syntactic setup - https://jaxbot.me/articles/setting-up-vim-for-react-js-jsx-02-03-2015
 " Now uses eslint https://github.com/jaxbot/syntastic-react
-" let g:syntastic_javascript_checkers = ['jsxhint']
-let g:syntastic_javascript_checkers = ['eslint']
-" let g:syntastic_javascript_jsxhint_exec = 'jsx-jshint-wrapper'
+" let g:syntastic_javascript_checkers = ['eslint']
+" Use jshint (uses ~/.jshintrc)
+
+" Use zsh for the syntastic shell...
+" let g:syntastic_shell = '/bin/zsh'
 
 
-
-" set statusline+=%#warningmsg#
-" set statusline+=%{SyntasticStatuslineFlag()}
-" set statusline+=%*
-"
-" let g:syntastic_always_populate_loc_list = 1
-" let g:syntastic_auto_loc_list = 1
-" let g:syntastic_check_on_open = 1
-" let g:syntastic_check_on_wq = 0
+" On by default, turn it off for html
+" let g:syntastic_mode_map = { 'mode': 'active',
+"     \ 'active_filetypes': ['es6', 'js', 'javascript'],
+"     \ 'passive_filetypes': ['html'] }
 
 ""
 "" Vim-Expand-Region
