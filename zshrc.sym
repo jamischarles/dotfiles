@@ -212,6 +212,7 @@ abbreviations=(
   "gch"   "git checkout"
   "grm"    "git remote -v"
   "gr"    "git reset"
+  "grc"   "git rebase --continue"
   "grh"    "git reset --hard HEAD^"
   "grs"    "git reset --soft HEAD^"
   "gl"    "git l" # l is aliased in ~/.gitconfig

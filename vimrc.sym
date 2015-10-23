@@ -1,3 +1,21 @@
+" TODO: Consider making a quick cheatsheet of the important keystrokes...
+"
+" Silly hack to avoid having to escape all the comments in here...
+if 0
+i
+
+Newline - cmd Enter
+
+Last insertion point - `.
+
+Wrap, delete quotes, etc - ds* delete surrounding *, w** wrap [modifier] with *, cs** change surrounding a with b
+Delete surrounding Tag - dst
+Change surrounding Tag - cst<em>
+
+.
+endif
+
+
 ""
 "" Basic Setup from Janus https://github.com/carlhuda/janus/blob/master/janus/vim/core/before/plugin/settings.vim
 ""
@@ -23,57 +41,57 @@ call vundle#begin()
 " let Vundle manage Vundle, required
 Plugin 'gmarik/Vundle.vim'
 
-" TODO: group these into sensible groupings
-Plugin 'tpope/vim-fugitive'                         " Git commands in Vim. Consider https://github.com/carlhuda/janus/blob/master/janus/vim/tools/janus/after/plugin/fugitive.vim
-Plugin 'airblade/vim-gitgutter'                     " Git gutter
-Plugin 'kien/ctrlp.vim'                             " Fuzzy file finder
-Plugin 'scrooloose/nerdtree'                        " File tree  Consider https://github.com/carlhuda/janus/blob/master/janus/vim/tools/janus/after/plugin/nerdtree.vim
-Plugin 'mileszs/ack.vim' " Ack in Vim. TODO: Consider trying ag instead of ack in here
-Plugin 'rking/ag.vim' " Try AG instead of ACK
+                                                     " TODO: group these into sensible groupings
+Plugin 'tpope/vim-fugitive'                          " Git commands in Vim. Consider https://github.com/carlhuda/janus/blob/master/janus/vim/tools/janus/after/plugin/fugitive.vim
+Plugin 'airblade/vim-gitgutter'                      " Git gutter
+Plugin 'kien/ctrlp.vim'                              " Fuzzy file finder
+Plugin 'scrooloose/nerdtree'                         " File tree  Consider https://github.com/carlhuda/janus/blob/master/janus/vim/tools/janus/after/plugin/nerdtree.vim
+Plugin 'mileszs/ack.vim'                             " Ack in Vim. TODO: Consider trying ag instead of ack in here
+Plugin 'rking/ag.vim'                                " Try AG instead of ACK
 
 Plugin 'tomtom/tcomment_vim'
-"Plugin 'scrooloose/nerdcommenter'                   " Awesome commenting
-"Plugin 'tpope/vim-commentary' "
-Plugin 'scrooloose/syntastic'                       " Syntax checker
-Plugin 'tpope/vim-unimpaired'                       " Buffer switching
-Plugin 'SirVer/ultisnips'                           " Snippet engine
-Plugin 'honza/vim-snippets'                         " Default snippet package for the utilsnips engine
+" Plugin 'scrooloose/nerdcommenter'                  " Awesome commenting
+" Plugin 'tpope/vim-commentary'                      "
+Plugin 'scrooloose/syntastic'                        " Syntax checker
+Plugin 'tpope/vim-unimpaired'                        " Buffer switching
+Plugin 'SirVer/ultisnips'                            " Snippet engine
+Plugin 'honza/vim-snippets'                          " Default snippet package for the utilsnips engine
 
-Plugin 'ervandew/supertab'                          " Sweet tab completion
-Plugin 'zerowidth/vim-copy-as-rtf' " Copy to rtf (and paste code to Keynote)
-                                                    " Plugin 'garbas/vim-snipmate'                                                                                                " Snippet framework
-Plugin 'vim-scripts/ZoomWin'                        " Zoom current buffer window <ld> zw
-Plugin 'bronson/vim-trailing-whitespace'            " Trail whitespace finder
-Plugin 'godlygeek/tabular'                          " easy aligning. http://vimcasts.org/episodes/aligning-text-with-tabular-vim/
-Plugin 'tpope/vim-sleuth'                           " Better indentation. Give it a try... Sigh.
-" Plugin 'tpope/vim-surround'                         " easy surround with quote etc
-" Plugin 'jwhitley/vim-matchit'                       " better % matching. Does this even do anything? Not sure it's worth having around. REMOVE?
+Plugin 'ervandew/supertab'                           " Sweet tab completion
+Plugin 'zerowidth/vim-copy-as-rtf'                   " Copy to rtf (and paste code to Keynote)
+                                                     " Plugin 'garbas/vim-snipmate'                                                                                                " Snippet framework
+Plugin 'vim-scripts/ZoomWin'                         " Zoom current buffer window <ld> zw
+Plugin 'bronson/vim-trailing-whitespace'             " Trail whitespace finder
+Plugin 'godlygeek/tabular'                           " easy aligning. :Tab /= http://vimcasts.org/episodes/aligning-text-with-tabular-vim/
+Plugin 'tpope/vim-sleuth'                            " Better indentation. Give it a try... Sigh.
+Plugin 'tpope/vim-surround'                          " easy surround with quote etc
+" Plugin 'jwhitley/vim-matchit'                      " better % matching. Does this even do anything? Not sure it's worth having around. REMOVE?
 " Plugin 'terryma/vim-expand-region'
-                                                    " Plugin 'jeetsukumaran/vim-markology'                                                                                        " Mark visualizations
-Plugin 'bkad/CamelCaseMotion'                       " Next word considers camelcase as part of it :). LOVE IT!!! SO AMAZING
+" Plugin 'jeetsukumaran/vim-markology'               " Mark visualizations
+Plugin 'bkad/CamelCaseMotion'                        " Next word considers camelcase as part of it :). LOVE IT!!! SO AMAZING
 
 
-Plugin 'Raimondi/delimitMate'                       " quote, bracket, etc autocompletion
-Plugin 't9md/vim-textmanip'                         " Move selected text around easily
-Plugin 'ntpeters/vim-better-whitespace'             " Strip whitespace on save
-Plugin 'elzr/vim-json'                              " Hide quotes, json highlighting
+Plugin 'Raimondi/delimitMate'                        " quote, bracket, etc autocompletion
+Plugin 't9md/vim-textmanip'                          " Move selected text around easily
+Plugin 'ntpeters/vim-better-whitespace'              " Strip whitespace on save
+Plugin 'elzr/vim-json'                               " Hide quotes, json highlighting
 Plugin 'jimmyhchan/dustjs.vim'
-Plugin 'moll/vim-node'                              " node sugar like gf, gd?
-Plugin 'lambdatoast/elm.vim' "Elm syntax
-Plugin 'ElmCast/elm-vim' "Elm error sugar etc
+Plugin 'moll/vim-node'                               " node sugar like gf, gd?
+Plugin 'lambdatoast/elm.vim'                         " Elm syntax
+Plugin 'ElmCast/elm-vim'                             " Elm error sugar etc
 
-Plugin 'bling/vim-airline'                          " Status bar (bottom)
-Plugin 'altercation/vim-colors-solarized'           " Color scheme
-Plugin 'tomasr/molokai' "Color scheme based on monokai
+Plugin 'bling/vim-airline'                           " Status bar (bottom)
+Plugin 'altercation/vim-colors-solarized'            " Color scheme
+Plugin 'tomasr/molokai'                              " Color scheme based on monokai
 Plugin 'lsdr/monokai'
 
-Plugin 'jooize/vim-colemak'                         " Remap keyboard shortcuts to colemak
-Plugin 'pangloss/vim-javascript'                    " JS indentation & syntax sugar
-Plugin 'groenewege/vim-less' " Less language bundle
-" Plugin 'mxw/vim-jsx'                                " JSX syntax highlighting
+Plugin 'jooize/vim-colemak'                          " Remap keyboard shortcuts to colemak
+Plugin 'pangloss/vim-javascript'                     " JS indentation & syntax sugar
+Plugin 'groenewege/vim-less'                         " Less language bundle
+Plugin 'mxw/vim-jsx'                                 " JSX syntax highlighting.
 
 
-Plugin 'junegunn/limelight.vim' "Focus mode
+" Plugin 'junegunn/limelight.vim' "Focus mode
 
 call vundle#end()            " required
 filetype plugin indent on    " required
@@ -319,7 +337,7 @@ command! ReTab set noet|retab!
 nmap <leader>q :bp <BAR> bd #<CR>
 
 " SEARCH/REPLACE
-nnoremap <leader>sr :%s/
+nnoremap <leader>fr :%s/
 
 " OPEN VIMRC
 nnoremap <leader>ev <C-w>v<C-w>l<C-w>L:e ~/.vimrc<cr>
@@ -437,6 +455,16 @@ nmap <leader>w <C-w>w
 " PLUGIN SETTINGS ************************
 " ********************************************
 
+
+""
+"" SURROUND (wrapping and removing stuff). https://github.com/tpope/vim-surround/blob/master/plugin/surround.vim
+""
+" Don't apply any of the mappings. I'll do that manually.
+let g:surround_no_mappings=1
+
+" see mappings in ~/.dotfiles/after/plugin/vim-surround.vim
+
+
 ""
 "" Util-snips. http://vimcasts.org/episodes/meet-ultisnips/
 ""
@@ -461,7 +489,7 @@ endif
 
 " NERDTREE easy toggle. More settings for this are in ~/.vim/plugin/nerdtree.vim
 map <leader>n :NERDTreeToggle<CR> :NERDTreeMirror<CR>
-
+map <leader>f :NERDTreeFind<CR>
 
 "map <Leader>n <plug>NERDTreeTabsToggle<CR>
 
@@ -495,6 +523,10 @@ nmap <leader>zw :ZoomWin<CR>
 let g:airline#extensions#tabline#enabled = 1
 let g:airline_powerline_fonts = 1     " use nice arrow symbols etc
 
+" Disable "mixed indent" warnings for airline status bar (false positives)
+let g:airline#extensions#whitespace#enabled = 0
+
+
 ""
 " Use JS syntax highlighting in .es6 files
 ""
@@ -510,7 +542,7 @@ let g:airline_powerline_fonts = 1     " use nice arrow symbols etc
 " http://learnvimscriptthehardway.stevelosh.com/chapters/12.html
 " When a new file is read into buffer with .es6 extension, set file to es6,
 " and call the setEslintForEs6() function...
-autocmd BufRead,BufNewFile *.es6 call s:setupES6File() 
+autocmd BufRead,BufNewFile *.es6 call s:setupES6File()
 
 " Set all the .*rc files to json
 autocmd BufRead,BufNewFile .*rc setfiletype json
@@ -543,7 +575,7 @@ endfunction
 ""
 "" JSX - Allow JSX syntax highlighting in JS files
 ""
-" let g:jsx_ext_required = 0
+let g:jsx_ext_required = 0
 
 " React syntactic setup - https://jaxbot.me/articles/setting-up-vim-for-react-js-jsx-02-03-2015
 " Now uses eslint https://github.com/jaxbot/syntastic-react
