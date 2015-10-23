@@ -7,6 +7,7 @@ i
 Newline - cmd Enter
 
 Last insertion point - `.
+Last insertion point - gs
 
 Wrap, delete quotes, etc - ds* delete surrounding *, w** wrap [modifier] with *, cs** change surrounding a with b
 Delete surrounding Tag - dst
@@ -197,7 +198,7 @@ set smartcase   " ... unless they contain at least one capital letter
 
 
 ""
-"" SEARCHING from ACK / AG. Use AG instead of ack for ack plugin...
+"" SEARCHING from ACK / AG. Silver Searcher. Use AG instead of ack for ack plugin...
 ""
 if executable('ag')
   " let g:ackprg = 'ag --vimgrep'
@@ -205,10 +206,14 @@ if executable('ag')
 endif
 
 " Map :ags to the following...
-cmap ags Ag -G '\.(js\|es6)'
-cmap agp Ag -G '\.properties'
+cmap ags Ag -A 5 -B 5 -G '\.(js\|es6)'
+cmap agp Ag -A 5 -B 5 -G '\.properties'
 " -A -B after / before lines..."
 
+" Open QuickFix for Silver Searcher in horizontal split
+" let g:ag_lhandler="topleft lopen"
+" or just use v?
+" go
 
 ""
 "" Backup and swap files
@@ -459,8 +464,9 @@ nmap <leader>w <C-w>w
 ""
 "" SURROUND (wrapping and removing stuff). https://github.com/tpope/vim-surround/blob/master/plugin/surround.vim
 ""
-" Don't apply any of the mappings. I'll do that manually.
-let g:surround_no_mappings=1
+" Don't apply any of the mappings. I'll do that manually. I think this has to
+" be a vimrc.before file to actually work. Has no effect right now.
+" let g:surround_no_mappings=1
 
 " see mappings in ~/.dotfiles/after/plugin/vim-surround.vim
 
@@ -486,10 +492,52 @@ else
   map <leader>/ <plug>NERDCommenterToggle<CR>
 endif
 
-
+"
 " NERDTREE easy toggle. More settings for this are in ~/.vim/plugin/nerdtree.vim
+"
 map <leader>n :NERDTreeToggle<CR> :NERDTreeMirror<CR>
 map <leader>f :NERDTreeFind<CR>
+
+let g:NERDTreeShowHidden=1 	 " Show hidden files by default
+let NERDTreeQuitOnOpen=0 " DOESN'T WORK :(
+
+" If NERDTree is the only window left, close vim. TODO: Move to nerdtree file?
+" autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
+
+" If only 1 buffer is left, make sure nerdtree is open...
+" autocmd bufenter * if (bufnr('$') == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
+
+" autocmd bufenter * if (call s:getNumberOfOpenBuffers() == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
+" autocmd BufWinEnter * call s:getNumberOfOpenBuffers()
+" au BufEnter * call s:getNumberOfOpenBuffers()
+" get number of open buffers
+
+" :NextWindow
+command NextWindow <C-w>w
+
+
+function! s:getNumberOfOpenBuffers()
+  " This is how you run a command from a script...
+  " If there's one buffer open, and it's not a nerdtree buffer...
+ if exists("t:NERDTreeBufName")
+   echo "HI"
+   if len(filter(range(1, bufnr('$')), 'buflisted(v:val)')) == 1 && bufwinnr(t:NERDTreeBufName) == -1
+   endif
+
+   " This block will ONLY be entered the very first time, when it normally
+   " closes on it's own
+ else
+
+   echo "NOT YET"
+   " Focus on new window, then call the stuff.?
+   " NERDTreeFind
+ endif
+  " return len(filter(range(1, bufnr('$')), 'buflisted(v:val)'))
+
+endfunction
+
+" autocmd bufenter * if (winnr("$") == 1 && b:NERDTreeType == "primary") | :NERDTreeFind | endif
+" More in ~/.dotfiles/plugin/nerdtree.vim
 
 "map <Leader>n <plug>NERDTreeTabsToggle<CR>
 
@@ -511,6 +559,19 @@ endif
 
 let g:ctrlp_map = '<D-t>'
 let g:ctrlp_working_path_mode = 0
+
+
+" Use The Silver Searcher https://github.com/ggreer/the_silver_searcher
+" Use ag instead of grep for ctrlp
+if executable('ag')
+  " Use Ag over Grep
+  set grepprg=ag\ --nogroup\ --nocolor
+
+  " Use ag in CtrlP for listing files. Lightning fast and respects .gitignore
+  " http://stackoverflow.com/questions/18285751/use-ag-in-ctrlp-vim
+  let g:ctrlp_user_command = 'ag %s -l  --hidden -g ""'
+endif
+
 
 " ZOOMwin
 nmap <leader>zw :ZoomWin<CR>
