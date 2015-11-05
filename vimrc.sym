@@ -1,20 +1,47 @@
 " TODO: Consider making a quick cheatsheet of the important keystrokes...
+" - Fix sourcing of this file (I think it's cmaps... Add ! to fix it...
 "
 " Silly hack to avoid having to escape all the comments in here...
-if 0
-i
+" if 0
+" i
 
-Newline - cmd Enter
 
-Last insertion point - `.
-Last insertion point - gs
-
-Wrap, delete quotes, etc - ds* delete surrounding *, w** wrap [modifier] with *, cs** change surrounding a with b
-Delete surrounding Tag - dst
-Change surrounding Tag - cst<em>
-
-.
-endif
+" WINDOW MANAGMENT
+" <leader>o - close other windows
+" <leader>q - close buffer and window
+" <leader>b - close buffer and window
+"
+" Newline - cmd Enter
+"
+" Last insertion point - `.
+" Last insertion point - gs
+"
+" Wrap, delete quotes, etc - ds* delete surrounding *, w** wrap [modifier] with *, cs** change surrounding a with b
+" Delete surrounding Tag - dst
+" Change surrounding Tag - cst<em>
+"
+" CLOSE all other windows - <leader>o
+"
+" RESUME Search - //
+"
+"
+" GIT ********************************
+" Cheatsheet - https://gist.github.com/dialelo/5902072
+" :Gedit develop:public/js/view/transfer/page/enter.js - open this file in github
+" Gtabedit HEAD^:public/templates/transfer/index.dust
+" :Gvsplit
+"
+"
+" :Gstatus - then use '-' to stage/unstage files. 'p' to stage hunks.
+" :Gvdiff  - Vertical diff
+" :gd
+" :gco - reset file (git checkout)
+"
+" [h - next hunk (next git change)
+" ]h - previous hunk
+" <leader>fc - Find conflict
+" .
+" endif
 
 
 ""
@@ -44,9 +71,10 @@ Plugin 'gmarik/Vundle.vim'
 
                                                      " TODO: group these into sensible groupings
 Plugin 'tpope/vim-fugitive'                          " Git commands in Vim. Consider https://github.com/carlhuda/janus/blob/master/janus/vim/tools/janus/after/plugin/fugitive.vim
-Plugin 'airblade/vim-gitgutter'                      " Git gutter
-Plugin 'kien/ctrlp.vim'                              " Fuzzy file finder
 Plugin 'scrooloose/nerdtree'                         " File tree  Consider https://github.com/carlhuda/janus/blob/master/janus/vim/tools/janus/after/plugin/nerdtree.vim
+Plugin 'airblade/vim-gitgutter'                      " Git gutter
+Plugin 'Xuyuanp/nerdtree-git-plugin'                 " Git status in Nerdtree
+Plugin 'kien/ctrlp.vim'                              " Fuzzy file finder
 Plugin 'mileszs/ack.vim'                             " Ack in Vim. TODO: Consider trying ag instead of ack in here
 Plugin 'rking/ag.vim'                                " Try AG instead of ACK
 
@@ -206,8 +234,14 @@ if executable('ag')
 endif
 
 " Map :ags to the following...
+" ! suffix overwrites so you can source the file easier...
+cmap ag Ag -A 5 -B 5
 cmap ags Ag -A 5 -B 5 -G '\.(js\|es6)'
 cmap agp Ag -A 5 -B 5 -G '\.properties'
+
+" http://vim.wikia.com/wiki/Search_and_replace_the_word_under_the_cursor
+" AG Search for word under the cursor (<coword) MONEY
+cmap agc Ag -A 5 -B 5 -G '\.(js\|es6)' <cword>
 " -A -B after / before lines..."
 
 " Open QuickFix for Silver Searcher in horizontal split
@@ -294,9 +328,9 @@ nmap <leader>l :set list!<CR>
 " don't move cursor -1 on esc. Not sure if this works
 inoremap <Esc> <Esc>`^
 " End insert mode with ,, and don't -1
-inoremap ,, <ESC>`^
+" inoremap ,, <ESC>`^
 " Same with visual mode
-vnoremap ,, <ESC>`^
+" vnoremap ,, <ESC>`^
 " Shift Enter -> esc, AND don't minus-1 on esc
 " inoremap <S-CR> <Esc>`^
 
@@ -339,7 +373,15 @@ command! ReTab set noet|retab!
 
 
 " CLOSE BUFFER with <leader>q
-nmap <leader>q :bp <BAR> bd #<CR>
+ nmap <leader>q :bp <BAR> bd #<CR>
+" Try this instead of above...
+nmap <leader>b :bd<CR>
+
+" CLOSE all other windows.
+nmap <leader>o :only<CR>
+" CLOSE current buffer and window
+
+
 
 " SEARCH/REPLACE
 nnoremap <leader>fr :%s/
@@ -513,7 +555,7 @@ let NERDTreeQuitOnOpen=0 " DOESN'T WORK :(
 " get number of open buffers
 
 " :NextWindow
-command NextWindow <C-w>w
+" command NextWindow <C-w>w
 
 
 function! s:getNumberOfOpenBuffers()
@@ -614,7 +656,7 @@ autocmd BufRead,BufNewFile .vimrc setfiletype vim
 " Default ESLint settings for all JS files...
 let g:syntastic_javascript_checkers = ['eslint']
 " Use this executable (Hacky but needed for our setup)
-let g:syntastic_javascript_eslint_exec = '/Users/jacharles/dev/p2pnodeweb/node_modules/grunt-eslint/node_modules/.bin/eslint'
+let g:syntastic_javascript_eslint_exec = '/Users/jacharles/dev/p2pnodeweb/node_modules/.bin/eslint'
 let g:syntastic_check_on_open=0 " Don't run on open (faster)
 let g:syntastic_enable_signs=1
 " Better :sign interface symbols
@@ -701,6 +743,14 @@ nmap <D-D> <Plug>(textmanip-duplicate-up)
 " FUGITIVE (Git sugar) - http://andyatkinson.com/blog/2013/10/28/open-the-current-file-in-github-enterprise-from-vim
 let g:fugitive_github_domains = ['https://github.paypal.com/']      "Gbrowse will work on ent github pages
 
+" Vertical diff
+cmap gd Gvdiff
+
+cmap gs Gstatus
+
+" Reset file aka $git checkout %
+cmap gco Gread
+
 " GIT GUTTER colors
 "highlight clear SignColumn (Use guibg for sign bg, and guifg)
 "https://github.com/airblade/vim-gitgutter#sign-column, and
@@ -711,6 +761,11 @@ highlight GitGutterChange ctermfg=yellow guifg=darkyellow
 highlight GitGutterDelete ctermfg=red guifg=darkred
 highlight GitGutterChangeDelete ctermfg=yellow guifg=darkyellow
 
+
+" GIT GUTTER mappins
+" nmap <leader>fh <Plug>GitGutterNextHunk
+nmap [h <Plug>GitGutterNextHunk
+nmap ]h <Plug>GitGutterPrevHunk
 
 
 " ***********************************************************************

@@ -197,24 +197,28 @@ setopt extendedglob
 
 typeset -Ag abbreviations
 abbreviations=(
-  "ags"    "ag -G '.(es6|js)' "
+  "ags"    "ag -A 2 -B 2 -G '.(es6|js)' "
   "nuke"  "git pull --rebase upstream develop && rm -rf node_modules && npm i"
-  "gp"    "git pull --rebase"
+  "gp"    "git push origin"
+  "gpf"   "git push -f origin"
   "gpu"   "git pull --rebase upstream"
+  "grb"   "git rebase -i upstream/develop"
   "gs"    "git status -s"
   "gb"    "git branch -v"
   "gbd"    "git branch -d"
   "gbD"    "git branch -D"
   "gc"    "git commit -v"
-  "gca"    "git commit --amend"
+  "gca"    "git commit -v --amend"
   "gd"    "git diff"
   "gds"    "git diff --staged"
   "gch"   "git checkout"
   "grm"    "git remote -v"
   "gr"    "git reset"
+  "gra"   "git rebase --abort"
   "grc"   "git rebase --continue"
   "grh"    "git reset --hard HEAD^"
   "grs"    "git reset --soft HEAD^"
+  "gsgd"  "git stash && git stash drop"
   "gl"    "git l" # l is aliased in ~/.gitconfig
   "gll"   "git ll" #ll is aliased in ~/.gitconfig
   "ac"    "ack -i -C 5 "  # this will use the .ackrc file. Use --noenv to ignore those presets (like to search node_modules)
