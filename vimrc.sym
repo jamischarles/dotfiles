@@ -106,7 +106,7 @@ call vundle#begin()
 " let Vundle manage Vundle, required
 Plugin 'gmarik/Vundle.vim'
 
-                                                     " TODO: group these into sensible groupings
+" TODO: group these into sensible groupings
 Plugin 'tpope/vim-fugitive'                          " Git commands in Vim. Consider https://github.com/carlhuda/janus/blob/master/janus/vim/tools/janus/after/plugin/fugitive.vim
 Plugin 'scrooloose/nerdtree'                         " File tree  Consider https://github.com/carlhuda/janus/blob/master/janus/vim/tools/janus/after/plugin/nerdtree.vim
 Plugin 'airblade/vim-gitgutter'                      " Git gutter
@@ -126,7 +126,7 @@ Plugin 'honza/vim-snippets'                          " Default snippet package f
 
 Plugin 'ervandew/supertab'                           " Sweet tab completion
 Plugin 'zerowidth/vim-copy-as-rtf'                   " Copy to rtf (and paste code to Keynote)
-                                                     " Plugin 'garbas/vim-snipmate'                                                                                                " Snippet framework
+" Plugin 'garbas/vim-snipmate'                                                                                                " Snippet framework
 Plugin 'vim-scripts/ZoomWin'                         " Zoom current buffer window <ld> zw
 Plugin 'bronson/vim-trailing-whitespace'             " Trail whitespace finder
 Plugin 'godlygeek/tabular'                           " easy aligning. :Tab /= http://vimcasts.org/episodes/aligning-text-with-tabular-vim/
@@ -180,34 +180,54 @@ set rtp+=~/.fzf
 " ********************************************
 " COLOR THEME & FONTS ************************
 " ********************************************
- if has("gui_macvim") "Only on macvim
-	" This MUST be defined BEFORE the colorscheme. No idea why. Also, seems like
-	" terminal vim doesn't handle the contrast variation very well, so let's leave
-	" it in here.
-	let g:solarized_contrast="high"
-	let g:solarized_visibility="low"
-	"
-	colorscheme solarized
-	set background=dark"
+"  if has("gui_macvim") "Only on macvim
+if exists("neovim_dot_app")
+  " This MUST be defined BEFORE the colorscheme. No idea why. Also, seems like
+  " terminal vim doesn't handle the contrast variation very well, so let's leave
+  " it in here.
+  let g:solarized_contrast="high"
+  let g:solarized_visibility="low"
+  "
+  colorscheme solarized
+  set background=dark"
 
 
 
-	"set guifont=Menlo:h15
+  "set guifont=Menlo:h15
   set guifont=Menlo\ for\ Powerline:h15     " from https://github.com/abertsch/Menlo-for-Powerline
   " set guifont=Fira\ Code:h15     " from https://github.com/abertsch/Menlo-for-Powerline
-	set lines=999 columns=9999
+  set lines=999 columns=9999
 
 
-    " clear SignColumn (Use guibg for sign bg, and guifg)
-    "https://github.com/airblade/vim-gitgutter#sign-column, and
-    "https://github.com/airblade/vim-gitgutter/issues/164
-    highlight clear SignColumn
-    highlight GitGutterAdd ctermfg=green guifg=darkgreen
-    highlight GitGutterChange ctermfg=yellow guifg=darkyellow
-    highlight GitGutterDelete ctermfg=red guifg=darkred
-    highlight GitGutterChangeDelete ctermfg=yellow guifg=darkyellow
+  " clear SignColumn (Use guibg for sign bg, and guifg)
+  "https://github.com/airblade/vim-gitgutter#sign-column, and
+  "https://github.com/airblade/vim-gitgutter/issues/164
+  highlight clear SignColumn
+  highlight GitGutterAdd ctermfg=green guifg=darkgreen
+  highlight GitGutterChange ctermfg=yellow guifg=darkyellow
+  highlight GitGutterDelete ctermfg=red guifg=darkred
+  highlight GitGutterChangeDelete ctermfg=yellow guifg=darkyellow
 
- endif
+
+  " Remap these so we can use them
+  call MacMenu("File.Save", "")
+  call MacMenu("Window.New Tab", "T-S-t")
+
+
+  func! Backspace()
+    if col('.') == 1
+      if line('.')  != 1
+        return  "\<ESC>kA\<Del>"
+      else
+        return ""
+      endif
+    else
+      return "\<Left>\<Del>"
+    endif
+  endfunc
+
+
+endif
 "
 " COLORS END --
 "
@@ -398,7 +418,7 @@ command! ReTab set noet|retab!
 " SAVE TO EXIT
 " Disable MacVim keybinding for cmd save
 "if has("gui_macvim") && has("gui_running")
-    "macmenu File.Save key=<nop>
+"macmenu File.Save key=<nop>
 "endif
 
 " TODO: Move the duplicate from the bottom higher up
@@ -409,11 +429,11 @@ command! ReTab set noet|retab!
 " Apparently case matters. <D-S> didn't work :(
 " Save but stay exited
 "inoremap <D-s> <ESC>:w<CR>  "insert mode
-"nnoremap <D-s> :w<CR>        "normalmode
+nnoremap <T-s> :w<CR>        "normalmode
 
 
 " CLOSE BUFFER with <leader>q
- nmap <leader>q :bp <BAR> bd #<CR>
+nmap <leader>q :bp <BAR> bd #<CR>
 " Try this instead of above...
 " This one will close buffer and window...
 " nmap <leader>b :bd<CR>
@@ -452,7 +472,8 @@ nnoremap <leader>, A,<esc>
 "inoremap <leader>, <esc>A,<esc>
 
 " Shortcuts from JANUS https://github.com/carlhuda/janus/blob/master/janus/vim/core/before/plugin/mappings.vim
-if has("gui_macvim") && has("gui_running")
+" if has("gui_macvim") && has("gui_running")
+if exists("neovim_dot_app")
 
   " Map command-[ and command-] to indenting or outdenting
   " while keeping the original selection in visual mode
@@ -461,46 +482,46 @@ if has("gui_macvim") && has("gui_running")
   " Above was busted due to colemak remappings
   "vmap <D-]> >
   "vmap <D-[> <
-  vmap <D-[> <Plug>(textmanip-move-left)
-  vmap <D-]> <Plug>(textmanip-move-right)
+  vmap <T-[> <Plug>(textmanip-move-left)
+  vmap <T-]> <Plug>(textmanip-move-right)
 
-  nmap <D-]> >>
-  nmap <D-[> <<
+  nmap <T-]> >>
+  nmap <T-[> <<
 
-  omap <D-]> >>
-  omap <D-[> <<
+  omap <T-]> >>
+  omap <T-[> <<
 
-  imap <D-]> <Esc>>>i
-  imap <D-[> <Esc><<i
+  imap <T-]> <Esc>>>i
+  imap <T-[> <Esc><<i
 
 
   " Bubble single lines Q: DOES THIS EVEN WORK? A: NO...
-"  nmap <D-Up> [e
+  "  nmap <D-Up> [e
   "nmap <D-Down> ]e
   "nmap <D-k> [e
   "nmap <D-j> ]e
 
-    " Map Command-# to switch tabs
-  map  <D-0> 0gt
-  imap <D-0> <Esc>0gt
-  map  <D-1> 1gt
-  imap <D-1> <Esc>1gt
-  map  <D-2> 2gt
-  imap <D-2> <Esc>2gt
-  map  <D-3> 3gt
-  imap <D-3> <Esc>3gt
-  map  <D-4> 4gt
-  imap <D-4> <Esc>4gt
-  map  <D-5> 5gt
-  imap <D-5> <Esc>5gt
-  map  <D-6> 6gt
-  imap <D-6> <Esc>6gt
-  map  <D-7> 7gt
-  imap <D-7> <Esc>7gt
-  map  <D-8> 8gt
-  imap <D-8> <Esc>8gt
-  map  <D-9> 9gt
-  imap <D-9> <Esc>9gt
+  " Map Command-# to switch tabs
+  map  <T-0> 0gt
+  imap <T-0> <Esc>0gt
+  map  <T-1> 1gt
+  imap <T-1> <Esc>1gt
+  map  <T-2> 2gt
+  imap <T-2> <Esc>2gt
+  map  <T-3> 3gt
+  imap <T-3> <Esc>3gt
+  map  <T-4> 4gt
+  imap <T-4> <Esc>4gt
+  map  <T-5> 5gt
+  imap <T-5> <Esc>5gt
+  map  <T-6> 6gt
+  imap <T-6> <Esc>6gt
+  map  <T-7> 7gt
+  imap <T-7> <Esc>7gt
+  map  <T-8> 8gt
+  imap <T-8> <Esc>8gt
+  map  <T-9> 9gt
+  imap <T-9> <Esc>9gt
 else
 
 endif
@@ -516,8 +537,8 @@ endif
 " and colemak.vim maps 'y' to 'w' (word). In combination this stalls 'y'
 " because Vim must wait to see if the user wants to press <C-G> as well.
 augroup RemoveFugitiveMappingForColemak
-    autocmd!
-    autocmd BufEnter * silent! execute "nunmap <buffer> <silent> y<C-G>"
+  autocmd!
+  autocmd BufEnter * silent! execute "nunmap <buffer> <silent> y<C-G>"
 augroup END
 
 
@@ -564,13 +585,14 @@ let g:UltiSnipsExpandTrigger="<tab>"
 
 
 " NERDCommenter mappings (from Janus) https://github.com/carlhuda/janus/blob/master/janus/vim/tools/janus/after/plugin/NERD_commenter.vim
-if has("gui_macvim") && has("gui_running")
+" if has("gui_macvim") && has("gui_running")
+if exists("neovim_dot_app")
   " map <D-/> <plug>NERDCommenterToggle<CR>
-  map <D-/> gcc
+  map <T-/> gcc
 
-	"Enter insert again when you're done
-  " imap <D-/> <Esc><plug>NERDCommenterToggle<CR><insert>
-  imap <D-/> <Esc>gcc<insert>
+  "Enter insert again when you're done
+  " imap <T-/> <Esc><plug>NERDCommenterToggle<CR><insert>
+  imap <T-/> <Esc>gcc<insert>
 else
   map <leader>/ <plug>NERDCommenterToggle<CR>
 endif
@@ -602,19 +624,19 @@ let NERDTreeQuitOnOpen=0 " DOESN'T WORK :(
 function! s:getNumberOfOpenBuffers()
   " This is how you run a command from a script...
   " If there's one buffer open, and it's not a nerdtree buffer...
- if exists("t:NERDTreeBufName")
-   echo "HI"
-   if len(filter(range(1, bufnr('$')), 'buflisted(v:val)')) == 1 && bufwinnr(t:NERDTreeBufName) == -1
-   endif
+  if exists("t:NERDTreeBufName")
+    echo "HI"
+    if len(filter(range(1, bufnr('$')), 'buflisted(v:val)')) == 1 && bufwinnr(t:NERDTreeBufName) == -1
+    endif
 
-   " This block will ONLY be entered the very first time, when it normally
-   " closes on it's own
- else
+    " This block will ONLY be entered the very first time, when it normally
+    " closes on it's own
+  else
 
-   echo "NOT YET"
-   " Focus on new window, then call the stuff.?
-   " NERDTreeFind
- endif
+    echo "NOT YET"
+    " Focus on new window, then call the stuff.?
+    " NERDTreeFind
+  endif
   " return len(filter(range(1, bufnr('$')), 'buflisted(v:val)'))
 
 endfunction
@@ -630,17 +652,18 @@ endfunction
 " after modifying this, run :CtrlPClearAllCaches to clear the cache. If you want to be sure, delete the .cache/ctrlp dir in your home dir.
 "let g:ctrlp_map = ''
 let g:ctrlp_custom_ignore = {
-  \ 'dir':  '\.git$\|node_modules$',
-  \ 'file': '\.so$\|\.dat$|\.DS_Store$'
-  \ }
+      \ 'dir':  '\.git$\|node_modules$',
+      \ 'file': '\.so$\|\.dat$|\.DS_Store$'
+      \ }
 "
 " Map cmd t to open ctrl P
-if has("gui_macvim") && has("gui_running")
-  map <D-t> :CtrlP<CR>
-  imap <D-t> <ESC>:CtrlP<CR>
+" if has("gui_macvim") && has("gui_running")
+if exists("neovim_dot_app")
+  map <T-t> :CtrlP<CR>
+  imap <T-t> <ESC>:CtrlP<CR>
 endif
 
-let g:ctrlp_map = '<D-t>'
+let g:ctrlp_map = '<T-t>'
 let g:ctrlp_working_path_mode = 0
 
 " Let ctrlP search through the buffers
@@ -733,12 +756,12 @@ let g:syntastic_warning_symbol = '!'
 " http://vim.wikia.com/wiki/Filetype.vim
 " For es6 files, run this every time it gets opened, and apply these buffer " variables
 function! s:setupES6File()
-	setfiletype javascript " Set filetype
+  setfiletype javascript " Set filetype
 
-	" Set the checkers for the current buffer to eslint
-	" let b:syntastic_checkers = ["eslint"] " b: means for the current buffer only...
-	" Set the arguments to pass to eslint to use the es6 ruleset...
-	let b:syntastic_javascript_eslint_args = "-c /Users/jacharles/dev/p2pnodeweb/.eslintes6rc"
+  " Set the checkers for the current buffer to eslint
+  " let b:syntastic_checkers = ["eslint"] " b: means for the current buffer only...
+  " Set the arguments to pass to eslint to use the es6 ruleset...
+  let b:syntastic_javascript_eslint_args = "-c /Users/jacharles/dev/p2pnodeweb/.eslintes6rc"
 endfunction
 
 
@@ -770,11 +793,11 @@ let g:jsx_ext_required = 0
 ""
 "" UNIMPAIRED - Map newline in normal mode to Cmd-Enter - Normal/Insert mode.
 ""
-nmap <D-CR> <Plug>unimpairedBlankDown
+nmap <T-CR> <Plug>unimpairedBlankDown
 "imap <D-CR>o   # consider this for insert mode... Doesn't make sense...
 "imap <C-o> <esc>o " Maps Ctrl o to newline in insert mode
 " Cmd shift Enter inserts newline ABOVE current line
-nmap <D-S-CR> <Plug>unimpairedBlankUp
+nmap <T-S-CR> <Plug>unimpairedBlankUp
 
 
 " Move single line up/down in normal mode (uses unimpaired keystrokes)
@@ -800,10 +823,10 @@ xmap <C-i> <Plug>(textmanip-move-right)
 " This plugin is done REALLY well. Having these mappins is NICE
 " x is for visual, n for normal mode
 " TODO: Make this jump down 5 at a time with shift.
-xmap <D-d> <Plug>(textmanip-duplicate-down)
-nmap <D-d> <Plug>(textmanip-duplicate-down)
-xmap <D-D> <Plug>(textmanip-duplicate-up)
-nmap <D-D> <Plug>(textmanip-duplicate-up)
+xmap <T-d> <Plug>(textmanip-duplicate-down)
+nmap <T-d> <Plug>(textmanip-duplicate-down)
+xmap <T-D> <Plug>(textmanip-duplicate-up)
+nmap <T-D> <Plug>(textmanip-duplicate-up)
 
 
 
@@ -843,10 +866,11 @@ nmap ]h <Plug>GitGutterPrevHunk
 nmap <silent> <leader>fc <ESC>/\v^[<=>]{7}( .*\|$)<CR>
 
 " fix the arrows in insert in console vi
-if has("gui_macvim") && has("gui_running")
-else
-  set term=builtin_ansi
-endif
+" Doesn't work in nvim
+" if has("gui_macvim") && has("gui_running")
+" else
+"   set term=builtin_ansi
+" endif
 
 " remap X to be del left instead of delete line. DD makes more sense for that
 " anyway. Should I just fork his version of colemak at this point? FIXME
@@ -875,7 +899,7 @@ xnoremap <S-BS> <Del>
 " Am I going a little overboard here? I feel like I'm fixing things that then
 " need to be fixed. Feels like a lot of cascading effects I'm dealing with...
 " In insert mode, cmd shift Backspace will delete from the cursor to col0
-inoremap <D-S-BS> <esc>d0
+inoremap <T-S-BS> <esc>d0
 "nnoremap <S-BS> <c-r>=Backspace()<CR> "doesn't seeme to work
 
 
@@ -898,14 +922,14 @@ endfunc
 
 " Pretty sure this has to go in .gvimrc and has no effect here
 "if has("gui_macvim")
-  "macmenu &File.New\ Tab key=<nop>
-  "map <D-t> :CtrlP<CR>
+"macmenu &File.New\ Tab key=<nop>
+"map <D-t> :CtrlP<CR>
 "endif
 
 
 " REMAP CMD-SAVE to esc after saving
 " This seems to work for normal and insert mode
-nnoremap <D-s> :w<CR>
-inoremap <D-s> <Esc>:w<CR>
-xnoremap <D-s> <Esc>:w<CR>
+nnoremap <T-s> :w<CR>
+inoremap <T-s> <Esc>:w<CR>
+xnoremap <T-s> <Esc>:w<CR>
 
