@@ -18,7 +18,8 @@ silent! nunmap yss
 " This one has to be in this file to avoid conflict with colemak mapping...
 "
 " wrap surround? - ww"   WRAP surround WORD with QUOTE. 2nd is a modifier.
-nmap w  <Plug>Ysurround
+" nmap w  <Plug>Ysurround
+nmap ws  <Plug>Ysurround
 
 " dst - delete surrounding tag
 " remove single surrounding quotes - ds '

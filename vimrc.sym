@@ -1,9 +1,36 @@
+" TODO: Fix neovim stuff:
+" command line: gnvim (alias it)?
+" https://github.com/neovim/python-client/issues/106
+" FORCE it on for nvim...
+" Maybe just have a has(gui_running)
+" 	source gvimrc...
+" 	YES. Let's do that...
+" 	At the end? Or the begginning?
+" 	https://github.com/rogual/neovim-dot-app/issues/91
+"
+" ln -s ~/.vim ~/.config/nvim
+"    ln -s ~/.vimrc ~/.config/nvim/init.vim
+"    Add command line command to open neovim.app
+"    Disable lost focus crazyness...
+" - colorscheme
+" - font type and size...
+" - cmd d mapping
+" - linting... (use neomake)?
+"
+"
+"
 " TODO: Consider making a quick cheatsheet of the important keystrokes...
 " - Fix sourcing of this file (I think it's cmaps... Add ! to fix it...
 "
 " Silly hack to avoid having to escape all the comments in here...
 " if 0
 " i
+"
+" BUFFER Managment
+" :CtrlPBufTag[All] - Search for a tag within all listed buffers
+" <leader>b - Quick buffer switching
+" <leader>fb - Search currently open buffers
+"
 
 
 " WINDOW MANAGMENT
@@ -16,13 +43,15 @@
 " Last insertion point - `.
 " Last insertion point - gs
 "
+" WORD WRAPPIN *********************
 " Wrap, delete quotes, etc - ds* delete surrounding *, w** wrap [modifier] with *, cs** change surrounding a with b
-" Delete surrounding Tag - dst
-" Change surrounding Tag - cst<em>
+" dst - Delete surrounding Tag - dst
+" cst - Change surrounding Tag - cst<em>
 "
 " CLOSE all other windows - <leader>o
 "
 " RESUME Search - //
+"
 "
 "
 " GIT ********************************
@@ -40,8 +69,16 @@
 " [h - next hunk (next git change)
 " ]h - previous hunk
 " <leader>fc - Find conflict
-" .
-" endif
+
+" Good Fonts:
+" Inconsolata is best for presentations.
+
+
+
+" - Menlo best for coding
+
+" - meslo is fork with better line spacing
+
 
 
 ""
@@ -83,6 +120,7 @@ Plugin 'tomtom/tcomment_vim'
 " Plugin 'tpope/vim-commentary'                      "
 Plugin 'scrooloose/syntastic'                        " Syntax checker
 Plugin 'tpope/vim-unimpaired'                        " Buffer switching
+Plugin 'mihaifm/bufstop'                             " MOST Amazing MRU Buffer switcher
 Plugin 'SirVer/ultisnips'                            " Snippet engine
 Plugin 'honza/vim-snippets'                          " Default snippet package for the utilsnips engine
 
@@ -142,7 +180,7 @@ set rtp+=~/.fzf
 " ********************************************
 " COLOR THEME & FONTS ************************
 " ********************************************
-if has("gui_macvim") " Only on macvim
+ if has("gui_macvim") "Only on macvim
 	" This MUST be defined BEFORE the colorscheme. No idea why. Also, seems like
 	" terminal vim doesn't handle the contrast variation very well, so let's leave
 	" it in here.
@@ -156,6 +194,7 @@ if has("gui_macvim") " Only on macvim
 
 	"set guifont=Menlo:h15
   set guifont=Menlo\ for\ Powerline:h15     " from https://github.com/abertsch/Menlo-for-Powerline
+  " set guifont=Fira\ Code:h15     " from https://github.com/abertsch/Menlo-for-Powerline
 	set lines=999 columns=9999
 
 
@@ -168,7 +207,7 @@ if has("gui_macvim") " Only on macvim
     highlight GitGutterDelete ctermfg=red guifg=darkred
     highlight GitGutterChangeDelete ctermfg=yellow guifg=darkyellow
 
-endif
+ endif
 "
 " COLORS END --
 "
@@ -180,6 +219,7 @@ endif
 set shortmess+=A 		" Ignore 'swapfile exists' warnings
 "
 "
+set vb                   " enable visual bell (disable audio bell)
 ""
 "" Whitespace (from Janus)
 ""
@@ -375,7 +415,8 @@ command! ReTab set noet|retab!
 " CLOSE BUFFER with <leader>q
  nmap <leader>q :bp <BAR> bd #<CR>
 " Try this instead of above...
-nmap <leader>b :bd<CR>
+" This one will close buffer and window...
+" nmap <leader>b :bd<CR>
 
 " CLOSE all other windows.
 nmap <leader>o :only<CR>
@@ -602,6 +643,8 @@ endif
 let g:ctrlp_map = '<D-t>'
 let g:ctrlp_working_path_mode = 0
 
+" Let ctrlP search through the buffers
+nmap <leader>fb :CtrlPBuffer<CR>
 
 " Use The Silver Searcher https://github.com/ggreer/the_silver_searcher
 " Use ag instead of grep for ctrlp
@@ -628,6 +671,30 @@ let g:airline_powerline_fonts = 1     " use nice arrow symbols etc
 
 " Disable "mixed indent" warnings for airline status bar (false positives)
 let g:airline#extensions#whitespace#enabled = 0
+
+"
+" Bufstop mappings (awesome buffer speed switching)
+"
+nmap <leader>b :BufstopMode<CR>
+
+" nmap <leader>b :BufstopModeFast<CR>
+
+" Go to last buffer. Avoid it getting overwritten by
+" BufstopAutoSpeedToggle
+" FIXME: Or should we remap the leaderkeys via the
+" variable available?
+" nnoremap <leader>1 :b#<CR>
+let g:BufstopSpeedKeys = ["0", "1", "2", "3", "4", "5"]
+
+" Map <leader>1-5 to recent buffers
+let g:BufstopAutoSpeedToggle = 1
+
+
+" Default speed assignment keys
+let g:BufstopKeys = "1234arstfxcz"
+"
+" FIXME: Not working...
+let g:BufstopDismissKey = "<BS>"
 
 
 ""
