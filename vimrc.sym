@@ -1,20 +1,7 @@
-" TODO: Fix neovim stuff:
-" command line: gnvim (alias it)?
-" https://github.com/neovim/python-client/issues/106
-" FORCE it on for nvim...
-" Maybe just have a has(gui_running)
-" 	source gvimrc...
-" 	YES. Let's do that...
-" 	At the end? Or the begginning?
-" 	https://github.com/rogual/neovim-dot-app/issues/91
-"
 " ln -s ~/.vim ~/.config/nvim
 "    ln -s ~/.vimrc ~/.config/nvim/init.vim
 "    Add command line command to open neovim.app
 "    Disable lost focus crazyness...
-" - colorscheme
-" - font type and size...
-" - cmd d mapping
 " - linting... (use neomake)?
 "
 "
@@ -118,9 +105,10 @@ Plugin 'rking/ag.vim'                                " Try AG instead of ACK
 Plugin 'tomtom/tcomment_vim'
 " Plugin 'scrooloose/nerdcommenter'                  " Awesome commenting
 " Plugin 'tpope/vim-commentary'                      "
-Plugin 'scrooloose/syntastic'                        " Syntax checker
+" Plugin 'scrooloose/syntastic'                        " Syntax checker
+Plugin 'benekastah/neomake'                          " Async make (for syntax checking etc)
 Plugin 'tpope/vim-unimpaired'                        " Buffer switching
-Plugin 'mihaifm/bufstop'                             " MOST Amazing MRU Buffer switcher
+" Plugin 'mihaifm/bufstop'                             " MOST Amazing MRU Buffer switcher
 Plugin 'SirVer/ultisnips'                            " Snippet engine
 Plugin 'honza/vim-snippets'                          " Default snippet package for the utilsnips engine
 
@@ -155,7 +143,7 @@ Plugin 'lsdr/monokai'
 Plugin 'jooize/vim-colemak'                          " Remap keyboard shortcuts to colemak
 Plugin 'pangloss/vim-javascript'                     " JS indentation & syntax sugar
 Plugin 'groenewege/vim-less'                         " Less language bundle
-Plugin 'mxw/vim-jsx'                                 " JSX syntax highlighting.
+" Plugin 'mxw/vim-jsx'                                 " JSX syntax highlighting.
 
 
 " Plugin 'junegunn/limelight.vim' "Focus mode
@@ -211,6 +199,7 @@ if exists("neovim_dot_app")
 
   " Remap these so we can use them
   call MacMenu("File.Save", "")
+  " call MacMenu("Window.Close Tab", "")
   call MacMenu("Window.New Tab", "T-S-t")
 
 
@@ -431,16 +420,23 @@ command! ReTab set noet|retab!
 "inoremap <D-s> <ESC>:w<CR>  "insert mode
 nnoremap <T-s> :w<CR>        "normalmode
 
+" CLOSE current buffer and window with cmd-w
+" nmap <T-w> :bd<CR>
+nmap <leader>q :bd <BAR> bd #<CR>
 
 " CLOSE BUFFER with <leader>q
-nmap <leader>q :bp <BAR> bd #<CR>
+" nmap <leader>q :bp <BAR> bd #<CR>
+" nmap <leader>qb :bp <BAR> bd #<CR>
 " Try this instead of above...
 " This one will close buffer and window...
 " nmap <leader>b :bd<CR>
 
+" Go to next window
+" nmap <leader>w <C-w>w
+nmap <leader>w <C-w>w
+
 " CLOSE all other windows.
 nmap <leader>o :only<CR>
-" CLOSE current buffer and window
 
 
 
@@ -551,10 +547,6 @@ nnoremap <silent> <S-tab> :bp<CR>
 nnoremap <leader><leader> <C-^>
 
 
-""
-"" Split Window navigation
-""
-nmap <leader>w <C-w>w
 
 
 " ********************************************
@@ -667,7 +659,7 @@ let g:ctrlp_map = '<T-t>'
 let g:ctrlp_working_path_mode = 0
 
 " Let ctrlP search through the buffers
-nmap <leader>fb :CtrlPBuffer<CR>
+nmap <leader>b :CtrlPBuffer<CR>
 
 " Use The Silver Searcher https://github.com/ggreer/the_silver_searcher
 " Use ag instead of grep for ctrlp
@@ -698,7 +690,7 @@ let g:airline#extensions#whitespace#enabled = 0
 "
 " Bufstop mappings (awesome buffer speed switching)
 "
-nmap <leader>b :BufstopMode<CR>
+" nmap <leader>b :BufstopMode<CR>
 
 " nmap <leader>b :BufstopModeFast<CR>
 
@@ -735,6 +727,10 @@ let g:BufstopDismissKey = "<BS>"
 " http://learnvimscriptthehardway.stevelosh.com/chapters/12.html
 " When a new file is read into buffer with .es6 extension, set file to es6,
 " and call the setEslintForEs6() function...
+"
+" Call Neomake (linters etc) on save for all files
+autocmd! BufWritePost * Neomake
+
 autocmd BufRead,BufNewFile *.es6 call s:setupES6File()
 
 " Set all the .*rc files to json
@@ -742,16 +738,31 @@ autocmd BufRead,BufNewFile .*rc setfiletype json
 " Set .vimrc as a vim file
 autocmd BufRead,BufNewFile .vimrc setfiletype vim
 
-
-" Default ESLint settings for all JS files...
-let g:syntastic_javascript_checkers = ['eslint']
+" http://gregjs.com/vim/2015/linting-code-with-neomake-and-neovim/
 " Use this executable (Hacky but needed for our setup)
-let g:syntastic_javascript_eslint_exec = '/Users/jacharles/dev/p2pnodeweb/node_modules/.bin/eslint'
-let g:syntastic_check_on_open=0 " Don't run on open (faster)
-let g:syntastic_enable_signs=1
-" Better :sign interface symbols
-let g:syntastic_error_symbol = '✗'
-let g:syntastic_warning_symbol = '!'
+" Default ESLint settings for all JS files...
+let g:neomake_javascript_enabled_makers = ['eslint']
+
+let g:neomake_javascript_eslint_exe = '/Users/jacharles/dev/p2pnodeweb/node_modules/.bin/eslint'
+
+" Keep tray closed
+let g:neomake_open_list = 0
+
+let g:neomake_warning_sign = {
+  \ 'text': '!',
+  \ 'texthl': 'Warning',
+  \ }
+
+let g:neomake_error_sign = {
+  \ 'text': '✗',
+  \ 'texthl': 'Error',
+  \ }
+
+" Troubleshooting Neomake. Turn these on...
+" let g:neomake_verbose=3
+" let g:neomake_open_list = 2
+" let g:neomake_logfile='/tmp/error.log'
+
 
 " http://vim.wikia.com/wiki/Filetype.vim
 " For es6 files, run this every time it gets opened, and apply these buffer " variables
@@ -761,7 +772,11 @@ function! s:setupES6File()
   " Set the checkers for the current buffer to eslint
   " let b:syntastic_checkers = ["eslint"] " b: means for the current buffer only...
   " Set the arguments to pass to eslint to use the es6 ruleset...
-  let b:syntastic_javascript_eslint_args = "-c /Users/jacharles/dev/p2pnodeweb/.eslintes6rc"
+  " let b:syntastic_javascript_eslint_args = "-c /Users/jacharles/dev/p2pnodeweb/.eslintes6rc"
+  " let b:neomake_javascript_eslint_args = "-c /Users/jacharles/dev/p2pnodeweb/.eslintes6rc"
+  let b:neomake_javascript_eslint_args = ['-c', '/Users/jacharles/dev/p2pnodeweb/.eslintes6rc', '-f', 'compact']
+  " let b:neomake_javascript_eslint_exe = '/Users/jacharles/dev/p2pnodeweb/node_modules/.bin/eslint'
+
 endfunction
 
 
@@ -882,7 +897,7 @@ inoremap <BS> <ESC>`^
 xnoremap <BS> <ESC>`^
 
 "
-" Preserve backspace with SHIFT-BS
+" Preserve backspace with SHIFT-BS (aka SHIFT-CAPSLOCK/DELETE)
 inoremap <S-BS> <c-r>=Backspace()<CR>
 xnoremap <S-BS> <Del>
 " This feels a little dirty. Try shift at the same time...
@@ -899,7 +914,7 @@ xnoremap <S-BS> <Del>
 " Am I going a little overboard here? I feel like I'm fixing things that then
 " need to be fixed. Feels like a lot of cascading effects I'm dealing with...
 " In insert mode, cmd shift Backspace will delete from the cursor to col0
-inoremap <T-S-BS> <esc>d0
+" inoremap <T-S-BS> <esc>d0
 "nnoremap <S-BS> <c-r>=Backspace()<CR> "doesn't seeme to work
 
 

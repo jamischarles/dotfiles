@@ -49,6 +49,8 @@ alias zshconfig="vi ~/.zshrc" #open with sublime
 # down here to override the defaults
 alias fs="foreman start"
 
+alias mvim="gnvim" # Open Neovim.app via mvim
+
 # All these are now in the abbreviations at the end of the file
 #alias gb="git branch -v"
 #alias gc="git commit -v"

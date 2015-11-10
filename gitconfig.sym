@@ -13,7 +13,7 @@
 	insteadOf = git://
 [core]
 	excludesfile = /Users/jacharles/.gitignore_global
-	editor = /usr/bin/vim
+	editor = /usr/local/bin/nvim
 [filter "media"]
 	clean = git-media-clean %f
 	smudge = git-media-smudge %f
