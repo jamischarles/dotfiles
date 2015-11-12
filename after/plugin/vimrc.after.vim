@@ -22,3 +22,9 @@ nnoremap Y E|xnoremap Y E|onoremap Y E|
 
 nnoremap U W|xnoremap U W|onoremap U W|
 
+
+" Textmanip mappings that conflict
+"
+" nnoremap <C-h> <Plug>(textmanip-move-left)
+" xmap <C-h> <Plug>(textmanip-move-left)
+" nnoremap <C-i> <Plug>(textmanip-move-right)

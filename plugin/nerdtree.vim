@@ -8,9 +8,13 @@
   " Default mapping, <leader>n
   map <leader>n :NERDTreeToggle<CR> :NERDTreeMirror<CR>
 
+  " Remove 'e' as it is a colemak conflict
+  let g:NERDTreeMapOpenExpl = ''
+  let g:NERDTreeMapPreview = 'p'
+
   augroup AuNERDTreeCmd
   autocmd AuNERDTreeCmd VimEnter * call s:CdIfDirectory(expand("<amatch>"))
-  autocmd AuNERDTreeCmd FocusGained * call s:UpdateNERDTree()
+  "autocmd AuNERDTreeCmd FocusGained * call s:UpdateNERDTree()
 
   " If the parameter is a directory, cd into it
   function s:CdIfDirectory(directory)
