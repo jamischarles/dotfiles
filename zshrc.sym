@@ -52,6 +52,11 @@ alias fs="foreman start"
 alias mvim="gnvim" # Open Neovim.app via mvim
 alias vimr="/Applications/vimr"
 
+# Use vim keys in iterm on command line: https://coderwall.com/p/c9vs3q/vim-movement-in-iterm2
+# Preserve Insert Cursor shape in nvim using iterm
+# export NVIM_TUI_ENABLE_CURSOR_SHAPE=1
+
+
 # All these are now in the abbreviations at the end of the file
 #alias gb="git branch -v"
 #alias gc="git commit -v"

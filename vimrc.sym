@@ -1,31 +1,21 @@
-" ln -s ~/.vim ~/.config/nvim
-"    ln -s ~/.vimrc ~/.config/nvim/init.vim
-"    Add command line command to open neovim.app
-"    Disable lost focus crazyness...
-" - linting... (use neomake)?
-"
-"
-"
-" TODO: Consider making a quick cheatsheet of the important keystrokes...
-" - Fix sourcing of this file (I think it's cmaps... Add ! to fix it...
-"
-" Silly hack to avoid having to escape all the comments in here...
-" if 0
-" i
+" QUICK KEYS
 "
 " BUFFER Managment
 " :CtrlPBufTag[All] - Search for a tag within all listed buffers
-" <leader>b - Quick buffer switching
-" <leader>fb - Search currently open buffers
+" <leader>b - Search currently open buffers
 "
 
-
-" WINDOW MANAGMENT
+" WINDOW MANAGMENT ************************
+" :Close - Close current window
 " <leader>o - close other windows
 " <leader>q - close buffer and window
-" <leader>b - close buffer and window
 "
-" Newline - cmd Enter
+" Max out the height of the current split
+" +  - Bigger vsplit
+" _  - Smaller vsplit
+" <leader>+  - Max split
+" <leader>_  - Min Split
+" <leader>=  - EQ Split window (kill mappings we don't use
 "
 " Last insertion point - `.
 " Last insertion point - gs
@@ -38,7 +28,6 @@
 " CLOSE all other windows - <leader>o
 "
 " RESUME Search - //
-"
 "
 "
 " GIT ********************************
@@ -56,6 +45,17 @@
 " [h - next hunk (next git change)
 " ]h - previous hunk
 " <leader>fc - Find conflict
+"
+" "
+" <leader>p GitGutterPreviewHunk
+" <leader>s GitGutterStageHunk
+" <leader>r GitGutterRevertHunk
+"
+" in DIFF:
+"   :diffget - Get change from the other window.
+"   :diffput - Push change to the other window.
+"
+
 
 " Good Fonts:
 " Inconsolata is best for presentations.
@@ -75,8 +75,11 @@
 set nocompatible      " Use vim, no vi defaults
 set number            " Show line numbers
 set ruler             " Show line and column number
+set equalalways       " Splits are always sized equally
 syntax enable         " Turn on syntax highlighting allowing local overrides
-set encoding=utf-8    " Set default encoding to UTF-8
+if !has('nvim')
+    set encoding=utf-8    " Set default encoding to UTF-8. Nvim defaults this. Only do this in non-nvim.
+endif
 
 " Most of these are from https://github.com/gmarik/Vundle.vim
 
@@ -125,6 +128,7 @@ Plugin 'tpope/vim-surround'                          " easy surround with quote 
 " Plugin 'jeetsukumaran/vim-markology'               " Mark visualizations
 Plugin 'bkad/CamelCaseMotion'                        " Next word considers camelcase as part of it :). LOVE IT!!! SO AMAZING
 
+Plugin 'janko-m/vim-test'                            " Running tests from vim
 
 Plugin 'Raimondi/delimitMate'                        " quote, bracket, etc autocompletion
 Plugin 't9md/vim-textmanip'                          " Move selected text around easily
@@ -153,7 +157,8 @@ filetype plugin indent on    " required
 
 " enable fzf for VIM
 set rtp+=~/.fzf
-
+" yank will go to the system clipboard. Allows copy paste to outside
+set clipboard=unnamed
 " To ignore plugin indent changes, instead use:
 "filetype plugin on
 
@@ -290,6 +295,9 @@ set smartcase   " ... unless they contain at least one capital letter
 ""
 "" SEARCHING from ACK / AG. Silver Searcher. Use AG instead of ack for ack plugin...
 ""
+":AgFromSearch
+":AgFile - Search for filename
+" FIXME: Can we have it use the project root? Or do we need to hardcode that?
 if executable('ag')
   " let g:ackprg = 'ag --vimgrep'
   let g:ackprg = 'ag --nogroup --nocolor --column'
@@ -297,14 +305,31 @@ endif
 
 " Map :ags to the following...
 " ! suffix overwrites so you can source the file easier...
-cmap ag Ag -A 5 -B 5
-cmap ags Ag -A 5 -B 5 -G '\.(js\|es6)'
-cmap agp Ag -A 5 -B 5 -G '\.properties'
+cmap ag Ag! -S -A 5 -B 5
+" Search open buffers
+cmap agb AgBuffer! -S -A 5 -B 5
+
+cmap ags Ag! -S -A 5 -B 5 -G '\.(js\|es6)'
+cmap agp Ag! -S -A 5 -B 5 -G '\.properties'
 
 " http://vim.wikia.com/wiki/Search_and_replace_the_word_under_the_cursor
 " AG Search for word under the cursor (<coword) MONEY
-cmap agc Ag -A 5 -B 5 -G '\.(js\|es6)' <cword>
+cmap agc Ag! -S -A 5 -B 5 -G '\.(js\|es6)' <cword>
 " -A -B after / before lines..."
+"
+
+" Turn off mappings
+let g:ag_apply_lmappings=0
+let g:ag_apply_qmappings=0
+
+" let g:ag_qhandler="copen 40"
+" Run this command when quickfix is ready
+" let g:ag_qhandler="vertical topleft cwindow"
+" PIPE allows us to use another command
+let g:ag_qhandler="vert copen|WindowEq"
+" start searching from project root
+let g:ag_working_path_mode="r"
+"
 
 " Open QuickFix for Silver Searcher in horizontal split
 " let g:ag_lhandler="topleft lopen"
@@ -354,6 +379,10 @@ if has("autocmd")
 endif
 
 
+
+" Preserve Insert Cursor shape in nvim using iterm.
+let $NVIM_TUI_ENABLE_CURSOR_SHAPE=1
+" let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 
 " ********************************************
 " MACROS
@@ -482,7 +511,7 @@ endfunction
 " This one will close buffer and window...
 " nmap <leader>b :bd<CR>
 
-" WINDOW NAVIGATION
+" WINDOW MANAGMENT / SIZING / NAVIGATION
 " Go to next window
 " nmap <leader>w <C-w>w
 "nmap <leader>w <C-w>w
@@ -492,7 +521,24 @@ nmap <leader><tab> <C-w>w
 " CLOSE all other windows.
 nmap <leader>o :only<CR>
 
+" Window SIZING
+" 'normal' allows us to type is just like on the command line (useful when
+" there aren't any commands for a mapping)
+command! WindowEq :exe "normal \<C-W>="
+command! WindowMax :vertical resize
+command! WindowMin :vertical resize 0
+command! WindowVInc :vertical resize +20
+command! WindowVDec :vertical resize -20
 
+" WINDOW RE-SIZING
+nnoremap <silent> + :WindowVInc<CR>
+nnoremap <silent> _ :WindowVDec<CR>
+nnoremap <silent> <leader>+ :WindowMax<CR>
+nnoremap <silent> <leader>_ :WindowMin<CR>
+nnoremap <silent> <leader>= :WindowEq<CR>
+
+" :NextWindow
+" command! WindowNext <C-w>w
 
 " SEARCH/REPLACE
 nnoremap <leader>fr :%s/
@@ -729,6 +775,17 @@ if executable('ag')
 endif
 
 
+
+""
+" GIT Gutter
+""
+" nmap <leader>sh <Plug>GitGutterStageHunk
+" nmap <leader>rh <Plug>GitGutterRevertHunk
+" nmap <leader>ph <Plug>GitGutterPreviewHunk
+nmap <leader>s <Plug>GitGutterStageHunk
+nmap <leader>r <Plug>GitGutterRevertHunk
+nmap <leader>p <Plug>GitGutterPreviewHunk
+
 " ZOOMwin
 nmap <leader>zw :ZoomWin<CR>
 
@@ -755,17 +812,23 @@ let g:airline#extensions#whitespace#enabled = 0
 " FIXME: Or should we remap the leaderkeys via the
 " variable available?
 " nnoremap <leader>1 :b#<CR>
-let g:BufstopSpeedKeys = ["0", "1", "2", "3", "4", "5"]
-
-" Map <leader>1-5 to recent buffers
-let g:BufstopAutoSpeedToggle = 1
-
-
-" Default speed assignment keys
-let g:BufstopKeys = "1234arstfxcz"
+" let g:BufstopSpeedKeys = ["0", "1", "2", "3", "4", "5"]
 "
-" FIXME: Not working...
-let g:BufstopDismissKey = "<BS>"
+" " Map <leader>1-5 to recent buffers
+" let g:BufstopAutoSpeedToggle = 1
+"
+"
+" " Default speed assignment keys
+" let g:BufstopKeys = "1234arstfxcz"
+" "
+" " FIXME: Not working...
+" let g:BufstopDismissKey = "<BS>"
+
+""
+" VIM-TEST
+""
+" let test#strategy = "neovim"
+let test#strategy = "iterm"
 
 
 ""
@@ -825,7 +888,6 @@ let g:neomake_error_sign = {
 function! s:setupES6File()
 " TODO: Eithr apply to all files on enter, or wait until col shows, or neomake is run...
 " Dirty dirty hack. This doesn't work if we do it on startup
-highlight SignColumn guibg=#002b36
 
 setfiletype javascript " Set filetype
 
@@ -922,12 +984,14 @@ cmap gco Gread
 "highlight clear SignColumn (Use guibg for sign bg, and guifg)
 "https://github.com/airblade/vim-gitgutter#sign-column, and
 "https://github.com/airblade/vim-gitgutter/issues/164
-"highlight clear SignColumn
 " Tells gitgutter to leave the sign column alone
 "let g:gitgutter_override_sign_column_highlight = 0
+" Xterm colors: http://vim.wikia.com/wiki/Xterm256_color_names_for_console_Vim
+" 34 is lighter green than 28
 
-highlight GitGutterAdd ctermfg=green guifg=darkgreen
-highlight GitGutterChange ctermfg=yellow guifg=darkyellow
+highlight clear SignColumn
+highlight GitGutterAdd ctermfg=28 guifg=darkgreen
+highlight GitGutterChange ctermfg=100 guifg=darkyellow
 highlight GitGutterDelete ctermfg=red guifg=darkred
 highlight GitGutterChangeDelete ctermfg=yellow guifg=darkyellow
 
