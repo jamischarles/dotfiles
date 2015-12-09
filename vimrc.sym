@@ -1,19 +1,19 @@
-" QUICK KEYS
+" QUICK KEYS,
 "
 " BUFFER Managment
 " :CtrlPBufTag[All] - Search for a tag within all listed buffers
 " <leader>b - Search currently open buffers
-"
+" :BufOnly - Close others
 
 " WINDOW MANAGMENT ************************
 " :Close - Close current window
 " <leader>o - close other windows
-" <leader>q - close buffer and window
+" <leader>q - close buffer and/or window
 "
 " Max out the height of the current split
-" +  - Bigger vsplit
+" -  - Bigger vsplit
 " _  - Smaller vsplit
-" <leader>+  - Max split
+" <leader>-  - Max split
 " <leader>_  - Min Split
 " <leader>=  - EQ Split window (kill mappings we don't use
 "
@@ -111,6 +111,7 @@ Plugin 'tomtom/tcomment_vim'
 " Plugin 'scrooloose/syntastic'                        " Syntax checker
 Plugin 'benekastah/neomake'                          " Async make (for syntax checking etc)
 Plugin 'tpope/vim-unimpaired'                        " Buffer switching
+Plugin 'duff/vim-bufonly'                            " Close all buffers but current
 " Plugin 'mihaifm/bufstop'                             " MOST Amazing MRU Buffer switcher
 Plugin 'SirVer/ultisnips'                            " Snippet engine
 Plugin 'honza/vim-snippets'                          " Default snippet package for the utilsnips engine
@@ -118,7 +119,6 @@ Plugin 'honza/vim-snippets'                          " Default snippet package f
 Plugin 'ervandew/supertab'                           " Sweet tab completion
 Plugin 'zerowidth/vim-copy-as-rtf'                   " Copy to rtf (and paste code to Keynote)
 " Plugin 'garbas/vim-snipmate'                                                                                                " Snippet framework
-Plugin 'vim-scripts/ZoomWin'                         " Zoom current buffer window <ld> zw
 Plugin 'bronson/vim-trailing-whitespace'             " Trail whitespace finder
 Plugin 'godlygeek/tabular'                           " easy aligning. :Tab /= http://vimcasts.org/episodes/aligning-text-with-tabular-vim/
 Plugin 'tpope/vim-sleuth'                            " Better indentation. Give it a try... Sigh.
@@ -417,7 +417,8 @@ nmap <leader>l :set list!<CR>
 " ESCAPE VISUAL / NORMAL MODE with ,, Consider ,n ,. ,m ,e or something more
 " rapid
 " don't move cursor -1 on esc. Not sure if this works
-inoremap <Esc> <Esc>`^
+" TRIAL ****
+" inoremap <Esc> <Esc>`^
 " End insert mode with ,, and don't -1
 " inoremap ,, <ESC>`^
 " Same with visual mode
@@ -531,9 +532,9 @@ command! WindowVInc :vertical resize +20
 command! WindowVDec :vertical resize -20
 
 " WINDOW RE-SIZING
-nnoremap <silent> + :WindowVInc<CR>
+nnoremap <silent> - :WindowVInc<CR>
 nnoremap <silent> _ :WindowVDec<CR>
-nnoremap <silent> <leader>+ :WindowMax<CR>
+nnoremap <silent> <leader>- :WindowMax<CR>
 nnoremap <silent> <leader>_ :WindowMin<CR>
 nnoremap <silent> <leader>= :WindowEq<CR>
 
@@ -578,11 +579,11 @@ if exists("neovim_dot_app")
 " Above was busted due to colemak remappings
 "vmap <D-]> >
 "vmap <D-[> <
-vmap <T-[> <Plug>(textmanip-move-left)
-vmap <T-]> <Plug>(textmanip-move-right)
+vmap <leader>[ <Plug>(textmanip-move-left)
+vmap <leader>] <Plug>(textmanip-move-right)
 
-nmap <T-]> >>
-nmap <T-[> <<
+nnoremap <leader>] >>
+nnoremap <leader>[ <<
 
 omap <T-]> >>
 omap <T-[> <<
@@ -786,8 +787,8 @@ nmap <leader>s <Plug>GitGutterStageHunk
 nmap <leader>r <Plug>GitGutterRevertHunk
 nmap <leader>p <Plug>GitGutterPreviewHunk
 
-" ZOOMwin
-nmap <leader>zw :ZoomWin<CR>
+" ZOOMwin - Replaced by :WindowMax
+" nmap <leader>zw :ZoomWin<CR>
 
 " EASYMOTION to be <leader> s - REMOVE
 " map <Leader> <Plug>(easymotion-prefix)
@@ -931,6 +932,7 @@ let g:jsx_ext_required = 0
 "" UNIMPAIRED - Map newline in normal mode to Cmd-Enter - Normal/Insert mode.
 ""
 nmap <T-CR> <Plug>unimpairedBlankDown
+nmap <leader><CR> <Plug>unimpairedBlankDown
 "imap <D-CR>o   # consider this for insert mode... Doesn't make sense...
 "imap <C-o> <esc>o " Maps Ctrl o to newline in insert mode
 " Cmd shift Enter inserts newline ABOVE current line
@@ -1080,3 +1082,6 @@ nnoremap <leader>w :w<CR>
 inoremap <T-s> <Esc>:w<CR>
 xnoremap <T-s> <Esc>:w<CR>
 
+" VIM SCRIPTING LESSONS:
+" | can be used to combine commands
+" :exe "normal \<C-w>w"  can be used to map a command to a keymap.
