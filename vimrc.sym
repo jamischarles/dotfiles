@@ -29,6 +29,7 @@
 "
 " RESUME Search - //
 "
+" OPEN URL IN BROWSER - gx   (consider mapping to gb) - http://stackoverflow.com/questions/9458294/open-url-under-cursor-in-vim-with-browser
 "
 " GIT ********************************
 " Cheatsheet - https://gist.github.com/dialelo/5902072
@@ -129,6 +130,7 @@ Plugin 'tpope/vim-surround'                          " easy surround with quote 
 Plugin 'bkad/CamelCaseMotion'                        " Next word considers camelcase as part of it :). LOVE IT!!! SO AMAZING
 
 Plugin 'janko-m/vim-test'                            " Running tests from vim
+Plugin 'tyru/open-browser.vim'                       " Open in test
 
 Plugin 'Raimondi/delimitMate'                        " quote, bracket, etc autocompletion
 Plugin 't9md/vim-textmanip'                          " Move selected text around easily
@@ -252,9 +254,9 @@ set vb                   " enable visual bell (disable audio bell)
 ""
 
 set nowrap                        " don't wrap lines
-set tabstop=4                     " a tab is two spaces
-set shiftwidth=4                  " an autoindent (with <<) is two spaces
-"set expandtab                     " use spaces, not tabs
+set tabstop=2                     " a tab is two spaces
+set shiftwidth=2                  " an autoindent (with <<) is two spaces
+set expandtab                     " use spaces, not tabs
 set list                          " Show invisible characters
 set backspace=indent,eol,start    " backspace through everything in insert mode
 
@@ -293,6 +295,12 @@ set smartcase   " ... unless they contain at least one capital letter
 
 
 ""
+"" Open link under cursor in Browser
+""
+" gx
+" command! Browse OpenBrowser <cword>
+
+""
 "" SEARCHING from ACK / AG. Silver Searcher. Use AG instead of ack for ack plugin...
 ""
 ":AgFromSearch
@@ -305,15 +313,16 @@ endif
 
 " Map :ags to the following...
 " ! suffix overwrites so you can source the file easier...
-cmap ag Ag! -S -A 5 -B 5
+" -Q makes it a non-regex search
+cmap ag Ag! -S -A 5 -B 5 -Q
 " Search open buffers
 cmap agb AgBuffer! -S -A 5 -B 5
 
-cmap ags Ag! -S -A 5 -B 5 -G '\.(js\|es6)'
-cmap agp Ag! -S -A 5 -B 5 -G '\.properties'
+cmap ags Ag! -S -A 5 -B 5 -G '\.(js\|es6)' -Q
+cmap agp Ag! -S -A 5 -B 5 -G '\.properties' -Q
 
 " http://vim.wikia.com/wiki/Search_and_replace_the_word_under_the_cursor
-" AG Search for word under the cursor (<coword) MONEY
+" AG Search for word under the cursor (<cword>) MONEY
 cmap agc Ag! -S -A 5 -B 5 -G '\.(js\|es6)' <cword>
 " -A -B after / before lines..."
 "
@@ -544,6 +553,14 @@ nnoremap <silent> <leader>= :WindowEq<CR>
 " SEARCH/REPLACE
 nnoremap <leader>fr :%s/
 
+
+" Find / replace commands
+" -range=% means range is optional (you can use selection) - http://vimdoc.sourceforge.net/htmldoc/usr_40.html
+command! -range=% ReplaceSingleQuoteWithDouble :<line1>,<line2>s/'/"/gi
+" This is busted. Replaces all words, not just the unquoted ones...
+" command! -range=% ReplaceWrapUnquotedWords :<line1>,<line2>s/\(\w\+\)/"\1"/gi
+
+
 " OPEN VIMRC
 nnoremap <leader>ev <C-w>v<C-w>l<C-w>L:e ~/.vimrc<cr>
 nnoremap <leader>sv :source ~/.vimrc<cr>
@@ -570,7 +587,7 @@ nnoremap <leader>, A,<esc>
 
 " Shortcuts from JANUS https://github.com/carlhuda/janus/blob/master/janus/vim/core/before/plugin/mappings.vim
 " if has("gui_macvim") && has("gui_running")
-if exists("neovim_dot_app")
+" if exists("neovim_dot_app")
 
 " Map command-[ and command-] to indenting or outdenting
 " while keeping the original selection in visual mode
@@ -585,11 +602,11 @@ vmap <leader>] <Plug>(textmanip-move-right)
 nnoremap <leader>] >>
 nnoremap <leader>[ <<
 
-omap <T-]> >>
-omap <T-[> <<
+" omap <T-]> >>
+" omap <T-[> <<
 
-imap <T-]> <Esc>>>i
-imap <T-[> <Esc><<i
+" imap <T-]> <Esc>>>i
+" imap <T-[> <Esc><<i
 
 
 " Bubble single lines Q: DOES THIS EVEN WORK? A: NO...
@@ -599,29 +616,29 @@ imap <T-[> <Esc><<i
 "nmap <D-j> ]e
 
 " Map Command-# to switch tabs
-map  <T-0> 0gt
-imap <T-0> <Esc>0gt
-map  <T-1> 1gt
-imap <T-1> <Esc>1gt
-map  <T-2> 2gt
-imap <T-2> <Esc>2gt
-map  <T-3> 3gt
-imap <T-3> <Esc>3gt
-map  <T-4> 4gt
-imap <T-4> <Esc>4gt
-map  <T-5> 5gt
-imap <T-5> <Esc>5gt
-map  <T-6> 6gt
-imap <T-6> <Esc>6gt
-map  <T-7> 7gt
-imap <T-7> <Esc>7gt
-map  <T-8> 8gt
-imap <T-8> <Esc>8gt
-map  <T-9> 9gt
-imap <T-9> <Esc>9gt
-else
+" map  <T-0> 0gt
+" imap <T-0> <Esc>0gt
+" map  <T-1> 1gt
+" imap <T-1> <Esc>1gt
+" map  <T-2> 2gt
+" imap <T-2> <Esc>2gt
+" map  <T-3> 3gt
+" imap <T-3> <Esc>3gt
+" map  <T-4> 4gt
+" imap <T-4> <Esc>4gt
+" map  <T-5> 5gt
+" imap <T-5> <Esc>5gt
+" map  <T-6> 6gt
+" imap <T-6> <Esc>6gt
+" map  <T-7> 7gt
+" imap <T-7> <Esc>7gt
+" map  <T-8> 8gt
+" imap <T-8> <Esc>8gt
+" map  <T-9> 9gt
+" imap <T-9> <Esc>9gt
+" else
 
-endif
+" endif
 
 
 
@@ -744,21 +761,18 @@ endfunction
 " Ignore some folders and files for CtrlP indexing | https://coderwall.com/p/hk_bwg/how-to-speed-up-ctrlp
 " after modifying this, run :CtrlPClearAllCaches to clear the cache. If you want to be sure, delete the .cache/ctrlp dir in your home dir.
 "let g:ctrlp_map = ''
-let g:ctrlp_custom_ignore = {
-    \ 'dir':  '\.git$\|node_modules$',
-    \ 'file': '\.so$\|\.dat$|\.DS_Store$'
-    \ }
 "
 " Map cmd t to open ctrl P
 " if has("gui_macvim") && has("gui_running")
-if exists("neovim_dot_app")
-  map <T-t> :CtrlP<CR>
-  imap <T-t> <ESC>:CtrlP<CR>
-else
-  nmap <leader>t :CtrlP<CR>
-endif
+" if exists("neovim_dot_app")
+"   map <T-t> :CtrlP<CR>
+"   imap <T-t> <ESC>:CtrlP<CR>
+" else
+" endif
 
-let g:ctrlp_map = '<T-t>'
+nmap <leader>t :CtrlP<CR>
+
+" let g:ctrlp_map = '<T-t>'
 let g:ctrlp_working_path_mode = 0
 
 " Let ctrlP search through the buffers
@@ -772,7 +786,16 @@ if executable('ag')
 
   " Use ag in CtrlP for listing files. Lightning fast and respects .gitignore
   " http://stackoverflow.com/questions/18285751/use-ag-in-ctrlp-vim
-  let g:ctrlp_user_command = 'ag %s -l  --hidden -g ""'
+  let g:ctrlp_user_command = 'ag %s -l  --ignore .git --hidden -g ""'
+
+
+  " ag is fast enough that CtrlP doesn't need to cache
+  " let g:ctrlp_use_caching = 0
+
+  let g:ctrlp_custom_ignore = {
+        \ 'dir':  '\.git$\|node_modules$',
+        \ 'file': '\.so$\|\.dat$|\.DS_Store$'
+        \ }
 endif
 
 
@@ -864,6 +887,7 @@ autocmd BufRead,BufNewFile .vimrc setfiletype vim
 let g:neomake_javascript_enabled_makers = ['eslint']
 
 let g:neomake_javascript_eslint_exe = '/Users/jacharles/dev/p2pnodeweb/node_modules/.bin/eslint'
+" let g:neomake_javascript_eslint_args = ['--fix']
 
 " Keep tray closed
 let g:neomake_open_list = 0
@@ -897,7 +921,7 @@ setfiletype javascript " Set filetype
 " Set the arguments to pass to eslint to use the es6 ruleset...
 " let b:syntastic_javascript_eslint_args = "-c /Users/jacharles/dev/p2pnodeweb/.eslintes6rc"
 " let b:neomake_javascript_eslint_args = "-c /Users/jacharles/dev/p2pnodeweb/.eslintes6rc"
-let b:neomake_javascript_eslint_args = ['-c', '/Users/jacharles/dev/p2pnodeweb/.eslintes6rc', '-f', 'compact']
+let b:neomake_javascript_eslint_args = ['--fix', '-c', '/Users/jacharles/dev/p2pnodeweb/.eslintes6rc', '-f', 'compact']
 " let b:neomake_javascript_eslint_exe = '/Users/jacharles/dev/p2pnodeweb/node_modules/.bin/eslint'
 
 endfunction
@@ -997,8 +1021,10 @@ highlight GitGutterChange ctermfg=100 guifg=darkyellow
 highlight GitGutterDelete ctermfg=red guifg=darkred
 highlight GitGutterChangeDelete ctermfg=yellow guifg=darkyellow
 
-" This doesn't seem to work. Executed too early I think
-"highlight SignColumn guibg=#002b36
+" https://github.com/altercation/vim-colors-solarized/blob/master/colors/solarized.vim#L285
+" 10, 0, 8 are similar options from the colorscheme...
+" Not sure why this has to be re-applied...
+highlight SignColumn ctermbg=8
 
 " GIT GUTTER mappins
 " nmap <leader>fh <Plug>GitGutterNextHunk
@@ -1026,8 +1052,11 @@ nmap <silent> <leader>fc <ESC>/\v^[<=>]{7}( .*\|$)<CR>
 
 " map Delete to ESC and CTRL. HIGHLY experimental
 " Don't think the ctrl works properly
-inoremap <BS> <ESC>`^
-xnoremap <BS> <ESC>`^
+inoremap <BS> <ESC>
+xnoremap <BS> <ESC>
+" Minus 1 on esc (not normal behavior)
+" inoremap <BS> <ESC>`^
+" xnoremap <BS> <ESC>`^
 
 "
 " Preserve backspace with SHIFT-BS (aka SHIFT-CAPSLOCK/DELETE)
@@ -1077,10 +1106,10 @@ endfunc
 
 " REMAP CMD-SAVE to esc after saving
 " This seems to work for normal and insert mode
-nnoremap <T-s> :w<CR>
+" nnoremap <T-s> :w<CR>
 nnoremap <leader>w :w<CR>
-inoremap <T-s> <Esc>:w<CR>
-xnoremap <T-s> <Esc>:w<CR>
+" inoremap <T-s> <Esc>:w<CR>
+" xnoremap <T-s> <Esc>:w<CR>
 
 " VIM SCRIPTING LESSONS:
 " | can be used to combine commands

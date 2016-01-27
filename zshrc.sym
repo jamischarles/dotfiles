@@ -196,6 +196,9 @@ fshow() {
 
 alias fshow=fshow()
 
+# function to change your iterm profile. Can be called from terminal now.
+set_iterm_profile() { echo -e "\033]50;SetProfile=$1\a" }
+
 ### Add PATH for Sublime
 #export PATH="~/bin:$PATH"
 
@@ -205,7 +208,17 @@ setopt extendedglob
 
 typeset -Ag abbreviations
 abbreviations=(
-  "ags"    "ag -A 2 -B 2 -G '.(es6|js)' "
+  "ez"    "nvim ~/.zshrc"
+  "sz"    "source ~/.zshrc"
+  "itermNvim" "set_iterm_profile Nvim"
+  "itermNormal" "set_iterm_profile Nvim"
+  "iterm0" "set_iterm_profile Nvim"
+  "iterm1" "set_iterm_profile Jamis"
+  "iterm2" "set_iterm_profile Pluralsight"
+  "itermp" "set_iterm_profile Pluralsight"
+  "itermd" "set_iterm_profile Default"
+  "itermn2" "set_iterm_profile Nvim2"
+  "ags"    "ag -A 2 -B 2 -G '.(es6|js)' -Q" # -Q makes it a non-regex match
   "nuke"  "git pull --rebase upstream develop && rm -rf node_modules && npm i"
   "gp"    "git push origin"
   "gpf"   "git push -f origin"
@@ -217,6 +230,8 @@ abbreviations=(
   "gbD"    "git branch -D"
   "gc"    "git commit -v"
   "gca"    "git commit -v --amend"
+  "fixconflict"     "git diff --name-only | uniq | xargs nvim" # Open all git changed files in nvim
+  "och"     "git diff --name-only | uniq | xargs nvim" # Open all git changed files in nvim
   "gd"    "git diff"
   "gds"    "git diff --staged"
   "gch"   "git checkout"
