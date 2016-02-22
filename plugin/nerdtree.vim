@@ -3,7 +3,7 @@
 " basic nerdtree
 "
 "if janus#is_plugin_enabled("nerdtree")
-  let NERDTreeIgnore=['\.pyc$', '\.pyo$', '\.rbc$', '\.rbo$', '\.class$', '\.o$', '\~$']
+  let NERDTreeIgnore=['.DS_STORE', '\.pyc$', '\.pyo$', '\.rbc$', '\.rbo$', '\.class$', '\.o$', '\~$']
 
   " Default mapping, <leader>n
   map <leader>n :NERDTreeToggle<CR> :NERDTreeMirror<CR>

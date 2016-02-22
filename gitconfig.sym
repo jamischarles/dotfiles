@@ -25,3 +25,38 @@
 	rebase = true
 [web]
 	browser = open
+# [color "diff-highlight"]
+	# oldNormal = red bold
+	# oldHighlight = red bold 52
+	# newNormal = green bold
+	# newHighlight = green bold 22
+[color]
+	ui = always
+[color "diff"]
+	meta = black  # yellow
+	commit = green bold
+	# frag = magenta bold
+	# old = red bold
+	# new = green bold
+	whitespace = red reverse
+[color "diff-highlight"]
+# uses https://github.com/stevemao/diff-so-fancy
+	oldNormal = red bold
+	oldHighlight = "red bold 52"
+	newNormal = "green bold"
+	newHighlight = "green bold 22"
+# [color "status"]
+# 	added = yellow
+# 	changed = green
+# 	untracked = cyan
+#
+#
+# COLORS:
+# Of course you can change the colours if you want to.
+# The accepted values are two of normal, black, red, green, yellow, blue, magenta,
+# cyan and white and optionally one of bold, dim, ul, blink and reverse.
+# If two colours are given the first is the foreground and the second is the background.
+# https://nathanhoad.net/how-to-colours-in-git
+[pager]
+	diff = diff-so-fancy | less --tabs=1,5 -R
+	show = diff-so-fancy | less --tabs=1,5 -R

@@ -73,6 +73,7 @@ alias vimr="/Applications/vimr"
 alias gp="echo 'git pull --rebase upstream develop' ; git pull --rebase upstream develop; growlImg 'Git Pull' ' ' github.png"
 # alias gpm="git push origin master"
 alias gs="git status -sb; growlImg 'Status' ' ' github.png"
+alias gd="git diff --color | diff-highlight | diff-so-fancy | less --tabs=1,5 -R"
 
 #NUKE it all, rebase, and reinstall node modules
 alias nuke="gp ; echo 'rm -rf node_modules && npm i';  rm -rf node_modules && npm i; growlImg 'Nuke Done'   'git pull; rm -rf node_module; npm install'   npm.png"
@@ -144,6 +145,10 @@ export PATH=/usr/local/share/npm/bin:$PATH.
 
 #brew
 export PATH=/usr/local/bin:$PATH
+
+# Executables I want in from my dotfiles
+# export PATH=~/.dotfiles/bin:$PATH
+# export PATH=~/bin:$PATH
 
 # zsh-notify plugin timeout. What's the threshold for activating the stuff...
 # FIXME: Not sure this is even working.
@@ -229,12 +234,14 @@ abbreviations=(
   "gbd"    "git branch -d"
   "gbD"    "git branch -D"
   "gc"    "git commit -v"
+  "gcm"    "git commit -m"
   "gca"    "git commit -v --amend"
   "fixconflict"     "git diff --name-only | uniq | xargs nvim" # Open all git changed files in nvim
   "och"     "git diff --name-only | uniq | xargs nvim" # Open all git changed files in nvim
-  "gd"    "git diff"
+  # "gd"    "git diff"
+  "gd"     "git diff --color | diff-highlight | diff-so-fancy | less --tabs=1,5 -R"
   "gds"    "git diff --staged"
-  "gch"   "git checkout"
+  "gch"    "git checkout"
   "grm"    "git remote -v"
   "gr"    "git reset"
   "gra"   "git rebase --abort"

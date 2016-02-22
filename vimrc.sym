@@ -58,6 +58,9 @@
 "
 
 
+" Global NPM installs
+" https://github.com/stevemao/diff-so-fancy
+
 " Good Fonts:
 " Inconsolata is best for presentations.
 
@@ -74,6 +77,7 @@
 ""
 
 set nocompatible      " Use vim, no vi defaults
+set nospell           " No spell check
 set number            " Show line numbers
 set ruler             " Show line and column number
 set equalalways       " Splits are always sized equally
@@ -253,11 +257,17 @@ set vb                   " enable visual bell (disable audio bell)
 "" Whitespace (from Janus)
 ""
 
+" http://stackoverflow.com/questions/1878974/redefine-tab-as-4-spaces
+" tabstop=2 will make it 'look' like 2 spaces even though it's 4 :)
+" Seems to be buggy :|
+set tabstop=4 softtabstop=0 noexpandtab shiftwidth=4
+" set smarttab
 set nowrap                        " don't wrap lines
-set tabstop=2                     " a tab is two spaces
-set shiftwidth=2                  " an autoindent (with <<) is two spaces
-set expandtab                     " use spaces, not tabs
-set list                          " Show invisible characters
+" set tabstop=4                     " a tab is two spaces
+" set softtabstop=4
+" set shiftwidth=4                  " an autoindent (with <<) is two spaces
+" set expandtab                     " use spaces, not tabs
+" set list                          " Show invisible characters
 set backspace=indent,eol,start    " backspace through everything in insert mode
 
 " Strip whitespace on save for all files
@@ -475,7 +485,9 @@ nnoremap <leader>s :w<CR>        "normalmode
 
 " CLOSE current buffer and window with cmd-w
 " nmap <T-w> :bd<CR>
-nmap <leader>q :bd <BAR> bd #<CR>
+" FIXME: How is the bottom one different?
+" nmap <leader>q :bd <BAR> bd #<CR>
+nmap <leader>q :bp <BAR> bd #<CR>
 " nmap <leader>q <C-L>GetNumberOfOpenBuffers()
 " # This is how you call a bloody function from a mapping
 " nmap <leader>q :call GetNumberOfOpenBuffers()<CR>
@@ -658,14 +670,41 @@ augroup END
 
 " BUFFER NAVIGATION - http://c7.se/switching-to-vundle/
 "noremap <tab> <c-w><c-w>
-nnoremap <silent> <tab> :bn<CR>
+" nnoremap <silent> <tab> :bn<CR>
+nnoremap <silent> <tab> :call GotoNextBuffer()<CR>
 " map shift tab to backwards
-nnoremap <silent> <S-tab> :bp<CR>
+nnoremap <silent> <S-tab> :call GotoPriorBuffer()<CR>
 " Toggle between last two buffers
 nnoremap <leader><leader> <C-^>
 
 
 
+" Q: Why do we use s: or caps?
+function! GotoNextBuffer()
+    " If currently focused on NERDtree, don't allow to change buffer
+	" Instead change window, and then change buffer
+    if exists("b:NERDTree")
+        echo "Can't navigate on NERDTree"
+		" Go to next window
+		wincmd p
+    endif
+
+	" Go to next
+	:bn
+endfunction
+
+function! GotoPriorBuffer()
+    " If currently focused on NERDtree, don't allow to change buffer
+	" Instead change window, and then change buffer
+    if exists("b:NERDTree")
+        echo "Can't navigate on NERDTree"
+		" Go to next window
+		wincmd p
+    endif
+
+	" Go to next
+	:bp
+endfunction
 
 " ********************************************
 " PLUGIN SETTINGS ************************
@@ -874,7 +913,7 @@ let test#strategy = "iterm"
 " Call Neomake (linters etc) on save for all files
 autocmd! BufWritePost * Neomake
 
-autocmd BufRead,BufNewFile *.es6 call s:setupES6File()
+autocmd BufRead,BufNewFile *.js call s:setupXBLintRules()
 
 " Set all the .*rc files to json
 autocmd BufRead,BufNewFile .*rc setfiletype json
@@ -887,7 +926,7 @@ autocmd BufRead,BufNewFile .vimrc setfiletype vim
 let g:neomake_javascript_enabled_makers = ['eslint']
 
 let g:neomake_javascript_eslint_exe = '/Users/jacharles/dev/p2pnodeweb/node_modules/.bin/eslint'
-" let g:neomake_javascript_eslint_args = ['--fix']
+" let g:neomake_javascript_eslint_args = ['--no-ignore', '-c', '/Users/jacharles/dev/p2pnodeweb/.eslintes6rc', '-f', 'compact']
 
 " Keep tray closed
 let g:neomake_open_list = 0
@@ -907,24 +946,51 @@ let g:neomake_error_sign = {
 " let g:neomake_open_list = 2
 " let g:neomake_logfile='/tmp/error.log'
 
+""
+" Lint /public/calculator files differently. This is lame, but must be done...
+" :(, in order to have different lint rules apply.
+""
+function! s:setupXBLintRules()
+
+  " :echo pwd
+  " TODO: does this need to be throttled?
+  " http://vi.stackexchange.com/questions/104/how-can-i-see-the-full-path-of-the-current-file
+  let pathName = @%
+  " :echo pathName
+  "
+  " if pathname contains this string, change the eslint params
+  if pathName =~ "public/js/calculator"
+    " :echo "MATCH"
+    let b:neomake_javascript_eslint_args = ['-c', '/Users/jacharles/dev/p2pnodeweb/.eslintes6rc', '-f', 'compact']
+  endif
+
+  " Set the checkers for the current buffer to eslint
+  " let b:syntastic_checkers = ["eslint"] " b: means for the current buffer only...
+  " Set the arguments to pass to eslint to use the es6 ruleset...
+  " let b:neomake_javascript_eslint_args = "-c /Users/jacharles/dev/p2pnodeweb/.eslintes6rc"
+
+endfunction
 
 " http://vim.wikia.com/wiki/Filetype.vim
 " For es6 files, run this every time it gets opened, and apply these buffer " variables
+" FIXME: Deprecate this. We don't need this anymore
 function! s:setupES6File()
 " TODO: Eithr apply to all files on enter, or wait until col shows, or neomake is run...
 " Dirty dirty hack. This doesn't work if we do it on startup
 
 setfiletype javascript " Set filetype
 
-" Set the checkers for the current buffer to eslint
-" let b:syntastic_checkers = ["eslint"] " b: means for the current buffer only...
-" Set the arguments to pass to eslint to use the es6 ruleset...
-" let b:syntastic_javascript_eslint_args = "-c /Users/jacharles/dev/p2pnodeweb/.eslintes6rc"
-" let b:neomake_javascript_eslint_args = "-c /Users/jacharles/dev/p2pnodeweb/.eslintes6rc"
-let b:neomake_javascript_eslint_args = ['--fix', '-c', '/Users/jacharles/dev/p2pnodeweb/.eslintes6rc', '-f', 'compact']
-" let b:neomake_javascript_eslint_exe = '/Users/jacharles/dev/p2pnodeweb/node_modules/.bin/eslint'
+  " Set the checkers for the current buffer to eslint
+  " let b:syntastic_checkers = ["eslint"] " b: means for the current buffer only...
+  " Set the arguments to pass to eslint to use the es6 ruleset...
+  " let b:syntastic_javascript_eslint_args = "-c /Users/jacharles/dev/p2pnodeweb/.eslintes6rc"
+  " let b:neomake_javascript_eslint_args = "-c /Users/jacharles/dev/p2pnodeweb/.eslintes6rc"
+  " FIXME: Change this for files in the /calculator folder...
+  let b:neomake_javascript_eslint_args = ['--fix', '-c', '/Users/jacharles/dev/p2pnodeweb/.eslintes6rc', '-f', 'compact']
+  " let b:neomake_javascript_eslint_exe = '/Users/jacharles/dev/p2pnodeweb/node_modules/.bin/eslint'
 
 endfunction
+
 
 
 ""
@@ -1114,3 +1180,15 @@ nnoremap <leader>w :w<CR>
 " VIM SCRIPTING LESSONS:
 " | can be used to combine commands
 " :exe "normal \<C-w>w"  can be used to map a command to a keymap.
+"
+"
+"
+"
+"
+"
+" ##################################################
+""" Snippets!!!!
+
+" snippet cl "console.log(...)" b
+" console.log($0);
+" endsnippet
