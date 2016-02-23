@@ -57,6 +57,8 @@
 "   :diffput - Push change to the other window.
 "
 
+" :imap    See the current insert mappings
+" :verbose imap <tab>   See what's currently mapped to tab in insert mode
 
 " Global NPM installs
 " https://github.com/stevemao/diff-so-fancy
@@ -93,7 +95,10 @@ filetype off                  " required for Vundle
 " VUNDLE START ***********
 "
 " set the runtime path to include Vundle and initialize
-set rtp+=~/.vim/bundle/Vundle.vim
+" vim-snipmate looks in runtimepath for a folder named 'snippets' for code
+" snippets
+set rtp+=~/.vim/bundle/Vundle.vim,~/.dotfiles/_codesnippets
+" set rtp+=~/.
 call vundle#begin()
 " alternatively, pass a path where Vundle should install plugins
 "call vundle#begin('~/some/path/here')
@@ -119,11 +124,14 @@ Plugin 'tpope/vim-unimpaired'                        " Buffer switching
 Plugin 'duff/vim-bufonly'                            " Close all buffers but current
 " Plugin 'mihaifm/bufstop'                             " MOST Amazing MRU Buffer switcher
 Plugin 'SirVer/ultisnips'                            " Snippet engine
-Plugin 'honza/vim-snippets'                          " Default snippet package for the utilsnips engine
+" Vim Snippets (local)
+Plugin 'MarcWeber/vim-addon-mw-utils'
+Plugin 'tomtom/tlib_vim'
+Plugin 'garbas/vim-snipmate'                         " Snippets that allow you to use a separate folder                                                                                               " Snippet framework
+" Plugin 'honza/vim-snippets'                          " Default snippet package for the utilsnips engine
 
 Plugin 'ervandew/supertab'                           " Sweet tab completion
 Plugin 'zerowidth/vim-copy-as-rtf'                   " Copy to rtf (and paste code to Keynote)
-" Plugin 'garbas/vim-snipmate'                                                                                                " Snippet framework
 Plugin 'bronson/vim-trailing-whitespace'             " Trail whitespace finder
 Plugin 'godlygeek/tabular'                           " easy aligning. :Tab /= http://vimcasts.org/episodes/aligning-text-with-tabular-vim/
 Plugin 'tpope/vim-sleuth'                            " Better indentation. Give it a try... Sigh.
@@ -487,11 +495,34 @@ nnoremap <leader>s :w<CR>        "normalmode
 " nmap <T-w> :bd<CR>
 " FIXME: How is the bottom one different?
 " nmap <leader>q :bd <BAR> bd #<CR>
-nmap <leader>q :bp <BAR> bd #<CR>
+" nmap <leader>q :bp <BAR> bd #<CR>
+nmap <leader>q :call CloseCurrentBufferOrWindow()<CR>
 " nmap <leader>q <C-L>GetNumberOfOpenBuffers()
 " # This is how you call a bloody function from a mapping
 " nmap <leader>q :call GetNumberOfOpenBuffers()<CR>
 
+" Will close the window if there are more open than should be
+function! CloseCurrentBufferOrWindow()
+" If NerdTree is  open
+  if bufwinnr(t:NERDTreeBufName) == 1
+      " If NERDTree is open, there should be 2 open windows.
+      let shouldBeOpen = 2
+  else
+      " If NERDTree is not open, there should be 1 open window.
+      let shouldBeOpen = 1
+
+  endif
+
+  " Close buffer and go to prior buffer
+  :bp
+  :bd #
+
+  " If number of open windows exceeds what it should, close the window
+  if winnr() > shouldBeOpen
+      :close
+  endif
+
+endfunction
 
 func! GetNumberOfOpenBuffers()
   " This is how you run a command from a script...
@@ -682,28 +713,28 @@ nnoremap <leader><leader> <C-^>
 " Q: Why do we use s: or caps?
 function! GotoNextBuffer()
     " If currently focused on NERDtree, don't allow to change buffer
-	" Instead change window, and then change buffer
+    " Instead change window, and then change buffer
     if exists("b:NERDTree")
         echo "Can't navigate on NERDTree"
-		" Go to next window
-		wincmd p
+	" Go to next window
+	wincmd p
     endif
 
-	" Go to next
-	:bn
+    " Go to next
+    :bn
 endfunction
 
 function! GotoPriorBuffer()
     " If currently focused on NERDtree, don't allow to change buffer
-	" Instead change window, and then change buffer
+    " Instead change window, and then change buffer
     if exists("b:NERDTree")
-        echo "Can't navigate on NERDTree"
-		" Go to next window
-		wincmd p
+      echo "Can't navigate on NERDTree"
+      " Go to next window
+      wincmd p
     endif
 
-	" Go to next
-	:bp
+    " Go to next
+    :bp
 endfunction
 
 " ********************************************
@@ -725,9 +756,16 @@ endfunction
 
 
 ""
+"" Autocompletion, and snippets...
 "" Util-snips. http://vimcasts.org/episodes/meet-ultisnips/
 ""
 let g:UltiSnipsExpandTrigger="<tab>"
+" imap <Tab> <Plug>snipMateTrigger
+
+" Edit JS snippets file
+nnoremap <leader>es <C-w>v<C-w>l<C-w>L:e ~/.dotfiles/_codesnippets/snippets/javascript.snippets<cr>
+
+
 "let g:UltiSnipsJumpForwardTrigger="<s-tab>"    " Lets you jump to next insertion point
 " Let's try this
 "let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
