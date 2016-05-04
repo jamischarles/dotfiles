@@ -98,7 +98,8 @@ filetype off                  " required for Vundle
 " vim-snipmate looks in runtimepath for a folder named 'snippets' for code
 " snippets
 " set rtp+=~/.vim/bundle/Vundle.vim,~/.dotfiles/_codesnippets
-set rtp+=~/.dotfiles/_codesnippets,/usr/local/Cellar/fzf/HEAD
+set rtp+=~/.dotfiles/_codesnippets
+" set rtp+=~/.dotfiles/_codesnippets,/usr/local/Cellar/fzf/HEAD
 " set rtp+=~/.
 call plug#begin('~/.vim/plugged')
 
@@ -106,15 +107,16 @@ call plug#begin('~/.vim/plugged')
 " TODO: group these into sensible groupings
 Plug 'tpope/vim-fugitive'                          " Git commands in Vim. Consider https://github.com/carlhuda/janus/blob/master/janus/vim/tools/janus/after/plugin/fugitive.vim
 " Plug 'scrooloose/nerdtree' | Plug 'Xuyuanp/nerdtree-git-plugin'
-Plug 'scrooloose/nerdtree' "| Plug 'Xuyuanp/nerdtree-git-plugin'
-Plug 'Xuyuanp/nerdtree-git-plugin', { 'on':  'NERDTreeToggle' }  " Load lazily, since first load is really slow with this on
+Plug 'scrooloose/nerdtree' | Plug 'Xuyuanp/nerdtree-git-plugin'
+" Lazy loading doesn't seem to work properly...
+" Plug 'Xuyuanp/nerdtree-git-plugin', { 'on':  'NERDTreeToggle' }  " Load lazily, since first load is really slow with this on
 " File tree  Consider https://github.com/carlhuda/janus/blob/master/janus/vim/tools/janus/after/plugin/nerdtree.vim
 " Git status in Nerdtree
 
 Plug 'airblade/vim-gitgutter'                      " Git gutter
-" Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' } " Have it
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' } " Have it
 " added above with rtp
-Plug 'junegunn/fzf.vim'
+" Plug 'junegunn/fzf.vim'
 Plug 'Shougo/neomru.vim'                             "MRU cache (can be used from FZF)
 " Plug 'kien/ctrlp.vim'                              " Fuzzy file finder
 " Plug 'mileszs/ack.vim'                             " Ack in Vim. TODO: Consider trying ag instead of ack in here
@@ -878,8 +880,17 @@ endfunction
 " endif
 
 " nmap <leader>t :CtrlP<CR>
-nmap <leader>t :FZF<CR>
+" nmap <leader>t :FZF<CR>
 
+" use ag to respect gitignores, then pipe result to fzf
+" Favor matches from the end, and shorter. And use exact match.
+nnoremap <silent> <Leader>t :call fzf#run({
+\   'source': 'ag -g ""',
+\   'options': '--exact --tiebreak=end,length',
+\   'sink': 'e '
+\ })<CR>
+
+" \   'options': '--exact --tiebreak=end,length',
 
 " This is the default extra key bindings
 let g:fzf_action = {
@@ -921,6 +932,13 @@ nnoremap <silent> <Leader>m :call fzf#run({
 \   'sink': 'e '
 \ })<CR>
 
+" Pipe git status to fzf
+"<sid> maps to s:
+nnoremap <silent> <Leader>g :call fzf#run({
+\   'source': 'git status -s',
+\   'options': '--ansi',
+\   'sink': function('<sid>gitstatusopen')
+\ })<CR>
 
 " Process && Open Git status line
 function! s:gitstatusopen(e)
@@ -929,13 +947,6 @@ function! s:gitstatusopen(e)
   execute 'e' matchstr(a:e, '.\+', 2)
 endfunction
 
-" Pipe git status to fzf
-nnoremap <silent> <Leader>g :call fzf#run({
-\   'source': 'git status --porcelain',
-\   'sink': function('<sid>gitstatusopen')
-\ })<CR>
-"<sid> maps to s:
-" \   'source': 'git status --porcelain',
 
 " Jump to opened file (buffer) with <space>b
 function! s:buflist()
@@ -1000,7 +1011,7 @@ let g:ctrlp_custom_ignore = {
 " nmap <leader>rh <Plug>GitGutterRevertHunk
 " nmap <leader>ph <Plug>GitGutterPreviewHunk
 nmap <leader>s <Plug>GitGutterStageHunk
-nmap <leader>r <Plug>GitGutterRevertHunk
+nmap <leader>r <Plug>GitGutterUndoHunk
 nmap <leader>p <Plug>GitGutterPreviewHunk
 
 " ZOOMwin - Replaced by :WindowMax
