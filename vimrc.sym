@@ -97,79 +97,83 @@ filetype off                  " required for Vundle
 " set the runtime path to include Vundle and initialize
 " vim-snipmate looks in runtimepath for a folder named 'snippets' for code
 " snippets
-set rtp+=~/.vim/bundle/Vundle.vim,~/.dotfiles/_codesnippets
+" set rtp+=~/.vim/bundle/Vundle.vim,~/.dotfiles/_codesnippets
+set rtp+=~/.dotfiles/_codesnippets,/usr/local/Cellar/fzf/HEAD
 " set rtp+=~/.
-call vundle#begin()
-" alternatively, pass a path where Vundle should install plugins
-"call vundle#begin('~/some/path/here')
+call plug#begin('~/.vim/plugged')
 
-" let Vundle manage Vundle, required
-Plugin 'gmarik/Vundle.vim'
 
 " TODO: group these into sensible groupings
-Plugin 'tpope/vim-fugitive'                          " Git commands in Vim. Consider https://github.com/carlhuda/janus/blob/master/janus/vim/tools/janus/after/plugin/fugitive.vim
-Plugin 'scrooloose/nerdtree'                         " File tree  Consider https://github.com/carlhuda/janus/blob/master/janus/vim/tools/janus/after/plugin/nerdtree.vim
-Plugin 'airblade/vim-gitgutter'                      " Git gutter
-Plugin 'Xuyuanp/nerdtree-git-plugin'                 " Git status in Nerdtree
-Plugin 'kien/ctrlp.vim'                              " Fuzzy file finder
-Plugin 'mileszs/ack.vim'                             " Ack in Vim. TODO: Consider trying ag instead of ack in here
-Plugin 'rking/ag.vim'                                " Try AG instead of ACK
+Plug 'tpope/vim-fugitive'                          " Git commands in Vim. Consider https://github.com/carlhuda/janus/blob/master/janus/vim/tools/janus/after/plugin/fugitive.vim
+" Plug 'scrooloose/nerdtree' | Plug 'Xuyuanp/nerdtree-git-plugin'
+Plug 'scrooloose/nerdtree' "| Plug 'Xuyuanp/nerdtree-git-plugin'
+Plug 'Xuyuanp/nerdtree-git-plugin', { 'on':  'NERDTreeToggle' }  " Load lazily, since first load is really slow with this on
+" File tree  Consider https://github.com/carlhuda/janus/blob/master/janus/vim/tools/janus/after/plugin/nerdtree.vim
+" Git status in Nerdtree
 
-Plugin 'tomtom/tcomment_vim'
+Plug 'airblade/vim-gitgutter'                      " Git gutter
+" Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' } " Have it
+" added above with rtp
+Plug 'junegunn/fzf.vim'
+Plug 'Shougo/neomru.vim'                             "MRU cache (can be used from FZF)
+" Plug 'kien/ctrlp.vim'                              " Fuzzy file finder
+" Plug 'mileszs/ack.vim'                             " Ack in Vim. TODO: Consider trying ag instead of ack in here
+" Plug 'rking/ag.vim'                                " Try AG instead of ACK
+
+Plug 'tomtom/tcomment_vim'
 " Plugin 'scrooloose/nerdcommenter'                  " Awesome commenting
 " Plugin 'tpope/vim-commentary'                      "
 " Plugin 'scrooloose/syntastic'                        " Syntax checker
-Plugin 'benekastah/neomake'                          " Async make (for syntax checking etc)
-Plugin 'tpope/vim-unimpaired'                        " Buffer switching
-Plugin 'duff/vim-bufonly'                            " Close all buffers but current
+Plug 'benekastah/neomake'                          " Async make (for syntax checking etc)
+Plug 'tpope/vim-unimpaired'                        " Buffer switching
+Plug 'duff/vim-bufonly'                            " Close all buffers but current
 " Plugin 'mihaifm/bufstop'                             " MOST Amazing MRU Buffer switcher
-Plugin 'SirVer/ultisnips'                            " Snippet engine
+Plug 'SirVer/ultisnips'                            " Snippet engine
 " Vim Snippets (local)
-Plugin 'MarcWeber/vim-addon-mw-utils'
-Plugin 'tomtom/tlib_vim'
-" Plugin 'garbas/vim-snipmate'                         " Snippets that allow you to use a separate folder                                                                                               " Snippet framework
-" Plugin 'honza/vim-snippets'                          " Default snippet package for the utilsnips engine
+Plug 'MarcWeber/vim-addon-mw-utils'
+Plug 'tomtom/tlib_vim'
 
-Plugin 'ervandew/supertab'                           " Sweet tab completion
-Plugin 'zerowidth/vim-copy-as-rtf'                   " Copy to rtf (and paste code to Keynote)
-Plugin 'bronson/vim-trailing-whitespace'             " Trail whitespace finder
-Plugin 'godlygeek/tabular'                           " easy aligning. :Tab /= http://vimcasts.org/episodes/aligning-text-with-tabular-vim/
-Plugin 'tpope/vim-sleuth'                            " Better indentation. Give it a try... Sigh.
-Plugin 'tpope/vim-surround'                          " easy surround with quote etc
+Plug 'ervandew/supertab'                           " Sweet tab completion
+Plug 'zerowidth/vim-copy-as-rtf'                   " Copy to rtf (and paste code to Keynote)
+Plug 'bronson/vim-trailing-whitespace'             " Trail whitespace finder
+Plug 'godlygeek/tabular'                           " easy aligning. :Tab /= http://vimcasts.org/episodes/aligning-text-with-tabular-vim/
+Plug 'tpope/vim-sleuth'                            " Better indentation. Give it a try... Sigh.
+Plug 'tpope/vim-surround'                          " easy surround with quote etc
 " Plugin 'jwhitley/vim-matchit'                      " better % matching. Does this even do anything? Not sure it's worth having around. REMOVE?
 " Plugin 'terryma/vim-expand-region'
 " Plugin 'jeetsukumaran/vim-markology'               " Mark visualizations
-Plugin 'bkad/CamelCaseMotion'                        " Next word considers camelcase as part of it :). LOVE IT!!! SO AMAZING
+Plug 'bkad/CamelCaseMotion'                        " Next word considers camelcase as part of it :). LOVE IT!!! SO AMAZING
 
-Plugin 'janko-m/vim-test'                            " Running tests from vim
-Plugin 'tyru/open-browser.vim'                       " Open in test
+Plug 'janko-m/vim-test'                            " Running tests from vim
+Plug 'tyru/open-browser.vim'                       " Open in test
 
-Plugin 'Raimondi/delimitMate'                        " quote, bracket, etc autocompletion
-Plugin 't9md/vim-textmanip'                          " Move selected text around easily
-Plugin 'ntpeters/vim-better-whitespace'              " Strip whitespace on save
-Plugin 'elzr/vim-json'                               " Hide quotes, json highlighting
-Plugin 'jimmyhchan/dustjs.vim'
-Plugin 'moll/vim-node'                               " node sugar like gf, gd?
-Plugin 'lambdatoast/elm.vim'                         " Elm syntax
-Plugin 'ElmCast/elm-vim'                             " Elm error sugar etc
-Plugin 'nikvdp/ejs-syntax'                           " EJS Highlighting
+Plug 'Raimondi/delimitMate'                        " quote, bracket, etc autocompletion
+Plug 't9md/vim-textmanip'                          " Move selected text around easily
+Plug 'ntpeters/vim-better-whitespace'              " Strip whitespace on save
+Plug 'elzr/vim-json'                               " Hide quotes, json highlighting
+Plug 'jimmyhchan/dustjs.vim'
+Plug 'moll/vim-node'                               " node sugar like gf, gd?
+Plug 'lambdatoast/elm.vim'                         " Elm syntax
+Plug 'ElmCast/elm-vim'                             " Elm error sugar etc
+Plug 'nikvdp/ejs-syntax'                           " EJS Highlighting
 
-Plugin 'vim-airline/vim-airline'                           " Status bar (bottom)
-Plugin 'vim-airline/vim-airline-themes'              " Themes for statusbar
-Plugin 'altercation/vim-colors-solarized'            " Color scheme
-Plugin 'tomasr/molokai'                              " Color scheme based on monokai
-Plugin 'sickill/vim-monokai'
+Plug 'vim-airline/vim-airline' | Plug 'vim-airline/vim-airline-themes'
+" Status bar (bottom)
+" Themes for statusbar
+Plug 'altercation/vim-colors-solarized'            " Color scheme
+Plug 'tomasr/molokai'                              " Color scheme based on monokai
+Plug 'sickill/vim-monokai'
 
-Plugin 'jooize/vim-colemak'                          " Remap keyboard shortcuts to colemak
-Plugin 'pangloss/vim-javascript'                     " JS indentation & syntax sugar
-Plugin 'groenewege/vim-less'                         " Less language bundle
+Plug 'jooize/vim-colemak'                          " Remap keyboard shortcuts to colemak
+Plug 'pangloss/vim-javascript'                     " JS indentation & syntax sugar
+Plug 'groenewege/vim-less'                         " Less language bundle
 " Plugin 'mxw/vim-jsx'                                 " JSX syntax highlighting.
 
 
 " Plugin 'junegunn/limelight.vim' "Focus mode
 
-call vundle#end()            " required
-filetype plugin indent on    " required
+" Add plugins to &runtimepath
+call plug#end()
 
 " enable fzf for VIM
 set rtp+=~/.fzf
@@ -873,13 +877,94 @@ endfunction
 " else
 " endif
 
-nmap <leader>t :CtrlP<CR>
+" nmap <leader>t :CtrlP<CR>
+nmap <leader>t :FZF<CR>
+
+
+" This is the default extra key bindings
+let g:fzf_action = {
+  \ 'ctrl-t': 'tab split',
+  \ 'ctrl-x': 'split',
+  \ 'ctrl-v': 'vsplit' }
+
+" Default fzf layout
+" - down / up / left / right
+" - window (nvim only)
+let g:fzf_layout = { 'down': '~30%' }
+
+" Customize fzf colors to match your color scheme
+let g:fzf_colors =
+\ { 'fg':      ['fg', 'Normal'],
+  \ 'bg':      ['bg', 'Normal'],
+  \ 'hl':      ['fg', 'Comment'],
+  \ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
+  \ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
+  \ 'hl+':     ['fg', 'Statement'],
+  \ 'info':    ['fg', 'PreProc'],
+  \ 'prompt':  ['fg', 'Conditional'],
+  \ 'pointer': ['fg', 'Exception'],
+  \ 'marker':  ['fg', 'Keyword'],
+  \ 'spinner': ['fg', 'Label'],
+  \ 'header':  ['fg', 'Comment'] }
+
+
+" [Buffers] Jump to the existing window if possible
+let g:fzf_buffers_jump = 1
+
+" [[B]Commits] to customize the options used by 'git log':
+let g:fzf_commits_log_options = '--graph --color=always --format="%C(auto)%h%d %s %C(black)%C(bold)%cr"'
+
+
+" Use the MRU cache
+nnoremap <silent> <Leader>m :call fzf#run({
+\   'source': 'sed "1d" $HOME/.cache/neomru/file',
+\   'sink': 'e '
+\ })<CR>
+
+
+" Process && Open Git status line
+function! s:gitstatusopen(e)
+	"TODO: FIXME: This is a regex that just takes everything after char 2.
+	"haha. Maybe try to handle this properly...
+  execute 'e' matchstr(a:e, '.\+', 2)
+endfunction
+
+" Pipe git status to fzf
+nnoremap <silent> <Leader>g :call fzf#run({
+\   'source': 'git status --porcelain',
+\   'sink': function('<sid>gitstatusopen')
+\ })<CR>
+"<sid> maps to s:
+" \   'source': 'git status --porcelain',
+
+" Jump to opened file (buffer) with <space>b
+function! s:buflist()
+  redir => ls
+  silent ls
+  redir END
+  return split(ls, '\n')
+endfunction
+
+function! s:bufopen(e)
+  execute 'buffer' matchstr(a:e, '^[ 0-9]*')
+endfunction
+
+" Send buffers to FZF
+nnoremap <silent> <Leader>b :call fzf#run({
+\   'source':  reverse(<sid>buflist()),
+\   'sink':    function('<sid>bufopen'),
+\   'options': '+m',
+\   'down':    len(<sid>buflist()) + 2
+\ })<CR>
+
+
+" TODO: REMOVE THIS BELOW?
 
 " let g:ctrlp_map = '<T-t>'
 let g:ctrlp_working_path_mode = 0
 
 " Let ctrlP search through the buffers
-nmap <leader>b :CtrlPBuffer<CR>
+" nmap <leader>b :CtrlPBuffer<CR>
 
 " Use The Silver Searcher https://github.com/ggreer/the_silver_searcher
 " Use ag instead of grep for ctrlp
