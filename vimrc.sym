@@ -99,6 +99,7 @@ filetype off                  " required for Vundle
 " snippets
 " set rtp+=~/.vim/bundle/Vundle.vim,~/.dotfiles/_codesnippets
 set rtp+=~/.dotfiles/_codesnippets
+set rtp+=~/.fzf " Is this the old version? "
 " set rtp+=~/.dotfiles/_codesnippets,/usr/local/Cellar/fzf/HEAD
 " set rtp+=~/.
 call plug#begin('~/.vim/plugged')
@@ -115,8 +116,7 @@ Plug 'scrooloose/nerdtree' | Plug 'Xuyuanp/nerdtree-git-plugin'
 
 Plug 'airblade/vim-gitgutter'                      " Git gutter
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' } " Have it
-" added above with rtp
-" Plug 'junegunn/fzf.vim'
+Plug 'junegunn/fzf.vim'
 Plug 'Shougo/neomru.vim'                             "MRU cache (can be used from FZF)
 " Plug 'kien/ctrlp.vim'                              " Fuzzy file finder
 " Plug 'mileszs/ack.vim'                             " Ack in Vim. TODO: Consider trying ag instead of ack in here
@@ -178,7 +178,6 @@ Plug 'groenewege/vim-less'                         " Less language bundle
 call plug#end()
 
 " enable fzf for VIM
-set rtp+=~/.fzf
 " yank will go to the system clipboard. Allows copy paste to outside
 set clipboard=unnamed
 " To ignore plugin indent changes, instead use:
@@ -882,13 +881,19 @@ endfunction
 " nmap <leader>t :CtrlP<CR>
 " nmap <leader>t :FZF<CR>
 
-" use ag to respect gitignores, then pipe result to fzf
-" Favor matches from the end, and shorter. And use exact match.
+" use ag as source to respect gitignores, then pipe result to fzf
+" options: Favor matches from the end, and shorter. And use exact match.
+" down: location & size of window
+" TODO: Consider just using gitfiles. That works pretty well...
 nnoremap <silent> <Leader>t :call fzf#run({
 \   'source': 'ag -g ""',
 \   'options': '--exact --tiebreak=end,length',
+\   'down': '~40%',
 \   'sink': 'e '
 \ })<CR>
+
+
+let g:fzf_command_prefix = 'Fzf'
 
 " \   'options': '--exact --tiebreak=end,length',
 
@@ -927,46 +932,52 @@ let g:fzf_commits_log_options = '--graph --color=always --format="%C(auto)%h%d %
 
 
 " Use the MRU cache
-nnoremap <silent> <Leader>m :call fzf#run({
-\   'source': 'sed "1d" $HOME/.cache/neomru/file',
-\   'sink': 'e '
-\ })<CR>
+"
+nnoremap <silent> <Leader>m :FzfHistory<CR>
+" nnoremap <silent> <Leader>m :call fzf#run({
+" \   'source': 'sed "1d" $HOME/.cache/neomru/file',
+" \   'sink': 'e '
+" \ })<CR>
 
 " Pipe git status to fzf
 "<sid> maps to s:
-nnoremap <silent> <Leader>g :call fzf#run({
-\   'source': 'git status -s',
-\   'options': '--ansi',
-\   'sink': function('<sid>gitstatusopen')
-\ })<CR>
+nnoremap <silent> <Leader>g :FzfGitFiles?<CR>
+" nnoremap <silent> <Leader>g :call fzf#run({
+" \   'source': 'git status -s',
+" \   'options': '--ansi',
+" \   'sink': function('<sid>gitstatusopen')
+" \ })<CR>
+"
+" " Process && Open Git status line
+" function! s:gitstatusopen(e)
+" 	"TODO: FIXME: This is a regex that just takes everything after char 2.
+" 	"haha. Maybe try to handle this properly...
+"   execute 'e' matchstr(a:e, '.\+', 2)
+" endfunction
 
-" Process && Open Git status line
-function! s:gitstatusopen(e)
-	"TODO: FIXME: This is a regex that just takes everything after char 2.
-	"haha. Maybe try to handle this properly...
-  execute 'e' matchstr(a:e, '.\+', 2)
-endfunction
+
+nnoremap <silent> <Leader>b :FzfBuffers<CR>
 
 
 " Jump to opened file (buffer) with <space>b
-function! s:buflist()
-  redir => ls
-  silent ls
-  redir END
-  return split(ls, '\n')
-endfunction
-
-function! s:bufopen(e)
-  execute 'buffer' matchstr(a:e, '^[ 0-9]*')
-endfunction
-
-" Send buffers to FZF
-nnoremap <silent> <Leader>b :call fzf#run({
-\   'source':  reverse(<sid>buflist()),
-\   'sink':    function('<sid>bufopen'),
-\   'options': '+m',
-\   'down':    len(<sid>buflist()) + 2
-\ })<CR>
+" function! s:buflist()
+"   redir => ls
+"   silent ls
+"   redir END
+"   return split(ls, '\n')
+" endfunction
+"
+" function! s:bufopen(e)
+"   execute 'buffer' matchstr(a:e, '^[ 0-9]*')
+" endfunction
+"
+" " Send buffers to FZF
+" nnoremap <silent> <Leader>b :call fzf#run({
+" \   'source':  reverse(<sid>buflist()),
+" \   'sink':    function('<sid>bufopen'),
+" \   'options': '+m',
+" \   'down':    len(<sid>buflist()) + 2
+" \ })<CR>
 
 
 " TODO: REMOVE THIS BELOW?
