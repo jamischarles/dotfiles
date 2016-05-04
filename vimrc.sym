@@ -127,7 +127,7 @@ Plugin 'SirVer/ultisnips'                            " Snippet engine
 " Vim Snippets (local)
 Plugin 'MarcWeber/vim-addon-mw-utils'
 Plugin 'tomtom/tlib_vim'
-Plugin 'garbas/vim-snipmate'                         " Snippets that allow you to use a separate folder                                                                                               " Snippet framework
+" Plugin 'garbas/vim-snipmate'                         " Snippets that allow you to use a separate folder                                                                                               " Snippet framework
 " Plugin 'honza/vim-snippets'                          " Default snippet package for the utilsnips engine
 
 Plugin 'ervandew/supertab'                           " Sweet tab completion
@@ -152,11 +152,13 @@ Plugin 'jimmyhchan/dustjs.vim'
 Plugin 'moll/vim-node'                               " node sugar like gf, gd?
 Plugin 'lambdatoast/elm.vim'                         " Elm syntax
 Plugin 'ElmCast/elm-vim'                             " Elm error sugar etc
+Plugin 'nikvdp/ejs-syntax'                           " EJS Highlighting
 
-Plugin 'bling/vim-airline'                           " Status bar (bottom)
+Plugin 'vim-airline/vim-airline'                           " Status bar (bottom)
+Plugin 'vim-airline/vim-airline-themes'              " Themes for statusbar
 Plugin 'altercation/vim-colors-solarized'            " Color scheme
 Plugin 'tomasr/molokai'                              " Color scheme based on monokai
-Plugin 'lsdr/monokai'
+Plugin 'sickill/vim-monokai'
 
 Plugin 'jooize/vim-colemak'                          " Remap keyboard shortcuts to colemak
 Plugin 'pangloss/vim-javascript'                     " JS indentation & syntax sugar
@@ -198,6 +200,12 @@ let g:solarized_visibility = "low"
 colorscheme solarized
 set background=dark"
 
+
+" For presentations
+" colorscheme monokai
+" let g:html_font = 'Menlo'
+
+"? Does this even load?
 if exists("neovim_dot_app")
   " This MUST be defined BEFORE the colorscheme. No idea why. Also, seems like
   " terminal vim doesn't handle the contrast variation very well, so let's leave
@@ -332,12 +340,15 @@ endif
 " Map :ags to the following...
 " ! suffix overwrites so you can source the file easier...
 " -Q makes it a non-regex search
-cmap ag Ag! -S -A 5 -B 5 -Q
+
+" TODO: Fix this. Conflicts too much right now
+" cmap ag Ag! -S -A 5 -B 5 -QS
+
 " Search open buffers
 cmap agb AgBuffer! -S -A 5 -B 5
 
-cmap ags Ag! -S -A 5 -B 5 -G '\.(js\|es6)' -Q
-cmap agp Ag! -S -A 5 -B 5 -G '\.properties' -Q
+cmap ags Ag! -S -A 5 -B 5 -G '\.(js\|es6)' -QS
+cmap agp Ag! -S -A 5 -B 5 -G '\.properties' -QS
 
 " http://vim.wikia.com/wiki/Search_and_replace_the_word_under_the_cursor
 " AG Search for word under the cursor (<cword>) MONEY
@@ -593,6 +604,16 @@ nnoremap <silent> <leader>= :WindowEq<CR>
 " :NextWindow
 " command! WindowNext <C-w>w
 
+" NAVIGATION-CURSOR
+" Turbo navigation (Colemak) {{{
+    " Works with counts, see ":help complex-repeat"
+    nnoremap <silent> H @='5h'<CR>|xnoremap <silent> H @='5h'<CR>|onoremap <silent> H @='5h'<CR>|
+    nnoremap <silent> N @='5gj'<CR>|xnoremap <silent> N @='5gj'<CR>|onoremap <silent> N @='5gj'<CR>|
+    nnoremap <silent> E @='5gk'<CR>|xnoremap <silent> E @='5gk'<CR>|onoremap <silent> E @='5gk'<CR>|
+    nnoremap <silent> I @='5l'<CR>|xnoremap <silent> I @='5l'<CR>|onoremap <silent> I @='5l'<CR>|
+" }}}
+
+
 " SEARCH/REPLACE
 nnoremap <leader>fr :%s/
 
@@ -833,6 +854,11 @@ endfunction
 
 "map <Leader>n <plug>NERDTreeTabsToggle<CR>
 
+
+""
+" Ctrl-P File Search
+""
+
 " CTRL-P Settings (Janus) https://github.com/carlhuda/janus/blob/master/janus/vim/tools/janus/after/plugin/ctrlp.vim
 "" Ctrl-p ignore node_modules (too much)
 " Ignore some folders and files for CtrlP indexing | https://coderwall.com/p/hk_bwg/how-to-speed-up-ctrlp
@@ -863,18 +889,23 @@ if executable('ag')
 
   " Use ag in CtrlP for listing files. Lightning fast and respects .gitignore
   " http://stackoverflow.com/questions/18285751/use-ag-in-ctrlp-vim
-  let g:ctrlp_user_command = 'ag %s -l  --ignore .git --hidden -g ""'
+  " No idea why this ignore works, but this appears to ignore non-us locales
+  " folders
+  " If you use user command, the custom_ignore doesn't apply...
+  let g:ctrlp_user_command = 'ag %s -l --ignore .git --hidden -g ""'
+  " let g:ctrlp_user_command = 'ag %s -l  --ignore .git --hidden -g ""'
 
 
   " ag is fast enough that CtrlP doesn't need to cache
   " let g:ctrlp_use_caching = 0
 
-  let g:ctrlp_custom_ignore = {
-        \ 'dir':  '\.git$\|node_modules$',
-        \ 'file': '\.so$\|\.dat$|\.DS_Store$'
-        \ }
 endif
 
+" This won't work if ctrlp_user_command is set...
+let g:ctrlp_custom_ignore = {
+      \ 'dir':  'locales$|\.git$|node_modules',
+      \ 'file': '\.so$\|\.dat$|\.DS_Store$'
+      \ }
 
 
 ""
@@ -993,14 +1024,15 @@ function! s:setupXBLintRules()
   " :echo pwd
   " TODO: does this need to be throttled?
   " http://vi.stackexchange.com/questions/104/how-can-i-see-the-full-path-of-the-current-file
-  let pathName = @%
+  " let pathName = @%
   " :echo pathName
   "
+  " Works GREAT, but isn't needed anymore
   " if pathname contains this string, change the eslint params
-  if pathName =~ "public/js/calculator"
+  " if pathName =~ "public/js/calculator"
     " :echo "MATCH"
-    let b:neomake_javascript_eslint_args = ['-c', '/Users/jacharles/dev/p2pnodeweb/.eslintes6rc', '-f', 'compact']
-  endif
+    " let b:neomake_javascript_eslint_args = ['-c', '/Users/jacharles/dev/p2pnodeweb/.eslintes6rc', '-f', 'compact']
+  " endif
 
   " Set the checkers for the current buffer to eslint
   " let b:syntastic_checkers = ["eslint"] " b: means for the current buffer only...

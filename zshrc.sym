@@ -112,6 +112,14 @@ function gn {
   growlnotify Finished -m $output -a iterm #notify what we just executed and stringify it
 }
 
+# One liner doesn't seem to work beacuse the branch name (at the end) isn't available when it's needed at time of expansion...
+ # "branch=$(git rev-parse --abbrev-ref HEAD) && git checkout develop | git pull --rebase upstream develop;  git branch -d $branch " # go to develop and delete current branch.
+function deleteCurrentBranch {
+  # save current branch, then go to develop, pull down most recent, then delete the current branch (if merged).
+  branch=$(git rev-parse --abbrev-ref HEAD)
+  git checkout develop && git pull --rebase upstream develop
+  git branch -d $branch  # go to develop and delete current branch.
+}
 
 #not working :(
 alias gne="$@; growlnotify Finished -m '$@' -a iterm"
@@ -218,12 +226,15 @@ abbreviations=(
   "itermNvim" "set_iterm_profile Nvim"
   "itermNormal" "set_iterm_profile Nvim"
   "iterm0" "set_iterm_profile Nvim"
+  "itermNvimHigh" "set_iterm_profile Nvim_high_contrast"
   "iterm1" "set_iterm_profile Jamis"
   "iterm2" "set_iterm_profile Pluralsight"
   "itermp" "set_iterm_profile Pluralsight"
   "itermd" "set_iterm_profile Default"
   "itermn2" "set_iterm_profile Nvim2"
-  "ags"    "ag -A 2 -B 2 -G '.(es6|js)' -Q" # -Q makes it a non-regex match
+  "ags"    "ag -C 2 -G '.(es6|js)' -QS" # -Q makes it a non-regex match. S makes it smart case
+  "agp"    "ag -C 2 -G 'locales/US/en/' -QS" # Ignore non US locale folders...
+  # "ags"    "ag -A 2 -B 2 -G '.(es6|js)' -QS" # -Q makes it a non-regex match. S makes it smart case
   "nuke"  "git pull --rebase upstream develop && rm -rf node_modules && npm i"
   "gp"    "git push origin"
   "gpf"   "git push -f origin"
@@ -231,7 +242,9 @@ abbreviations=(
   "grb"   "git rebase -i upstream/develop"
   "gs"    "git status -s"
   "gb"    "git branch -v"
-  "gbd"    "git branch -d"
+  # "gbd"    "git branch -d"
+  # This next command uses `command substitution`: http://zsh.sourceforge.net/Intro/intro_7.html
+  "gbd"    "deleteCurrentBranch" # go to develop and delete current branch.
   "gbD"    "git branch -D"
   "gc"    "git commit -v"
   "gcm"    "git commit -m"
@@ -240,6 +253,7 @@ abbreviations=(
   "och"     "git diff --name-only | uniq | xargs nvim" # Open all git changed files in nvim
   # "gd"    "git diff"
   "gd"     "git diff --color | diff-highlight | diff-so-fancy | less --tabs=1,5 -R"
+  "gdc"     "git diff --cached --color | diff-highlight | diff-so-fancy | less --tabs=1,5 -R"
   "gds"    "git diff --staged"
   "gch"    "git checkout"
   "grm"    "git remote -v"
