@@ -25,6 +25,9 @@
 " dst - Delete surrounding Tag - dst
 " cst - Change surrounding Tag - cst<em>
 "
+"
+" COLUMN SELECT Ctrl-V
+"
 " CLOSE all other windows - <leader>o
 "
 " RESUME Search - //
@@ -819,6 +822,24 @@ map <leader>f :NERDTreeFind<CR>
 let g:NERDTreeShowHidden=1 	 " Show hidden files by default
 let NERDTreeQuitOnOpen=0 " DOESN'T WORK :(
 
+
+" autocmd! FileReadPre * call GotoNextWindow()
+
+" If you try to :e when Nerdtree is focused, DO NOT open a file in nerdtree...
+" Go to next window
+" function! GotoNextWindow()
+"   echo "DO IT"
+" 	wincmd p
+"     " If currently focused on NERDtree, don't allow to change buffer
+"     " Instead change window, and then change buffer
+"     if exists("b:NERDTree")
+"         echo "Can't navigate on NERDTree"
+" 	" Go to next window
+"     endif
+"
+" endfunction
+
+
 " If NERDTree is the only window left, close vim. TODO: Move to nerdtree file?
 " autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
 
@@ -884,13 +905,30 @@ endfunction
 " use ag as source to respect gitignores, then pipe result to fzf
 " options: Favor matches from the end, and shorter. And use exact match.
 " down: location & size of window
+" ignores locale folders except for locales/US/en
 " TODO: Consider just using gitfiles. That works pretty well...
 nnoremap <silent> <Leader>t :call fzf#run({
-\   'source': 'ag -g ""',
+\   'source': 'ag -g "" --ignore locales/^US --ignore locales/US/^en',
 \   'options': '--exact --tiebreak=end,length',
 \   'down': '~40%',
-\   'sink': 'e '
+\   'sink': function('<sid>dontopeninnerdtree')
 \ })<CR>
+
+
+function! s:dontopeninnerdtree(e)
+    " if NERDTree has focus, go to next window
+    if exists("b:NERDTree")
+        " echo "Can't navigate on NERDTree"
+		" Go to next window
+		execute 'wincmd w'
+    endif
+
+    " Open selected file
+    execute 'e ' a:e
+
+endfunction
+
+
 
 
 let g:fzf_command_prefix = 'Fzf'
@@ -909,6 +947,7 @@ let g:fzf_action = {
 let g:fzf_layout = { 'down': '~30%' }
 
 " Customize fzf colors to match your color scheme
+" TODO: Change this?
 let g:fzf_colors =
 \ { 'fg':      ['fg', 'Normal'],
   \ 'bg':      ['bg', 'Normal'],

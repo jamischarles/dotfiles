@@ -232,7 +232,7 @@ abbreviations=(
   "itermp" "set_iterm_profile Pluralsight"
   "itermd" "set_iterm_profile Default"
   "itermn2" "set_iterm_profile Nvim2"
-  "ags"    "ag -C 2 -G '.(es6|js)' -QS" # -Q makes it a non-regex match. S makes it smart case
+  "ags"    "ag -C 2 --pager less -G '.(es6|js)' -QS" # -Q makes it a non-regex match. S makes it smart case
   "agp"    "ag -C 2 -G 'locales/US/en/' -QS" # Ignore non US locale folders...
   # "ags"    "ag -A 2 -B 2 -G '.(es6|js)' -QS" # -Q makes it a non-regex match. S makes it smart case
   "nuke"  "git pull --rebase upstream develop && rm -rf node_modules && npm i"
