@@ -120,7 +120,6 @@ Plug 'scrooloose/nerdtree' | Plug 'Xuyuanp/nerdtree-git-plugin'
 Plug 'airblade/vim-gitgutter'                      " Git gutter
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' } " Have it
 Plug 'junegunn/fzf.vim'
-Plug 'Shougo/neomru.vim'                             "MRU cache (can be used from FZF)
 " Plug 'kien/ctrlp.vim'                              " Fuzzy file finder
 " Plug 'mileszs/ack.vim'                             " Ack in Vim. TODO: Consider trying ag instead of ack in here
 " Plug 'rking/ag.vim'                                " Try AG instead of ACK
@@ -774,6 +773,13 @@ endfunction
 " ********************************************
 
 
+"" Node scratch buffer
+" https://medium.com/@garoth/neovim-terminal-usecases-tricks-8961e5ac19b9#.aou6l0ld5
+nnoremap <leader>N :below 20sp term://node<cr>i
+" Open a split terminal below that will stay open (like for node process...)
+" nnoremap <leader>o :below 10sp term://$SHELL<cr>i
+
+
 ""
 "" SURROUND (wrapping and removing stuff). https://github.com/tpope/vim-surround/blob/master/plugin/surround.vim
 ""
@@ -1140,7 +1146,12 @@ autocmd BufRead,BufNewFile .vimrc setfiletype vim
 " Default ESLint settings for all JS files...
 let g:neomake_javascript_enabled_makers = ['eslint']
 
-let g:neomake_javascript_eslint_exe = '/Users/jacharles/dev/p2pnodeweb/node_modules/.bin/eslint'
+" If eslint exec exists, use that.
+let eslint_path = '/Users/jacharles/dev/p2pnodeweb/node_modules/.bin/eslint'
+if filereadable(eslint_path)
+  let g:neomake_javascript_eslint_exe = eslint_path
+endif
+
 " let g:neomake_javascript_eslint_args = ['--no-ignore', '-c', '/Users/jacharles/dev/p2pnodeweb/.eslintes6rc', '-f', 'compact']
 
 " Keep tray closed
