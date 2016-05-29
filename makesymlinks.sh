@@ -44,3 +44,8 @@ FOLDER='after'
 echo "Deleting and creating ~/.vim/$FOLDER symlink"
 rm -rf "$HOME/.vim/$FOLDER"
 ln -s "$HERE/$FOLDER" "$HOME/.vim/$FOLDER"
+
+
+# symlink ~/.config/ files (powerline mainly for now)
+rm ~/.config/powerline
+ln -s ~/.dotfiles/powerline.sym ~/.config/powerline # do these need to be quoted?

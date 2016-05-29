@@ -57,6 +57,13 @@ alias vimr="/Applications/vimr"
 # export NVIM_TUI_ENABLE_CURSOR_SHAPE=1
 
 
+## Print a horizontal rule
+# https://github.com/LuRsT/hr  GOLD ***
+#rule () {
+#	printf -v _hr "%*s" $(tput cols) && echo ${_hr// /${1--}}
+#}
+
+
 # All these are now in the abbreviations at the end of the file
 #alias gb="git branch -v"
 #alias gc="git commit -v"
@@ -161,6 +168,9 @@ export PATH=/usr/local/bin:$PATH
 # zsh-notify plugin timeout. What's the threshold for activating the stuff...
 # FIXME: Not sure this is even working.
 export NOTIFY_COMMAND_COMPLETE_TIMEOUT=3
+
+# use nvim as my default editor. Global $EDITOR
+export EDITOR=/usr/local/bin/nvim
 
 
 # COMMAND LINE SYNTAX HIGHLIGHTING
@@ -272,6 +282,10 @@ abbreviations=(
   "Im"    "| more"
   "Ig"    "| grep"
   "Ip"    "| $PAGER"
+  # Tmux
+  "tmn"   "tmux new-session -s "
+  "tma"   "tmux attach -t "
+  "tml"   "tmux ls"
 )
 
 #1) Find the cursor, and move it using that
@@ -300,3 +314,91 @@ bindkey " " magic-abbrev-expand
 bindkey "^x " no-magic-abbrev-expand
 bindkey -M isearch " " self-insert
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+
+
+## https://docs.npmjs.com/cli/completion
+###-begin-npm-completion-###
+#
+# npm command completion script
+#
+# Installation: npm completion >> ~/.bashrc  (or ~/.zshrc)
+# Or, maybe: npm completion > /usr/local/etc/bash_completion.d/npm
+#
+
+if type complete &>/dev/null; then
+  _npm_completion () {
+    echo "MINE"
+    local words cword
+    if type _get_comp_words_by_ref &>/dev/null; then
+      _get_comp_words_by_ref -n = -n @ -w words -i cword
+    else
+      cword="$COMP_CWORD"
+      words=("${COMP_WORDS[@]}")
+    fi
+
+    local si="$IFS"
+
+
+	# if your npm command includes `install`
+	if [[ ${words[@]} =~ 'install' ]]; then
+		local cur=${COMP_WORDS[COMP_CWORD]}
+
+		# supply autocomplete words from `~/.npm`, with $cur being value of current expansion like 'expre'
+		COMPREPLY=( $( compgen -W "$(ls ~/.npm )" -- $cur ) )
+    else
+        IFS=$'\n' COMPREPLY=($(COMP_CWORD="$cword" \
+          COMP_LINE="$COMP_LINE" \
+          COMP_POINT="$COMP_POINT" \
+          npm completion -- "${words[@]}" \
+          2>/dev/null)) || return $?
+	fi
+
+    IFS="$si"
+  }
+  complete -o default -F _npm_completion npm
+elif type compdef &>/dev/null; then
+  # this one gets loaded for me... is this the zsh one?
+  _npm_completion() {
+    local si=$IFS
+
+
+	# if your npm command includes `install`
+	if [[ ${words} =~ 'install' ]]; then
+		compadd -- $(COMP_CWORD=$((CURRENT-1)) \
+			COMP_LINE=$BUFFER \
+			COMP_POINT=0 \
+			ls ~/.npm
+		2>/dev/null)
+
+      else
+        compadd -- $(COMP_CWORD=$((CURRENT-1)) \
+          COMP_LINE=$BUFFER \
+          COMP_POINT=0 \
+          npm completion -- "${words[@]}" \
+          2>/dev/null)
+	fi
+
+    IFS=$si
+  }
+  compdef _npm_completion npm
+elif type compctl &>/dev/null; then
+
+  _npm_completion () {
+    local cword line point words si
+    read -Ac words
+    read -cn cword
+    let cword-=1
+    read -l line
+    read -ln point
+    si="$IFS"
+    IFS=$'\n' reply=($(COMP_CWORD="$cword" \
+                       COMP_LINE="$line" \
+                       COMP_POINT="$point" \
+                       npm completion -- "${words[@]}" \
+                       2>/dev/null)) || return $?
+    IFS="$si"
+  }
+  compctl -K _npm_completion npm
+fi
+###-end-npm-completion-###

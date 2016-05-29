@@ -173,6 +173,11 @@ Plug 'pangloss/vim-javascript'                     " JS indentation & syntax sug
 Plug 'groenewege/vim-less'                         " Less language bundle
 " Plugin 'mxw/vim-jsx'                                 " JSX syntax highlighting.
 
+Plug 'christoomey/vim-tmux-navigator'              " Tmux / Vim window integration
+Plug 'tmux-plugins/vim-tmux'                       " Tmux conf syntax highlighting
+
+Plug 'sjl/vitality.vim/'                           "Fix cursor issues in tmux
+
 
 " Plugin 'junegunn/limelight.vim' "Focus mode
 
@@ -203,7 +208,7 @@ set clipboard=unnamed
 " Iterm must be set to xterm-256 (see above)
 let g:solarized_contrast = "high"
 let g:solarized_visibility = "low"
-"let g:solarized_termcolors = 16
+" let g:solarized_termcolors = 16
 colorscheme solarized
 set background=dark"
 
@@ -352,14 +357,14 @@ endif
 " cmap ag Ag! -S -A 5 -B 5 -QS
 
 " Search open buffers
-cmap agb AgBuffer! -S -A 5 -B 5
+" cmap agb AgBuffer! -S -A 5 -B 5
 
-cmap ags Ag! -S -A 5 -B 5 -G '\.(js\|es6)' -QS
-cmap agp Ag! -S -A 5 -B 5 -G '\.properties' -QS
+" cmap ags Ag! -S -A 5 -B 5 -G '\.(js\|es6)' -QS
+" cmap agp Ag! -S -A 5 -B 5 -G '\.properties' -QS
 
 " http://vim.wikia.com/wiki/Search_and_replace_the_word_under_the_cursor
 " AG Search for word under the cursor (<cword>) MONEY
-cmap agc Ag! -S -A 5 -B 5 -G '\.(js\|es6)' <cword>
+" cmap agc Ag! -S -A 5 -B 5 -G '\.(js\|es6)' <cword>
 " -A -B after / before lines..."
 "
 
@@ -619,6 +624,22 @@ nnoremap <silent> <leader>= :WindowEq<CR>
     nnoremap <silent> E @='5gk'<CR>|xnoremap <silent> E @='5gk'<CR>|onoremap <silent> E @='5gk'<CR>|
     nnoremap <silent> I @='5l'<CR>|xnoremap <silent> I @='5l'<CR>|onoremap <silent> I @='5l'<CR>|
 " }}}
+
+
+
+""
+" TMUX - Hack fix
+"https://github.com/christoomey/vim-tmux-navigator#it-doesnt-work-in-neovim-specifically-c-h
+""
+" nnoremap <silent> <BS> :TmuxNavigateLeft<cr>
+
+" tell the split tmux pane to ctrl-c and re-run the last command!!!
+" RESTART server in other pane...
+"http://stackoverflow.com/questions/19313807/tmux-send-keys-syntax
+" Appears to even work from non-tmux panes (wild)
+" FIXME: This seems dirtly now. I want a separator, and the last real command.
+" Or I can just send clear? Same problem... I want a new clear session...
+nnoremap <leader>R :silent !tmux send-keys -t 1 C-c hr space - Enter Up Up C-m<CR>
 
 
 " SEARCH/REPLACE
@@ -920,6 +941,13 @@ nnoremap <silent> <Leader>t :call fzf#run({
 \   'sink': function('<sid>dontopeninnerdtree')
 \ })<CR>
 
+" include node_modules
+nnoremap <silent> <Leader>T :call fzf#run({
+\   'options': '--exact --tiebreak=end,length',
+\   'down': '~40%',
+\   'sink': function('<sid>dontopeninnerdtree')
+\ })<CR>
+
 
 function! s:dontopeninnerdtree(e)
     " if NERDTree has focus, go to next window
@@ -1114,6 +1142,7 @@ let g:airline#extensions#whitespace#enabled = 0
 " let test#strategy = "neovim"
 let test#strategy = "iterm"
 
+" this file is loaded as json often :\
 
 ""
 " Use JS syntax highlighting in .es6 files
@@ -1137,9 +1166,11 @@ autocmd! BufWritePost * Neomake
 autocmd BufRead,BufNewFile *.js call s:setupXBLintRules()
 
 " Set all the .*rc files to json
-autocmd BufRead,BufNewFile .*rc setfiletype json
+ autocmd BufRead,BufNewFile .vimrc setfiletype vim
+ autocmd BufRead,BufNewFile .*rc setfiletype json
+"autocmd FileType .*rc setfiletype json
 " Set .vimrc as a vim file
-autocmd BufRead,BufNewFile .vimrc setfiletype vim
+"autocmd FileType .vimrc setfiletype vim
 
 " http://gregjs.com/vim/2015/linting-code-with-neomake-and-neovim/
 " Use this executable (Hacky but needed for our setup)
