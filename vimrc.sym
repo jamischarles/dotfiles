@@ -23,8 +23,13 @@
 " WORD WRAPPIN *********************
 " Wrap, delete quotes, etc - ds* delete surrounding *, w** wrap [modifier] with *, cs** change surrounding a with b
 " dst - Delete surrounding Tag - dst
+" ds( delete surrounding (
+" cs"' change surrounding "
 " cst - Change surrounding Tag - cst<em>
 "
+" FIND FUNCTION DEFINITIONS ***************
+" gf - go file
+" gd - go definition (same file)
 "
 " COLUMN SELECT Ctrl-V
 "
@@ -173,10 +178,15 @@ Plug 'pangloss/vim-javascript'                     " JS indentation & syntax sug
 Plug 'groenewege/vim-less'                         " Less language bundle
 " Plugin 'mxw/vim-jsx'                                 " JSX syntax highlighting.
 
+
+Plug 'tpope/vim-obsession'                          " Resurrect vim
+
 Plug 'christoomey/vim-tmux-navigator'              " Tmux / Vim window integration
 Plug 'tmux-plugins/vim-tmux'                       " Tmux conf syntax highlighting
 
 Plug 'sjl/vitality.vim/'                           "Fix cursor issues in tmux
+Plug 'jszakmeister/vim-togglecursor'
+" https://github.com/jszakmeister/vim-togglecursor/blob/master/doc/togglecursor.txt
 
 
 " Plugin 'junegunn/limelight.vim' "Focus mode
@@ -364,7 +374,7 @@ endif
 
 " http://vim.wikia.com/wiki/Search_and_replace_the_word_under_the_cursor
 " AG Search for word under the cursor (<cword>) MONEY
-" cmap agc Ag! -S -A 5 -B 5 -G '\.(js\|es6)' <cword>
+cmap agc Ag! -S -A 5 -B 5 -G '\.(js\|es6)' <cword>
 " -A -B after / before lines..."
 "
 
@@ -412,6 +422,7 @@ if has("statusline") && !&cp
   set laststatus=2  " always show the status bar
 
   " Start the status line
+  set statusline+=%{ObsessionStatus()}
   set statusline=%f\ %m\ %r
   set statusline+=Line:%l/%L[%p%%]
   set statusline+=Col:%v
@@ -431,7 +442,9 @@ endif
 
 
 " Preserve Insert Cursor shape in nvim using iterm.
-let $NVIM_TUI_ENABLE_CURSOR_SHAPE=1
+" Q: Still busted in TMUX?!?
+" Leave this off...
+" let $NVIM_TUI_ENABLE_CURSOR_SHAPE=1
 " let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 
 " ********************************************
@@ -627,6 +640,13 @@ nnoremap <silent> <leader>= :WindowEq<CR>
 
 
 
+
+""
+" Restore vim session
+""
+" Obsession ~/.nvim_session
+" Q: Why doesn't this work?
+
 ""
 " TMUX - Hack fix
 "https://github.com/christoomey/vim-tmux-navigator#it-doesnt-work-in-neovim-specifically-c-h
@@ -800,6 +820,13 @@ nnoremap <leader>N :below 20sp term://node<cr>i
 " Open a split terminal below that will stay open (like for node process...)
 " nnoremap <leader>o :below 10sp term://$SHELL<cr>i
 
+""
+" AVA test the current file
+""
+" command! Testme term node_modules/.bin/ava %
+command! Testme below 20sp | term node_modules/.bin/ava %
+" command! Testme below 20sp term://node_modules/.bin/ava %
+
 
 ""
 "" SURROUND (wrapping and removing stuff). https://github.com/tpope/vim-surround/blob/master/plugin/surround.vim
@@ -936,7 +963,7 @@ endfunction
 " TODO: Consider just using gitfiles. That works pretty well...
 nnoremap <silent> <Leader>t :call fzf#run({
 \   'source': 'ag -g "" --ignore locales/^US --ignore locales/US/^en',
-\   'options': '--exact --tiebreak=end,length',
+\   'options': '--multi --exact --tiebreak=end,length',
 \   'down': '~40%',
 \   'sink': function('<sid>dontopeninnerdtree')
 \ })<CR>

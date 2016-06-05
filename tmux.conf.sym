@@ -1,6 +1,8 @@
 # Forces tmux to use the same colors as nvim. :)
 set -g default-terminal "screen-256color"
 
+# Fix cursor in neovim https://github.com/neovim/neovim/issues/4219 Shouldn't be needed much longer.
+# set -ga terminal-overrides ',*:Ss=\eE[%p1%d q:Se=\eE[2 q'
 
 # Smart pane switching with awareness of vim splits
 # See: https://github.com/christoomey/vim-tmux-navigator
@@ -29,6 +31,9 @@ bind-key C-space send-prefix
 # TODO: See if this works...
 #set -g terminal-overrides 'xterm*:smcup@:rmcup@' #in normal session
 set -g mouse on #in history copy mode
+# Start copy mode when scrolling up. auto scroll works by turning on copy mode when you scroll)
+bind -n WheelUpPane if-shell -F -t = "#{mouse_any_flag}" "send-keys -M" "if -Ft= '#{pane_in_mode}' 'send-keys -M' 'select-pane -t=; copy-mode -e; send-keys -M'"
+bind -n WheelDownPane select-pane -t= \; send-keys -M
 
 # setw -g mode-keys vi
 set-window-option -g mode-keys vi
@@ -44,18 +49,22 @@ bind-key -t vi-edit Down history-down
 # TODO: Brind the other vim movement stuff here...
 bind-key -t vi-copy n cursor-down
 bind-key -t vi-copy e cursor-up
+bind-key -t vi-copy i cursor-right
 bind-key -t vi-copy E halfpage-up
 bind-key -t vi-copy N halfpage-down
 bind-key -t vi-copy C-e page-up
 bind-key -t vi-copy C-n page-down
 
 bind-key -t vi-copy a begin-selection
-bind-key -t vi-copy c copy-selection
+bind-key -t vi-copy c copy-pipe "reattach-to-user-namespace pbcopy; tmux display 'Copied to clipboard!'"
 
 
 ##
 # Window splits
 ##
+# easy resize
+bind - resize-pane -D 5
+bind _ resize-pane -U 5
 
 # Easy bindings for split
 # unbind %
@@ -106,6 +115,8 @@ set -g @plugin 'tmux-plugins/tpm'
 set -g @plugin 'jbnicolai/tmux-fpp'
 set -g @plugin 'tmux-plugins/tmux-sensible'
 set -g @plugin 'tmux-plugins/tmux-copycat'
+set -g @plugin 'tmux-plugins/tmux-open' #open url etc that's highlighted
+set -g @plugin 'tmux-plugins/tmux-yank' # copy from tmux :}. Not sure it's needed anymore...
 
 # Other examples:
 # set -g @plugin 'github_username/plugin_name'
