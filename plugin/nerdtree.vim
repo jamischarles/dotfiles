@@ -2,8 +2,9 @@
 " folder and remembers recent folder and other things that are awkward with
 " basic nerdtree
 "
+" Q: Does this even work?
 "if janus#is_plugin_enabled("nerdtree")
-  let NERDTreeIgnore=['\.DS_STORE', '\.pyc$', '\.pyo$', '\.rbc$', '\.rbo$', '\.class$', '\.o$', '\~$']
+  let NERDTreeIgnore=['^\.git$','\.vim$','\.DS_Store$', '\.pyc$', '\.pyo$', '\.rbc$', '\.rbo$', '\.class$', '\.o$', '\~$']
 
   " Default mapping, <leader>n
   map <leader>n :NERDTreeToggle<CR> :NERDTreeMirror<CR>

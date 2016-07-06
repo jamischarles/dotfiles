@@ -1,9 +1,6 @@
 # Forces tmux to use the same colors as nvim. :)
 set -g default-terminal "screen-256color"
 
-# Fix cursor in neovim https://github.com/neovim/neovim/issues/4219 Shouldn't be needed much longer.
-# set -ga terminal-overrides ',*:Ss=\eE[%p1%d q:Se=\eE[2 q'
-
 # Smart pane switching with awareness of vim splits
 # See: https://github.com/christoomey/vim-tmux-navigator
 is_vim='echo "#{pane_current_command}" | grep -iqE "(^|\/)g?(view|n?vim?x?)(diff)?$"'
@@ -14,8 +11,9 @@ bind -n C-l if-shell "$is_vim" "send-keys C-l" "select-pane -R"
 bind -n C-\ if-shell "$is_vim" "send-keys C-\\" "select-pane -l"
 
 # http://dan.carley.co/blog/2013/01/11/tmux-scrollback-with-iterm2/
-# allow scrollback in iterm
-set -g terminal-overrides 'xterm*:smcup@:rmcup@'
+# allow scrollback in iterm. Don't need this anymore...
+# Turning this on breaks cursor behavior...
+# set -g terminal-overrides 'xterm*:smcup@:rmcup@'
 
 
 

@@ -176,14 +176,18 @@ Plug 'sickill/vim-monokai'
 Plug 'jooize/vim-colemak'                          " Remap keyboard shortcuts to colemak
 Plug 'pangloss/vim-javascript'                     " JS indentation & syntax sugar
 Plug 'groenewege/vim-less'                         " Less language bundle
+" Plug 'terryma/vim-multiple-cursors'
 " Plugin 'mxw/vim-jsx'                                 " JSX syntax highlighting.
 
+Plug 'MattesGroeger/vim-bookmarks'  "mm|mx to mark. mn to jump
 
 Plug 'tpope/vim-obsession'                          " Resurrect vim
 
 Plug 'christoomey/vim-tmux-navigator'              " Tmux / Vim window integration
 Plug 'tmux-plugins/vim-tmux'                       " Tmux conf syntax highlighting
 
+
+" Q: This still needed?
 Plug 'sjl/vitality.vim/'                           "Fix cursor issues in tmux
 Plug 'jszakmeister/vim-togglecursor'
 " https://github.com/jszakmeister/vim-togglecursor/blob/master/doc/togglecursor.txt
@@ -220,6 +224,7 @@ let g:solarized_contrast = "high"
 let g:solarized_visibility = "low"
 " let g:solarized_termcolors = 16
 colorscheme solarized
+" set background=light"
 set background=dark"
 
 
@@ -440,10 +445,22 @@ if has("autocmd")
 endif
 
 
+""
+" VIM Bookmarks
+""
+nmap ms <Plug>BookmarkAnnotate
+
+""
+" Multiple cursors
+""
+" C-n to select multiple cursors
+" let g:multi_cursor_quit_key='<BS>'
+
+" inoremap <BS> <ESC>
+
 
 " Preserve Insert Cursor shape in nvim using iterm.
 " Q: Still busted in TMUX?!?
-" Leave this off...
 " let $NVIM_TUI_ENABLE_CURSOR_SHAPE=1
 " let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 
@@ -540,7 +557,7 @@ nmap <leader>q :call CloseCurrentBufferOrWindow()<CR>
 " Will close the window if there are more open than should be
 function! CloseCurrentBufferOrWindow()
 " If NerdTree is  open
-  if bufwinnr(t:NERDTreeBufName) == 1
+  if exists('t:NERDTreeBufName') && bufwinnr(t:NERDTreeBufName) == 1
       " If NERDTree is open, there should be 2 open windows.
       let shouldBeOpen = 2
   else
@@ -659,8 +676,10 @@ nnoremap <silent> <leader>= :WindowEq<CR>
 " Appears to even work from non-tmux panes (wild)
 " FIXME: This seems dirtly now. I want a separator, and the last real command.
 " Or I can just send clear? Same problem... I want a new clear session...
-nnoremap <leader>R :silent !tmux send-keys -t 1 C-c hr space - Enter Up Up C-m<CR>
-
+" nnoremap <leader>R :silent !tmux send-keys -t 1 C-c C-c hr space - Enter Up Up C-m<CR>
+" start / restart most recent node command
+" Search through terminal history, strip leading number (and spaces), then look for 'node', then run the most recent result
+nnoremap <leader>R :silent !tmux send-keys -t 1 C-c C-c "history \| sed -r 's/[0-9]*  //' \| grep '^node' -i \| tail -1 \| sh" C-m <CR>
 
 " SEARCH/REPLACE
 nnoremap <leader>fr :%s/
@@ -1164,6 +1183,11 @@ let g:airline#extensions#whitespace#enabled = 0
 " let g:BufstopDismissKey = "<BS>"
 
 ""
+" JSON Pretty print
+""
+command! PrettyJSON %!python -m json.tool
+
+""
 " VIM-TEST
 ""
 " let test#strategy = "neovim"
@@ -1403,6 +1427,9 @@ nmap <silent> <leader>fc <ESC>/\v^[<=>]{7}( .*\|$)<CR>
 
 " map Delete to ESC and CTRL. HIGHLY experimental
 " Don't think the ctrl works properly
+"
+
+" nnoremap <BS> :call multiple_cursors#quit()<CR>
 inoremap <BS> <ESC>
 xnoremap <BS> <ESC>
 " Minus 1 on esc (not normal behavior)
