@@ -165,11 +165,13 @@ Plug 'moll/vim-node'                               " node sugar like gf, gd?
 Plug 'lambdatoast/elm.vim'                         " Elm syntax
 Plug 'ElmCast/elm-vim'                             " Elm error sugar etc
 Plug 'nikvdp/ejs-syntax'                           " EJS Highlighting
+Plug 'motus/pig.vim'                               "Pig script highlighting
 
 Plug 'vim-airline/vim-airline' | Plug 'vim-airline/vim-airline-themes'
 " Status bar (bottom)
 " Themes for statusbar
 Plug 'altercation/vim-colors-solarized'            " Color scheme
+" Plug 'frankier/neovim-colors-solarized-truecolor-only' "24 bit version? Needed for hyperterm...
 Plug 'tomasr/molokai'                              " Color scheme based on monokai
 Plug 'sickill/vim-monokai'
 
@@ -222,11 +224,16 @@ set clipboard=unnamed
 " Iterm must be set to xterm-256 (see above)
 let g:solarized_contrast = "high"
 let g:solarized_visibility = "low"
+" let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 " let g:solarized_termcolors = 16
 colorscheme solarized
 " set background=light"
 set background=dark"
 
+
+
+command! Light set background=light"
+command! Dark set background=dark"
 
 " For presentations
 " colorscheme monokai
@@ -461,7 +468,7 @@ nmap ms <Plug>BookmarkAnnotate
 
 " Preserve Insert Cursor shape in nvim using iterm.
 " Q: Still busted in TMUX?!?
-" let $NVIM_TUI_ENABLE_CURSOR_SHAPE=1
+let $NVIM_TUI_ENABLE_CURSOR_SHAPE=1
 " let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 
 " ********************************************
@@ -676,10 +683,11 @@ nnoremap <silent> <leader>= :WindowEq<CR>
 " Appears to even work from non-tmux panes (wild)
 " FIXME: This seems dirtly now. I want a separator, and the last real command.
 " Or I can just send clear? Same problem... I want a new clear session...
-" nnoremap <leader>R :silent !tmux send-keys -t 1 C-c C-c hr space - Enter Up Up C-m<CR>
 " start / restart most recent node command
 " Search through terminal history, strip leading number (and spaces), then look for 'node', then run the most recent result
-nnoremap <leader>R :silent !tmux send-keys -t 1 C-c C-c "history \| sed -r 's/[0-9]*  //' \| grep '^node' -i \| tail -1 \| sh" C-m <CR>
+" nnoremap <leader>R :silent !tmux send-keys -t 1 C-c C-c "history \| sed -r 's/[0-9]*  //' \| grep '^node' -i \| tail -1 \| sh" C-m <CR>
+" Redo last comand
+nnoremap <leader>R :silent !tmux send-keys -t 1 C-c C-c hr space - Enter Up Up C-m<CR>
 
 " SEARCH/REPLACE
 nnoremap <leader>fr :%s/
@@ -1212,6 +1220,7 @@ let test#strategy = "iterm"
 " and call the setEslintForEs6() function...
 "
 " Call Neomake (linters etc) on save for all files
+" FIXME: turn this on again
 autocmd! BufWritePost * Neomake
 
 autocmd BufRead,BufNewFile *.js call s:setupXBLintRules()
@@ -1226,7 +1235,8 @@ autocmd BufRead,BufNewFile *.js call s:setupXBLintRules()
 " http://gregjs.com/vim/2015/linting-code-with-neomake-and-neovim/
 " Use this executable (Hacky but needed for our setup)
 " Default ESLint settings for all JS files...
-let g:neomake_javascript_enabled_makers = ['eslint']
+" FIXME: Turn this back on
+" let g:neomake_javascript_enabled_makers = ['eslint']
 
 " If eslint exec exists, use that.
 let eslint_path = '/Users/jacharles/dev/p2pnodeweb/node_modules/.bin/eslint'

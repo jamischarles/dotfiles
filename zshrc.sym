@@ -152,14 +152,25 @@ growlImg () { echo $2 | growlnotify --image ~/github/growlnotify-icons/images/$3
 # Customize to your needs...
 
 ### Added by Jamis for NVM stuff
-# export NVM_DIR=~/.nvm #keep node installs when you upgrade NVM
-source $(brew --prefix nvm)/nvm.sh
-
 #NPM
 export PATH=/usr/local/share/npm/bin:$PATH.
 
 #brew
 export PATH=/usr/local/bin:$PATH
+
+# export NVM_DIR=~/.nvm #keep node installs when you upgrade NVM
+# source $(brew --prefix nvm)/nvm.sh
+
+# keep node installs. And export it so we can use nvm across tabs
+export NVM_DIR="$HOME/.nvm"
+  . "$(brew --prefix nvm)/nvm.sh"
+
+# GO PATH - https://gist.github.com/vsouza/77e6b20520d07652ed7d
+# Installed via brew...
+export GOPATH=/usr/local/Cellar/go/1.6.2/
+export GOROOT=/usr/local/opt/go/libexec
+export PATH=$PATH:$GOPATH/bin
+export PATH=$PATH:$GOROOT/bin
 
 # Executables I want in from my dotfiles
 # export PATH=~/.dotfiles/bin:$PATH
@@ -243,6 +254,7 @@ abbreviations=(
   "itermd" "set_iterm_profile Default"
   "itermn2" "set_iterm_profile Nvim2"
   "ags"    "ag -C 2 --pager less -G '.(es6|js)' -QS" # -Q makes it a non-regex match. S makes it smart case
+  "agl"    "ag -C 2 -l -G '.(es6|js)' -QS _C_ | xargs nvim" # Show file names only and open those in neovim
   "agp"    "ag -C 2 -G 'locales/US/en/' -QS" # Ignore non US locale folders...
   # "ags"    "ag -A 2 -B 2 -G '.(es6|js)' -QS" # -Q makes it a non-regex match. S makes it smart case
   "nuke"  "git pull --rebase upstream develop && rm -rf node_modules && npm i"
