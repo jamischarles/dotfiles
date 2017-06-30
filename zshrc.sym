@@ -32,7 +32,8 @@ COMPLETION_WAITING_DOTS="true"
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
-plugins=(git sublime atom brew notify grunt globalias sfffe) # zsh-notify
+# plugins=(git sublime atom brew notify grunt globalias sfffe) # zsh-notify
+plugins=(git sublime atom brew notify grunt globalias) # zsh-notify
 
 # https://github.com/robbyrussell/oh-my-zsh/blob/master/plugins/sfffe/sfffe.plugin.zsh
 
@@ -51,6 +52,8 @@ alias fs="foreman start"
 
 alias mvim="gnvim" # Open Neovim.app via mvim
 alias vimr="/Applications/vimr"
+
+alias t="timer" # time-tracker-cli
 
 # Use vim keys in iterm on command line: https://coderwall.com/p/c9vs3q/vim-movement-in-iterm2
 # Preserve Insert Cursor shape in nvim using iterm
@@ -151,6 +154,20 @@ growlImg () { echo $2 | growlnotify --image ~/github/growlnotify-icons/images/$3
 
 # Customize to your needs...
 
+# If an entry starts with a space, don't add it to history (for pluralsight, to ignore the clear) http://unix.stackexchange.com/questions/49214/how-to-remove-a-single-line-from-history
+# HISTCONTROL=ignorespace // bash
+# http://stackoverflow.com/questions/7243983/how-to-remove-an-entry-from-the-history-in-zsh
+#setopt HIST_IGNORE_SPACE # doesn't work well enough
+
+setopt histignorespace
+bindkey -s "^Z" '\C-a history 1 | grep --color=auto "\C-e"\C-m \C-m'
+
+# unsetopt EXTENDED_HISTORY
+
+# removes the param from the history. Tie it to the alias `cl`
+#histrm() { LC_ALL=C sed --in-place '/$1/d' $HISTFILE }
+
+
 ### Added by Jamis for NVM stuff
 #NPM
 export PATH=/usr/local/share/npm/bin:$PATH.
@@ -183,6 +200,13 @@ export NOTIFY_COMMAND_COMPLETE_TIMEOUT=3
 # use nvim as my default editor. Global $EDITOR
 export EDITOR=/usr/local/bin/nvim
 
+
+#VENMO EXPORTS. These should be PRIVATE, so add them to a separate file that won't be in my .dotfiles on github
+source ~/.zshrc_VENMO_PRIVATE
+export PATH=$PATH:/sbin  # needed for vagrant cuz it uses nfsd (which it can't access normally because it's not on PATH
+
+# RVM for RUBY newest version... Only needed when I need to run latest version of Jekyll locally or other ruby stuff...
+source /Users/jacharles/.rvm/scripts/rvm
 
 # COMMAND LINE SYNTAX HIGHLIGHTING
 # vimpager works great instead of less, but not sure about a pager in general
@@ -228,7 +252,24 @@ fshow() {
 }
 
 
+# supposed to clear and then remove that entry from history... does NOT WORK :|
+cl() {
+  clear;
+  printf "hello\nworld\n"
+  head -n 1 ~/.zsh_history  > ~/.zsh_history_temp ; mv ~/.zsh_history_temp  ~/.zsh_history # clear and REMOVE clear (last entry) from ~/.zsh_history. hacky but works.
+}
+
 alias fshow=fshow()
+
+#alias hello='echo hello'
+
+
+#clearLastHistoryEntry() {
+#  clear
+#  head -n 1 ~/.zsh_history  > ~/.zsh_history_temp ; mv ~/.zsh_history_temp  ~/.zsh_history # clear and REMOVE clear (last entry) from ~/.zsh_history. hacky but works.
+#}
+
+# alias cl='clear; head -n 1 ~/.zsh_history  > ~/.zsh_history_temp ; mv ~/.zsh_history_temp  ~/.zsh_history' # clear and REMOVE clear (last entry) from ~/.zsh_history. hacky but works.
 
 # function to change your iterm profile. Can be called from terminal now.
 set_iterm_profile() { echo -e "\033]50;SetProfile=$1\a" }
@@ -253,6 +294,7 @@ abbreviations=(
   "itermp" "set_iterm_profile Pluralsight"
   "itermd" "set_iterm_profile Default"
   "itermn2" "set_iterm_profile Nvim2"
+  "agg"    "ag -C 2 --pager less -QS" # -Q makes it a non-regex match. S makes it smart case
   "ags"    "ag -C 2 --pager less -G '.(es6|js)' -QS" # -Q makes it a non-regex match. S makes it smart case
   "agl"    "ag -C 2 -l -G '.(es6|js)' -QS _C_ | xargs nvim" # Show file names only and open those in neovim
   "agp"    "ag -C 2 -G 'locales/US/en/' -QS" # Ignore non US locale folders...
@@ -289,7 +331,7 @@ abbreviations=(
   "gll"   "git ll" #ll is aliased in ~/.gitconfig
   "ac"    "ack -i -C 5 "  # this will use the .ackrc file. Use --noenv to ignore those presets (like to search node_modules)
   "acn"   "ack --noignore-dir=node_modules -C 5 _C_ node_modules"  # this will use the .ackrc file. Use --noenv to ignore those presets (like to search node_modules)
-  # 'find'  "find . -name '_C_' "
+  'findfile'  "find . -name '_C_' "
   'NO'    "NODE_ENV=test node ."
   "Im"    "| more"
   "Ig"    "| grep"
@@ -298,6 +340,7 @@ abbreviations=(
   "tmn"   "tmux new-session -s "
   "tma"   "tmux attach -t "
   "tml"   "tmux ls"
+  "fixfacetime"  "sudo killall VDCAssistant"
 )
 
 #1) Find the cursor, and move it using that
@@ -414,3 +457,7 @@ elif type compctl &>/dev/null; then
   compctl -K _npm_completion npm
 fi
 ###-end-npm-completion-###
+
+export PATH="$HOME/.yarn/bin:$PATH"
+
+export PATH="$HOME/.rvm/bin:$PATH" # Add RVM to PATH for scripting

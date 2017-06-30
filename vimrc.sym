@@ -20,6 +20,13 @@
 " Last insertion point - `.
 " Last insertion point - gs
 "
+" COPY / PASTE management
+" :reg lists all registers
+" "2v - paste the 2nd register
+" p - paste after cursor
+" P - paste before cursor
+" ga - go to last selection
+"
 " WORD WRAPPIN *********************
 " Wrap, delete quotes, etc - ds* delete surrounding *, w** wrap [modifier] with *, cs** change surrounding a with b
 " dst - Delete surrounding Tag - dst
@@ -167,6 +174,8 @@ Plug 'ElmCast/elm-vim'                             " Elm error sugar etc
 Plug 'nikvdp/ejs-syntax'                           " EJS Highlighting
 Plug 'motus/pig.vim'                               "Pig script highlighting
 
+Plug 'numkil/ag.nvim'                              "Ag search"
+
 Plug 'vim-airline/vim-airline' | Plug 'vim-airline/vim-airline-themes'
 " Status bar (bottom)
 " Themes for statusbar
@@ -176,14 +185,19 @@ Plug 'tomasr/molokai'                              " Color scheme based on monok
 Plug 'sickill/vim-monokai'
 
 Plug 'jooize/vim-colemak'                          " Remap keyboard shortcuts to colemak
+
+" SYNTAX
 Plug 'pangloss/vim-javascript'                     " JS indentation & syntax sugar
 Plug 'groenewege/vim-less'                         " Less language bundle
+Plug 'rust-lang/rust.vim'                          " Rust syntax highlighting
+Plug 'hashivim/vim-vagrant'                        "Vagrant Syntax
+Plug 'rodjek/vim-puppet'                           "Puppet syntax
 " Plug 'terryma/vim-multiple-cursors'
 " Plugin 'mxw/vim-jsx'                                 " JSX syntax highlighting.
 
 Plug 'MattesGroeger/vim-bookmarks'  "mm|mx to mark. mn to jump
 
-Plug 'tpope/vim-obsession'                          " Resurrect vim
+Plug 'tpope/vim-obsession'                          " Resurrect vim. Obsession.
 
 Plug 'christoomey/vim-tmux-navigator'              " Tmux / Vim window integration
 Plug 'tmux-plugins/vim-tmux'                       " Tmux conf syntax highlighting
@@ -230,6 +244,11 @@ colorscheme solarized
 " set background=light"
 set background=dark"
 
+" Pluralsight settings:
+" set background=light"
+" let g:vim_json_syntax_conceal = 0
+" let g:conceallevel = 0
+" call gitgutter#disable()
 
 
 command! Light set background=light"
@@ -381,7 +400,7 @@ endif
 " Search open buffers
 " cmap agb AgBuffer! -S -A 5 -B 5
 
-" cmap ags Ag! -S -A 5 -B 5 -G '\.(js\|es6)' -QS
+cmap ags Ag! -S -A 5 -B 5 -G '\.(js\|es6)' -QS
 " cmap agp Ag! -S -A 5 -B 5 -G '\.properties' -QS
 
 " http://vim.wikia.com/wiki/Search_and_replace_the_word_under_the_cursor
@@ -474,7 +493,7 @@ let $NVIM_TUI_ENABLE_CURSOR_SHAPE=1
 " ********************************************
 " MACROS
 " ********************************************
-" 1) Record
+" 1) Record (q + letter)
 " 2) :reg to find it
 " 3) Replace <80> with Ctrl+v Esc (in insert mode)
 " http://stackoverflow.com/questions/2943555/how-to-save-a-vim-macro-that-contains-escape-key-presses
@@ -485,7 +504,8 @@ let @f = 'dw%t =>'
 " require statement -> import
 let @i = '^dwsimport f=dwdwsfrom xf)xn^'
 
-
+" react.createClass -> class syntax
+let @c = '^dwsclass kbf=xsextendskbfcfcdwsComponentkbir i%ixx'
 
 " ********************************************
 " KEYBOARD REMAPPING ************************
@@ -988,8 +1008,10 @@ endfunction
 " down: location & size of window
 " ignores locale folders except for locales/US/en
 " TODO: Consider just using gitfiles. That works pretty well...
+" \   'source': 'ag -g "" --ignore locales/^US --ignore locales/US/^en',
+" Include hidden files. Ignore .git folder
 nnoremap <silent> <Leader>t :call fzf#run({
-\   'source': 'ag -g "" --ignore locales/^US --ignore locales/US/^en',
+\   'source': 'ag -g "" --hidden --ignore .git ',
 \   'options': '--multi --exact --tiebreak=end,length',
 \   'down': '~40%',
 \   'sink': function('<sid>dontopeninnerdtree')
@@ -1221,6 +1243,7 @@ let test#strategy = "iterm"
 "
 " Call Neomake (linters etc) on save for all files
 " FIXME: turn this on again
+" Pluralsight: Turns off inline linting
 autocmd! BufWritePost * Neomake
 
 autocmd BufRead,BufNewFile *.js call s:setupXBLintRules()
@@ -1236,10 +1259,11 @@ autocmd BufRead,BufNewFile *.js call s:setupXBLintRules()
 " Use this executable (Hacky but needed for our setup)
 " Default ESLint settings for all JS files...
 " FIXME: Turn this back on
-" let g:neomake_javascript_enabled_makers = ['eslint']
+let g:neomake_javascript_enabled_makers = ['eslint']
 
 " If eslint exec exists, use that.
-let eslint_path = '/Users/jacharles/dev/p2pnodeweb/node_modules/.bin/eslint'
+" let eslint_path = '/Users/jacharles/dev/p2pnodeweb/node_modules/.bin/eslint'
+let eslint_path = './node_modules/.bin/eslint'
 if filereadable(eslint_path)
   let g:neomake_javascript_eslint_exe = eslint_path
 endif
@@ -1247,7 +1271,7 @@ endif
 " let g:neomake_javascript_eslint_args = ['--no-ignore', '-c', '/Users/jacharles/dev/p2pnodeweb/.eslintes6rc', '-f', 'compact']
 
 " Keep tray closed
-let g:neomake_open_list = 0
+let g:neomake_open_list = 0 "2 to open
 
 let g:neomake_warning_sign = {
 \ 'text': '!',

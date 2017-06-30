@@ -65,8 +65,9 @@ bind - resize-pane -D 5
 bind _ resize-pane -U 5
 
 # Easy bindings for split
-# unbind %
+unbind %
 bind | split-window -h
+bind % split-window
 # bind - split-window -v
 
 # TMUX POWERLINE
