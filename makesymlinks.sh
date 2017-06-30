@@ -31,15 +31,31 @@ echo "Deleting and creating $FILE_PATH symlink"
 rm "$FILE_PATH"
 ln -s "$HERE/$FILE" "$FILE_PATH"
 
+# make .vim folder if it doesn't exist...
+mkdir ~/.vim
 
-# symlink .vim/plugin to ~/.dotfiles/plugin
+# make nvim seamlessly work with vim configs
+# ~/.config/nvim -> ~/.vim
+# ~/.config/nvim/init.vim -> ~/.vimrc
+
+
+# symlink ~/config/nvim to ~/.vim Used for Vim and Neovim.
+echo "Linking fake nvim folder to real .vim folder"
+#rm -rf "$HOME/.vim/$FOLDER"
+ln -s "$HOME/.vim" "$HOME/.config/nvim"  
+
+echo "Linkin .vimrc for nvim instead of nvim config file"
+ln -s "$HOME/.vimrc" "$HOME/.config/nvim/init.vim"
+
+
+# symlink .vim/plugin to ~/.dotfiles/plugin. Used for Vim and Neovim.
 FOLDER='plugin'
 echo "Deleting and creating ~/.vim/$FOLDER symlink"
 rm -rf "$HOME/.vim/$FOLDER"
 ln -s "$HERE/$FOLDER" "$HOME/.vim/$FOLDER"
 
 
-# symlink .vim/after to ~/.dotfiles/after
+# symlink .vim/after to ~/.dotfiles/after. Used for Vim and Neovim.
 FOLDER='after'
 echo "Deleting and creating ~/.vim/$FOLDER symlink"
 rm -rf "$HOME/.vim/$FOLDER"

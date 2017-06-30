@@ -107,7 +107,7 @@ endif
 
 filetype off                  " required for Vundle
 
-" VUNDLE START ***********
+" PLUGINS START *********** https://github.com/junegunn/vim-plug
 "
 " set the runtime path to include Vundle and initialize
 " vim-snipmate looks in runtimepath for a folder named 'snippets' for code
