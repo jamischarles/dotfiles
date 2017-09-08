@@ -75,8 +75,14 @@
 " :imap    See the current insert mappings
 " :verbose imap <tab>   See what's currently mapped to tab in insert mode
 
+" BREW INSTALLATIONS...
+" brew install diff-so-fancy (better than npm)
 " Global NPM installs
 " https://github.com/stevemao/diff-so-fancy
+" or brew?
+"
+" brew install colordiff
+" - https://github.com/universal-ctags/homebrew-universal-ctags
 
 " Good Fonts:
 " Inconsolata is best for presentations.
@@ -114,9 +120,11 @@ filetype off                  " required for Vundle
 " snippets
 " set rtp+=~/.vim/bundle/Vundle.vim,~/.dotfiles/_codesnippets
 set rtp+=~/.dotfiles/_codesnippets
-set rtp+=~/.fzf " Is this the old version? "
+" set rtp+=~/.fzf " Is this the old version? "
 " set rtp+=~/.dotfiles/_codesnippets,/usr/local/Cellar/fzf/HEAD
 " set rtp+=~/.
+"
+"https://github.com/junegunn/vim-plug
 call plug#begin('~/.vim/plugged')
 
 
@@ -160,19 +168,23 @@ Plug 'tpope/vim-surround'                          " easy surround with quote et
 " Plugin 'jeetsukumaran/vim-markology'               " Mark visualizations
 Plug 'bkad/CamelCaseMotion'                        " Next word considers camelcase as part of it :). LOVE IT!!! SO AMAZING
 
-Plug 'janko-m/vim-test'                            " Running tests from vim
+" Plug 'janko-m/vim-test'                            " Running tests from vim
 Plug 'tyru/open-browser.vim'                       " Open in test
 
 Plug 'Raimondi/delimitMate'                        " quote, bracket, etc autocompletion
 Plug 't9md/vim-textmanip'                          " Move selected text around easily
 Plug 'ntpeters/vim-better-whitespace'              " Strip whitespace on save
 Plug 'elzr/vim-json'                               " Hide quotes, json highlighting
-Plug 'jimmyhchan/dustjs.vim'
+" Plug 'jimmyhchan/dustjs.vim'
 Plug 'moll/vim-node'                               " node sugar like gf, gd?
-Plug 'lambdatoast/elm.vim'                         " Elm syntax
-Plug 'ElmCast/elm-vim'                             " Elm error sugar etc
+" Plug 'lambdatoast/elm.vim'                         " Elm syntax
+" Plug 'ElmCast/elm-vim'                             " Elm error sugar etc
 Plug 'nikvdp/ejs-syntax'                           " EJS Highlighting
 Plug 'motus/pig.vim'                               "Pig script highlighting
+
+
+"Golang
+Plug 'sbdchd/neoformat'                            " Formats your code
 
 Plug 'numkil/ag.nvim'                              "Ag search"
 
@@ -180,6 +192,7 @@ Plug 'vim-airline/vim-airline' | Plug 'vim-airline/vim-airline-themes'
 " Status bar (bottom)
 " Themes for statusbar
 Plug 'altercation/vim-colors-solarized'            " Color scheme
+" Plug 'lifepillar/vim-solarized8'                   " Trying this to avoid the colors changing slightly?!?
 " Plug 'frankier/neovim-colors-solarized-truecolor-only' "24 bit version? Needed for hyperterm...
 Plug 'tomasr/molokai'                              " Color scheme based on monokai
 Plug 'sickill/vim-monokai'
@@ -188,12 +201,14 @@ Plug 'jooize/vim-colemak'                          " Remap keyboard shortcuts to
 
 " SYNTAX
 Plug 'pangloss/vim-javascript'                     " JS indentation & syntax sugar
+Plug 'ludovicchabant/vim-gutentags'                " Ctag manager
 Plug 'groenewege/vim-less'                         " Less language bundle
 Plug 'rust-lang/rust.vim'                          " Rust syntax highlighting
 Plug 'hashivim/vim-vagrant'                        "Vagrant Syntax
 Plug 'rodjek/vim-puppet'                           "Puppet syntax
 " Plug 'terryma/vim-multiple-cursors'
 " Plugin 'mxw/vim-jsx'                                 " JSX syntax highlighting.
+Plug 'neoclide/vim-jsx-improve'                    " JSX Syntax and indentation
 
 Plug 'MattesGroeger/vim-bookmarks'  "mm|mx to mark. mn to jump
 
@@ -244,12 +259,24 @@ colorscheme solarized
 " set background=light"
 set background=dark"
 
-" Pluralsight settings:
-" set background=light"
-" let g:vim_json_syntax_conceal = 0
-" let g:conceallevel = 0
-" call gitgutter#disable()
+" Modifications to js-syntax highlighting. Basically changes how things are
+" marked. 'Conceal' is nice for hiding stuff.
 
+" highlight jsObject keys as 'Label' https://github.com/pangloss/vim-javascript/issues/138
+" hi def link jsObjectKey Label " Type is nice. Use :hi to see all the
+"Type is nice. Use :hi to see all the
+" colors...
+
+" trigger by starting nvim via '$ nvim --cmd "let is_ps=1"
+if exists("is_ps")
+  " Pluralsight settings:
+  set background=light"
+  let g:vim_json_syntax_conceal = 0
+  let g:conceallevel = 0
+  call gitgutter#disable()
+else "Highlight object keys
+  hi def link jsObjectKey Type
+endif
 
 command! Light set background=light"
 command! Dark set background=dark"
@@ -400,12 +427,13 @@ endif
 " Search open buffers
 " cmap agb AgBuffer! -S -A 5 -B 5
 
-cmap ags Ag! -S -A 5 -B 5 -G '\.(js\|es6)' -QS
+" cmap ags Ag! -S -A 5 -B 5 -G '\.(js\|es6)' -QS
+
 " cmap agp Ag! -S -A 5 -B 5 -G '\.properties' -QS
 
 " http://vim.wikia.com/wiki/Search_and_replace_the_word_under_the_cursor
 " AG Search for word under the cursor (<cword>) MONEY
-cmap agc Ag! -S -A 5 -B 5 -G '\.(js\|es6)' <cword>
+" cmap agc Ag! -S -A 5 -B 5 -G '\.(js\|es6)' <cword>
 " -A -B after / before lines..."
 "
 
@@ -470,6 +498,20 @@ if has("autocmd")
   endif
 endif
 
+""
+" CTAGS
+""
+" you have to generate the tag index before you can use it.
+" after that, you ctrl-] and :tag to do cool stuff. Ctrl-t brings you back.
+" https://medium.com/usevim/vim-101-tags-bc55bc21e130.
+command! CtagGenerate :call plug#helptags()
+" Leader> b   activates buffer tags
+" g] or :ts shows all places it is
+" Ctrl-w-} previews the definition
+" Ctrl-t returns to origin
+" nvim -t tagName     " opens tag. Then use :tn to open more... Pretty cool!
+
+" https://github.com/craigemery/vim-autotag " Auto-update tags
 
 ""
 " VIM Bookmarks
@@ -690,6 +732,11 @@ nnoremap <silent> <leader>= :WindowEq<CR>
 ""
 " Obsession ~/.nvim_session
 " Q: Why doesn't this work?
+"
+" type :Obsession to track session
+" then start nvim with -S flag
+command! SessionSave :Obsession
+command! SaveSession :Obsession
 
 ""
 " TMUX - Hack fix
@@ -1105,7 +1152,8 @@ nnoremap <silent> <Leader>g :FzfGitFiles?<CR>
 " endfunction
 
 
-nnoremap <silent> <Leader>b :FzfBuffers<CR>
+" nnoremap <silent> <Leader>b :FzfBuffers<CR>
+nnoremap <silent> <Leader>b :FzfBTags<CR>
 
 
 " Jump to opened file (buffer) with <space>b
@@ -1188,6 +1236,14 @@ let g:airline_powerline_fonts = 1     " use nice arrow symbols etc
 " Disable "mixed indent" warnings for airline status bar (false positives)
 let g:airline#extensions#whitespace#enabled = 0
 
+
+" Golang settings for Neoformat
+"
+augroup fmt
+  autocmd!
+  autocmd BufWritePre *.go undojoin | Neoformat
+augroup END
+
 "
 " Bufstop mappings (awesome buffer speed switching)
 "
@@ -1259,7 +1315,7 @@ autocmd BufRead,BufNewFile *.js call s:setupXBLintRules()
 " Use this executable (Hacky but needed for our setup)
 " Default ESLint settings for all JS files...
 " FIXME: Turn this back on
-let g:neomake_javascript_enabled_makers = ['eslint']
+" let g:neomake_javascript_enabled_makers = ['eslint']
 
 " If eslint exec exists, use that.
 " let eslint_path = '/Users/jacharles/dev/p2pnodeweb/node_modules/.bin/eslint'
@@ -1407,13 +1463,14 @@ nmap <T-D> <Plug>(textmanip-duplicate-up)
 " FUGITIVE (Git sugar) - http://andyatkinson.com/blog/2013/10/28/open-the-current-file-in-github-enterprise-from-vim
 let g:fugitive_github_domains = ['https://github.paypal.com/']      "Gbrowse will work on ent github pages
 
+" cmaps are the worst!!!
 " Vertical diff
-cmap gd Gvdiff
+" cmap gd Gvdiff
 
-cmap gs Gstatus
+" cmap gs Gstatus
 
 " Reset file aka $git checkout %
-cmap gco Gread
+" cmap gco Gread
 
 " GIT GUTTER colors
 "highlight clear SignColumn (Use guibg for sign bg, and guifg)
