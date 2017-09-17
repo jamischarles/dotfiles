@@ -23,6 +23,19 @@ nnoremap Y E|xnoremap Y E|onoremap Y E|
 nnoremap U W|xnoremap U W|onoremap U W|
 
 
+" REMAP COLEMAK presets  more mappings and settings are in
+" swap o and ; for normal mode, so we can much easier trigger the vim command,
+" and we can still insert on the next line.
+" line. Try it out... This is closer to how normal vim works anyway.
+" EXPERIMENTAL: If this makes things too weird, I'll have to turn it off
+nnoremap o ;
+nnoremap O :
+nnoremap ; o
+nnoremap : O
+
+" Map bottom of screen to B
+nnoremap B L
+
 " Textmanip mappings that conflict
 "
 " nnoremap <C-h> <Plug>(textmanip-move-left)

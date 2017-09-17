@@ -1,3 +1,7 @@
+# TODO:
+# - move from oh-my-zsh to zplug.
+# - get startup down to 1.5 or 1 sec
+
 function getTime {
   python -c'import time; print repr(time.time())'
 }
@@ -41,7 +45,47 @@ COMPLETION_WAITING_DOTS="true"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # plugins=(git sublime atom brew notify grunt globalias sfffe) # zsh-notify
-plugins=(git sublime atom brew notify grunt globalias) # zsh-notify
+# plugins=(git sublime atom brew notify grunt globalias) # zsh-notify
+plugins=(git z fasd brew globalias) # zsh-notify
+
+# PLUGINS:  https://github.com/unixorn/awesome-zsh-plugins
+# Plugins I installed manually
+# - fasd
+# - https://github.com/marzocchi/zsh-notify
+#
+# Brew I installed manaully
+# https://github.com/zplug/zplug  # Plugin manager
+# https://github.com/julienXX/terminal-notifier
+
+#############################################
+# ZSH PLUGINS
+#############################################
+# http://daanhorn.nl/post/zplug/
+# $ zplug install    # installs plugins listed here, similar to vim#plug
+#
+# Too slow for now. Maybe reconsider this if I dump fish shell.
+
+# export ZPLUG_HOME=/usr/local/opt/zplug
+# source $ZPLUG_HOME/init.zsh
+#
+# zplug "marzocchi/zsh-notify"
+# # zplug "jedahan/ripz" # Q: Why does having 2 break it?!?
+#
+# # Install packages that have not been installed yet
+# if ! zplug check --verbose; then
+#     printf "Install? [y/N]: "
+#     if read -q; then
+#         echo; zplug install
+#     else
+#         echo
+#     fi
+# fi
+#
+# # Load all the plugins
+# zplug load --verbose
+
+
+#############################################
 
 # https://github.com/robbyrussell/oh-my-zsh/blob/master/plugins/sfffe/sfffe.plugin.zsh
 
@@ -94,13 +138,13 @@ alias dif=/usr/local/bin/colordiff #nicer diff with color
 # TODO: use this to make special icons for these commands, like the GIT ones... That could be really cool...
 
 # TODO: use this to make special icons for these commands, like the GIT ones... That could be really cool...
-alias gp="echo 'git pull --rebase upstream develop' ; git pull --rebase upstream develop; growlImg 'Git Pull' ' ' github.png"
+alias gp="echo 'git pull --rebase upstream develop' ; git pull --rebase upstream develop;"
 # alias gpm="git push origin master"
-alias gs="git status -sb; growlImg 'Status' ' ' github.png"
+alias gs="git status -sb;" # growlImg 'Status' ' ' github.png"
 alias gd="git diff --color | diff-so-fancy | less --tabs=1,5 -R"
 
 #NUKE it all, rebase, and reinstall node modules
-alias nuke="gp ; echo 'rm -rf node_modules && npm i';  rm -rf node_modules && npm i; growlImg 'Nuke Done'   'git pull; rm -rf node_module; npm install'   npm.png"
+alias nuke="gp ; echo 'rm -rf node_modules && npm i';  rm -rf node_modules && npm i; 'git pull; rm -rf node_module; npm install'   npm.png"
 
 # sudo last command (move these down lower if there's a conflict.)
 alias please='eval "sudo $(fc -ln -1)"'
@@ -131,13 +175,6 @@ alias mock='NODE_ENV=test node .'
 testing () { echo "$@"}
 testing2 () { echo "$1" | !!:p && $(fc -ln -1) }
 
-# Is this the best we can do? http://superuser.com/questions/206370/growl-notifications-for-shell-task-completion
-function gn {
-  # /usr/local/bin/growlnotify Finished -m "$@"
-  $@ # execute cmd line
-  output="$@"
-  growlnotify Finished -m $output -a iterm #notify what we just executed and stringify it
-}
 
 # One liner doesn't seem to work beacuse the branch name (at the end) isn't available when it's needed at time of expansion...
  # "branch=$(git rev-parse --abbrev-ref HEAD) && git checkout develop | git pull --rebase upstream develop;  git branch -d $branch " # go to develop and delete current branch.
@@ -148,24 +185,7 @@ function deleteCurrentBranch {
   git branch -d $branch  # go to develop and delete current branch.
 }
 
-#not working :(
-alias gne="$@; growlnotify Finished -m '$@' -a iterm"
 
-
-
-
-#TODO: gng. Easy way to pass in the img or something... Another small abstraction layer?
-
-growl () { echo $1 | growlnotify --title $1 --app iterm -m $2 } #requires growlnotify
-
-# params: $1 title  $2 msg  $3 imageName
-growlImg () { echo $2 | growlnotify --image ~/github/growlnotify-icons/images/$3  -t $1 -m $2 }
-
-#Q: What's the difference between aliasing and actually having these functions in here?
-
-# growl() { echo -e $'\e]9;'${1}'\007' ; return ; } #http://aming-blog.blogspot.com/2011/01/growl-notification-from-iterm-2.html
-# growl () { echo $1 | growlnotify -m $1 } #requires growlnotify
-# growl () { echo $1 | terminal-notifier -sound default }  #requires terminal-notifier
 
 
 
@@ -201,8 +221,9 @@ export PATH=$PATH:$GOPATH/bin
 # source $(brew --prefix nvm)/nvm.sh
 
 # keep node installs. And export it so we can use nvm across tabs
-export NVM_DIR="$HOME/.nvm"
-  . "$(brew --prefix nvm)/nvm.sh"
+# TODO: Turn this on for NVM. THIS MAKES NVM work, but adds THREE SECONDS to startup time :|
+# export NVM_DIR="$HOME/.nvm"
+  # . "$(brew --prefix nvm)/nvm.sh"
 
 # GO PATH - https://gist.github.com/vsouza/77e6b20520d07652ed7d
 # Installed via brew...

@@ -4,7 +4,7 @@
 "
 " Q: Does this even work?
 "if janus#is_plugin_enabled("nerdtree")
-  let NERDTreeIgnore=['^\.git$','\.vim$','\.DS_Store$', '\.pyc$', '\.pyo$', '\.rbc$', '\.rbo$', '\.class$', '\.o$', '\~$']
+  let NERDTreeIgnore=['tags','^\.git$','\.vim$','\.DS_Store$', '\.pyc$', '\.pyo$', '\.rbc$', '\.rbo$', '\.class$', '\.o$', '\~$']
 
   " Default mapping, <leader>n
   map <leader>n :NERDTreeToggle<CR> :NERDTreeMirror<CR>

@@ -13,11 +13,14 @@ silent! nunmap ys
 silent! nunmap ySS
 silent! nunmap ySs
 silent! nunmap yss
+
+" Unmap s in visual mode because it doesn't make sense and conflicts.
+" silent! vunmap s
 "
 "
 " This one has to be in this file to avoid conflict with colemak mapping...
 "
-" wrap surround? - ww"   WRAP surround WORD with QUOTE. 2nd is a modifier.
+" wrap surround? - ws"   WRAP surround WORD with QUOTE. 2nd is a modifier.
 " nmap w  <Plug>Ysurround
 nmap ws  <Plug>Ysurround
 
@@ -27,4 +30,7 @@ nmap ds  <Plug>Dsurround
 
 " CHANGE surround - cs{[ CHANGE SURROUNDING { with [
 nmap cs  <Plug>Csurround
+
+" FIXME THIS SOMEHOW :|
+" vmap cs <Plug>Vsurround
 

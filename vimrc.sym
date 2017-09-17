@@ -1,11 +1,178 @@
-" QUICK KEYS,
+" Short TODO LIST:
+" Stupid marks aren't being cleared properly :{
+" Think about going back to u, y, x, d as much as possible. Would love to get
+" back to natural language.
+" Fix smooth scroll (don't go past the bottom of the line.
+" " even normal ctrl scroll goes too far :{
+" FIX: ZOOM WINDOW
+" FIX: smarter swap warning (or at least force :e)?
+" FIX t (till) in normal mode...
+" FIX TAGBAR for classes. Why not nested? Remove node_modules.
+" We can use that to show file outline if it shows up properly.
+" Figure out how not to overwrite when buffer is open? Add warning?
 "
-" BUFFER Managment
+" Find replacement for moving lines up and down... use it all the time. Cut
+" from x line and paste somewhere else.
+" Fix scroll highlight
+"
+" Q: p for paste again?
+
+" Disable cpaps repeat?
+" Remap <leader>f to <ctrl>-f and use that for a file buffer or ctrl T or
+" something...
+"
+" - Turn on zoom window again?
+"
+" - fix inline anzu (fix *#/ as well)
+" - turn on yankring / yankstack, or disable delete wiping yank history
+" - have nvim use fish for terminal?
+"
+" - add key for btags MONEY, and / or add it to denite
+" - fix tagbar exit with leader tab. Add toggle key? (turn it off for certain
+"   files to aviod being slow...)
+" - integrate ripgrep with fzf. Maybe full / partial screen takeover... Goal
+"   is to easily see all the results of your search. Both in same file and
+"   across buffers / files.
+"   (LEADER-F maybe?)
+"
+"
+"
+"###############################3
+" PLUGINS to consider - https://vimawesome.com/
+" https://vi.stackexchange.com/questions/12250/is-there-vim-plugin-that-can-show-keystroke-maps-or-abbreviations-for-command-af
+"
+" Grep for all things https://github.com/mhinz/vim-grepper
+" Sane buffer deletion https://github.com/mhinz/vim-sayonara
+" Git status https://github.com/mhinz/vim-signify
+"
+"https://github.com/mhinz/vim-startify/blob/master/README.md (start screen MRU
+"etc)... ***
+"https://vimawesome.com/plugin/abolish-vim (rename vars )
+"https://vimawesome.com/plugin/ferret (find)
+"https://vimawesome.com/plugin/searchcomplete
+"https://vimawesome.com/plugin/indexedsearch
+"http://vimcasts.org/blog/2013/02/habit-breaking-habit-making/ READ ***
+"https://github.com/takac/vim-hardtime (block basic movements) ***
+"https://github.com/ryanoasis/vim-devicons (add glyphs to fonts)
+"https://github.com/ddrscott/vim-side-search/blob/master/README.md (side
+"search)
+"https://vimawesome.com/plugin/vim-sneak (motion)
+"##########################3
+"
+"
+" look at this: https://github.com/clvv/fasd
+" - integrate unite / denite...
+" - add window zoom back in...
+"
+" - think about more sensible general purpose shortcuts
+"   or commands for many things. leader-r doesn't make
+"   much sense. I need more senisble eaiser to remimber stuff
+"
+" DEBUGGING:
+" - https://vi.stackexchange.com/questions/7722/how-to-debug-a-mapping debug
+"   mapping
+" ##############################
+" QUICK KEYS,###################
+" ~/.vim/after/plugin/ - is where several things are placed that must be
+" applied after this file
+"
+" Philosophy:
+" - use leader for frequent and very important stuff. Actions as it were.
+"   user straight keys when you're in the flow of someting and it's more in
+"   context.
+" - Use ctrl+ for infrequent actions, and / or if it's an escalation.
+"   Letter -> shift+letter -> ctrl+letter
+"
+" Embrace modes! That's really the key I think. Think about how modes differ
+" and how you can use context and modifier keys to work in your advantage. ie:
+" Having numbers disabled / inverted in N mode makes complete sense if you never jump to
+" line num.
+"
+" Try to stick with native vim stuff and learn that as much as possible. Avoid
+" plugins that modify original behavior and remap strokes. Try instead to use
+" plugins that enhance or make them more clear (like smooth scrolling etc).
+"
+" Try to use normal mappings and letters as much as possible. This will make
+" it easier to switch to normal vim and back...
+"
+" - TODO: Use ctrl+ for more stuff. Consider moving some of the leader keys
+"   there. Either group classes of things (like nav), or move them by
+"   frequency used... After using them I can usually feel how nice or awkward
+"   they are...
+"
+" NAVIGATION: ********************************
+" TODO: Learn text objects. Especially inside visual mode
+" Find on line - f/F then ;/, to forward/backward (t) does minus one
+" Last insertion point / edit - `.   (TODO: Make it g. ?)
+" Last insertion point - gs
+" Last selection ga
+" Previous jump - Ctrl-o
+" Jump 5 lines ahead / back -  5+/-
+"
+" H M B - Cursor to TOP MIDDLE BOTTOM of current screen. No scroll.
+"
+" Marks:
+" mx - set mark x (uppercase mark can be retrieved across files).
+" dmx - delete marx (mx mx will set/delete)
+" m<space> - remove all marks from file
+" m/ - show all tags in current file
+"
+" Motions all over the screen (easy motion type)
+" https://github.com/easymotion/vim-easymotion
+" https://vimawesome.com/plugin/vim-sneak
+"
+" Jumping on same line (use 2 letters with f) ***
+" https://github.com/goldfeld/vim-seek  https://vimawesome.com/plugin/clever-f-vim (better f)
+" https://vimawesome.com/plugin/smartword (smarter word WORD)
+"
+" Custom motions: https://vimawesome.com/plugin/countjump , https://github.com/okcompute/vim-javascript-motions
+" Smart jumps (halfway points etc): https://github.com/jayflo/vim-skip , https://github.com/mikezackles/Bisect
+"
+" Smooth scrolling https://vimawesome.com/plugin/comfortable-motion-vim (for
+" G)?
+"
+" TODO:
+" Challenge - Use vim-hardline to learn better nav
+" Challenge - Stop using nerdvim.
+" Challenge - Turn off tab switching. Use marks / jumps instead.
+" https://dockyard.com/blog/2014/04/10/vim-on-your-mark.
+"
+"
+" COPY PASTE: management######################
+" :reg lists all registers
+" "2v - paste the 2nd register
+" p - paste after cursor
+" P - paste before cursor
+" ga - go to last selection
+" " These below replace the ctrl moving code I had before...
+"
+" SELECTION COMMANDS:
+" :125y  - copy line 125 AMAZING
+" :125t2 - copy line 125 to below line 2
+" :125t. - copy line 125 to below cursor
+" :130m. - move 130 to below cursor
+" :130d - delete 130 from where you are. AMAZING.
+" "
+" :8,10TComment - Run TComment command on lines 8-10
+" https://stackoverflow.com/questions/15069613/how-to-copy-by-specifying-line-numbers-in-vi
+"
+" TODO: make 125 insert, 125 o work
+" TODO: Consider turning upy back on for the default actions...?
+"
+" WORD WRAPPIN: *********************
+" Wrap, delete quotes, etc - ds* delete surrounding *, w** wrap [modifier] with *, cs** change surrounding a with b
+" dst - Delete surrounding Tag - dst
+" ds( delete surrounding (
+" cs"' change surrounding "
+" cst - Change surrounding Tag - cst<em>
+"
+"
+" BUFFER Managment: **************************
 " :CtrlPBufTag[All] - Search for a tag within all listed buffers
 " <leader>b - Search currently open buffers
 " :BufOnly - Close others
 
-" WINDOW MANAGMENT ************************
+" WINDOW MANAGMENT: ************************
 " :Close - Close current window
 " <leader>o - close other windows
 " <leader>q - close buffer and/or window
@@ -17,22 +184,7 @@
 " <leader>_  - Min Split
 " <leader>=  - EQ Split window (kill mappings we don't use
 "
-" Last insertion point - `.
-" Last insertion point - gs
 "
-" COPY / PASTE management
-" :reg lists all registers
-" "2v - paste the 2nd register
-" p - paste after cursor
-" P - paste before cursor
-" ga - go to last selection
-"
-" WORD WRAPPIN *********************
-" Wrap, delete quotes, etc - ds* delete surrounding *, w** wrap [modifier] with *, cs** change surrounding a with b
-" dst - Delete surrounding Tag - dst
-" ds( delete surrounding (
-" cs"' change surrounding "
-" cst - Change surrounding Tag - cst<em>
 "
 " FIND FUNCTION DEFINITIONS ***************
 " gf - go file
@@ -62,7 +214,7 @@
 " ]h - previous hunk
 " <leader>fc - Find conflict
 "
-" "
+" TODO: Move these to ctrl? since they aren't used that often?
 " <leader>p GitGutterPreviewHunk
 " <leader>s GitGutterStageHunk
 " <leader>r GitGutterRevertHunk
@@ -127,9 +279,22 @@ set rtp+=~/.dotfiles/_codesnippets
 "https://github.com/junegunn/vim-plug
 call plug#begin('~/.vim/plugged')
 
-
+"Plugins
 " TODO: group these into sensible groupings
+"
+" STARTUP
+Plug 'mhinz/vim-startify'                          " Fancy Startup screen
+"
+" GIT / DIFFING
 Plug 'tpope/vim-fugitive'                          " Git commands in Vim. Consider https://github.com/carlhuda/janus/blob/master/janus/vim/tools/janus/after/plugin/fugitive.vim
+Plug 'AndrewRadev/linediff.vim'
+Plug 'airblade/vim-gitgutter'                      " Git gutter
+
+" Navigation
+Plug 'takac/vim-hardtime'                          " Disable lazy nav (like the other one)
+" Plug 'bkad/CamelCaseMotion'                        " Next word considers camelcase as part of it :). LOVE IT!!! SO AMAZING
+Plug 'yuttie/comfortable-motion.vim'               " Smooth scrolling
+
 " Plug 'scrooloose/nerdtree' | Plug 'Xuyuanp/nerdtree-git-plugin'
 Plug 'scrooloose/nerdtree' | Plug 'Xuyuanp/nerdtree-git-plugin'
 " Lazy loading doesn't seem to work properly...
@@ -137,7 +302,6 @@ Plug 'scrooloose/nerdtree' | Plug 'Xuyuanp/nerdtree-git-plugin'
 " File tree  Consider https://github.com/carlhuda/janus/blob/master/janus/vim/tools/janus/after/plugin/nerdtree.vim
 " Git status in Nerdtree
 
-Plug 'airblade/vim-gitgutter'                      " Git gutter
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' } " Have it
 Plug 'junegunn/fzf.vim'
 " Plug 'kien/ctrlp.vim'                              " Fuzzy file finder
@@ -166,7 +330,6 @@ Plug 'tpope/vim-surround'                          " easy surround with quote et
 " Plugin 'jwhitley/vim-matchit'                      " better % matching. Does this even do anything? Not sure it's worth having around. REMOVE?
 " Plugin 'terryma/vim-expand-region'
 " Plugin 'jeetsukumaran/vim-markology'               " Mark visualizations
-Plug 'bkad/CamelCaseMotion'                        " Next word considers camelcase as part of it :). LOVE IT!!! SO AMAZING
 
 " Plug 'janko-m/vim-test'                            " Running tests from vim
 Plug 'tyru/open-browser.vim'                       " Open in test
@@ -182,12 +345,14 @@ Plug 'moll/vim-node'                               " node sugar like gf, gd?
 Plug 'nikvdp/ejs-syntax'                           " EJS Highlighting
 Plug 'motus/pig.vim'                               "Pig script highlighting
 
+" Find / Search                                    "Incremental search numbers
+Plug 'osyo-manga/vim-anzu'
+Plug 'numkil/ag.nvim'                              "Ag search
 
 "Golang
 Plug 'sbdchd/neoformat'                            " Formats your code
 
-Plug 'numkil/ag.nvim'                              "Ag search"
-
+" THEMES
 Plug 'vim-airline/vim-airline' | Plug 'vim-airline/vim-airline-themes'
 " Status bar (bottom)
 " Themes for statusbar
@@ -199,9 +364,16 @@ Plug 'sickill/vim-monokai'
 
 Plug 'jooize/vim-colemak'                          " Remap keyboard shortcuts to colemak
 
+" Trying out unite / denite
+Plug 'Shougo/denite.nvim'
+
+" CTAGS
+" Plug 'ludovicchabant/vim-gutentags'                " Ctag manager
+Plug 'majutsushi/tagbar'                           " Navbar with tags
+" Plug 'ternjs/tern_for_vim', { 'do': 'npm install' } " js ctags? Requires npm install after
+
 " SYNTAX
 Plug 'pangloss/vim-javascript'                     " JS indentation & syntax sugar
-Plug 'ludovicchabant/vim-gutentags'                " Ctag manager
 Plug 'groenewege/vim-less'                         " Less language bundle
 Plug 'rust-lang/rust.vim'                          " Rust syntax highlighting
 Plug 'hashivim/vim-vagrant'                        "Vagrant Syntax
@@ -209,8 +381,11 @@ Plug 'rodjek/vim-puppet'                           "Puppet syntax
 " Plug 'terryma/vim-multiple-cursors'
 " Plugin 'mxw/vim-jsx'                                 " JSX syntax highlighting.
 Plug 'neoclide/vim-jsx-improve'                    " JSX Syntax and indentation
+Plug 'aliva/vim-fish'                              "Fish syntax highlighting
 
-Plug 'MattesGroeger/vim-bookmarks'  "mm|mx to mark. mn to jump
+"MARKS
+" Plug 'MattesGroeger/vim-bookmarks'  "mm|mx to mark. mn to jump
+Plug 'kshenoy/vim-signature' "Show marks in the sidebar
 
 Plug 'tpope/vim-obsession'                          " Resurrect vim. Obsession.
 
@@ -254,6 +429,7 @@ set clipboard=unnamed
 let g:solarized_contrast = "high"
 let g:solarized_visibility = "low"
 " let $NVIM_TUI_ENABLE_TRUE_COLOR=1
+" set termguicolors
 " let g:solarized_termcolors = 16
 colorscheme solarized
 " set background=light"
@@ -267,6 +443,7 @@ set background=dark"
 "Type is nice. Use :hi to see all the
 " colors...
 
+" TODO: Disable autotags / tagbar for PS? Speeds up scrolling...
 " trigger by starting nvim via '$ nvim --cmd "let is_ps=1"
 if exists("is_ps")
   " Pluralsight settings:
@@ -375,7 +552,7 @@ autocmd FileType * autocmd BufWritePre <buffer> StripWhitespace
 autocmd FileType * set tabstop=4|set shiftwidth=4
 set autoindent                  " Automatic indention
 
-set scrolloff=5                 " Don't get too close to the edge!
+" set scrolloff=5                 " Don't get too close to the edge!
 
 " HIDDEN CHARS
 " Use the same symbols as TextMate for tabstops and EOLs
@@ -505,6 +682,11 @@ endif
 " after that, you ctrl-] and :tag to do cool stuff. Ctrl-t brings you back.
 " https://medium.com/usevim/vim-101-tags-bc55bc21e130.
 command! CtagGenerate :call plug#helptags()
+" use the brew version
+" Does tagbar generate these on the fly?!? Is that why they are sticking
+" around?
+" let g:tagbar_ctags_bin='/usr/local/opt/universal-ctags/bin/ctags'
+
 " Leader> b   activates buffer tags
 " g] or :ts shows all places it is
 " Ctrl-w-} previews the definition
@@ -512,11 +694,12 @@ command! CtagGenerate :call plug#helptags()
 " nvim -t tagName     " opens tag. Then use :tn to open more... Pretty cool!
 
 " https://github.com/craigemery/vim-autotag " Auto-update tags
+" https://andrew.stwrt.ca/posts/vim-ctags/
 
 ""
 " VIM Bookmarks
 ""
-nmap ms <Plug>BookmarkAnnotate
+" nmap ms <Plug>BookmarkAnnotate
 
 ""
 " Multiple cursors
@@ -693,8 +876,9 @@ endfunction
 " nmap <C-i> <C-w>w
 nmap <leader><tab> <C-w>w
 
-" CLOSE all other windows.
-nmap <leader>o :only<CR>
+" CLOSE all other windows. Changed because we remapped these in vim-after in
+" .vim/after/plugins
+nmap <leader>; :only<CR>
 
 " Window SIZING
 " 'normal' allows us to type is just like on the command line (useful when
@@ -705,10 +889,12 @@ command! WindowMin :vertical resize 0
 command! WindowVInc :vertical resize +20
 command! WindowVDec :vertical resize -20
 
-" WINDOW RE-SIZING
-nnoremap <silent> - :WindowVInc<CR>
+" WINDOW RE-SIZING. FIXME: Add zoom window back?
+" nnoremap <silent> <C-_> :WindowVInc<CR>
+" <c-_> is how you do ctrl -
+nnoremap <c-_> :WindowVInc<CR>
 nnoremap <silent> _ :WindowVDec<CR>
-nnoremap <silent> <leader>- :WindowMax<CR>
+" nnoremap <silent> <leader>- :WindowMax<CR>
 nnoremap <silent> <leader>_ :WindowMin<CR>
 nnoremap <silent> <leader>= :WindowEq<CR>
 
@@ -718,12 +904,63 @@ nnoremap <silent> <leader>= :WindowEq<CR>
 " NAVIGATION-CURSOR
 " Turbo navigation (Colemak) {{{
     " Works with counts, see ":help complex-repeat"
-    nnoremap <silent> H @='5h'<CR>|xnoremap <silent> H @='5h'<CR>|onoremap <silent> H @='5h'<CR>|
-    nnoremap <silent> N @='5gj'<CR>|xnoremap <silent> N @='5gj'<CR>|onoremap <silent> N @='5gj'<CR>|
-    nnoremap <silent> E @='5gk'<CR>|xnoremap <silent> E @='5gk'<CR>|onoremap <silent> E @='5gk'<CR>|
-    nnoremap <silent> I @='5l'<CR>|xnoremap <silent> I @='5l'<CR>|onoremap <silent> I @='5l'<CR>|
+    " Turning off for vim-hardtime
+    " nnoremap <silent> H @='5h'<CR>|xnoremap <silent> H @='5h'<CR>|onoremap <silent> H @='5h'<CR>|
+    " nnoremap <silent> N @='5gj'<CR>|xnoremap <silent> N @='5gj'<CR>|onoremap <silent> N @='5gj'<CR>|
+    " nnoremap <silent> E @='5gk'<CR>|xnoremap <silent> E @='5gk'<CR>|onoremap <silent> E @='5gk'<CR>|
+    " nnoremap <silent> I @='5l'<CR>|xnoremap <silent> I @='5l'<CR>|onoremap <silent> I @='5l'<CR>|
+    "
+    " FIXME: Make this half screen jump instead?
+    " nnoremap <silent> N @='15gj'<CR>|xnoremap <silent> N @='15gj'<CR>|onoremap <silent> N @='15gj'<CR>|
+    " nnoremap <silent> E @='15gk'<CR>|xnoremap <silent> E @='15gk'<CR>|onoremap <silent> E @='15gk'<CR>|
 " }}}
+"
+" CamelCaseIs The best
+" REMAP COLEMAK presets  more mappings and settings are in
+" ~/.vim/after/plugin/colemak
+" swap o and ; for normal mode, so we can much easier trigger the vim command,
+" and we can still insert on the next line.
+" line. Try it out... This is closer to how normal vim works anyway.
+" EXPERIMENTAL: If this makes things too weird, I'll have to turn it off
+nnoremap o ;
+nnoremap O :
+nnoremap ; o
+nnoremap : O
 
+" FIX THIS. not working?
+" nnoremap B L
+
+"
+" NAVIGATION REMAPPINGS
+" SCROLLING - Turn these on after we turn the smooth scrolling off.
+" Scroll Half-screen up/down. :help scroll http://vimdoc.sourceforge.net/htmldoc/scroll.html
+" nnoremap E <C-U>
+" nnoremap N <C-D>
+" Scroll full up down.
+" nnoremap <C-e> <C-B>
+" nnoremap <C-n> <C-F>
+
+" Smooth scrolling plugin
+" // u vs y? y
+let g:comfortable_motion_no_default_key_mappings = 1
+let g:comfortable_motion_impulse_multiplier = 0.8 " Feel free to increase/decrease this value.
+nnoremap <silent> N :call comfortable_motion#flick(g:comfortable_motion_impulse_multiplier * winheight(0) * 2.7)<CR>
+nnoremap <silent> E :call comfortable_motion#flick(g:comfortable_motion_impulse_multiplier * winheight(0) * -2.7)<CR>
+nnoremap <silent> <C-n> :call comfortable_motion#flick(g:comfortable_motion_impulse_multiplier * winheight(0) * 4)<CR>
+nnoremap <silent> <C-e> :call comfortable_motion#flick(g:comfortable_motion_impulse_multiplier * winheight(0) * -4)<CR>
+
+
+""
+" Limit using the nav easy nav above...
+""
+let g:hardtime_showmsg = 1
+let g:hardtime_default_on = 1
+let g:hardtime_maxcount = 3
+
+let g:list_of_normal_keys = ["h", "n", "e", "i", "x", "<UP>", "<DOWN>", "<LEFT>", "<RIGHT>"]
+let g:list_of_visual_keys = ["h", "n", "e", "i", "x", "<UP>", "<DOWN>", "<LEFT>", "<RIGHT>"]
+let g:list_of_insert_keys = ["<UP>", "<DOWN>", "<LEFT>", "<RIGHT>"]
+let g:list_of_disabled_keys = []
 
 
 
@@ -737,6 +974,9 @@ nnoremap <silent> <leader>= :WindowEq<CR>
 " then start nvim with -S flag
 command! SessionSave :Obsession
 command! SaveSession :Obsession
+
+
+command! Mappings :map
 
 ""
 " TMUX - Hack fix
@@ -759,6 +999,27 @@ nnoremap <leader>R :silent !tmux send-keys -t 1 C-c C-c hr space - Enter Up Up C
 " SEARCH/REPLACE
 nnoremap <leader>fr :%s/
 
+""
+" Incremental SEARCH with COUNT via osyo-manga/vim-anzu
+""
+" nnoremap k <Plug>(anzu-mode-n)
+" nnoremap K <Plug>(anzu-mode-N)
+" nnoremap k <Plug>(anzu-n-with-echo)
+" nnoremap K <Plug>(anzu-N-with-echo)
+" nnoremap * <Plug>(anzu-star-with-echo)
+" nnoremap # <Plug>(anzu-sharp-with-echo)
+
+" command! AnzuModeOn
+
+" Inline not working :|
+nnoremap <silent> <Plug>(anzu-mode-n) :<C-u>call anzu#mode#start(@/, "k", "", "")<CR>
+nnoremap <silent> <Plug>(anzu-mode-N) :<C-u>call anzu#mode#start(@/, "K", "", "")<CR>
+nnoremap <silent> <Plug>(anzu-mode) :<C-u>call anzu#mode#start(@/, "", "", "")<CR>
+
+
+let g:anzu_enable_CursorMoved_AnzuUpdateSearchStatus=1
+
+" https://gist.github.com/cognitivegears/a854e6b45a29b8fed007c3b05c757fe4  Unite and Anzu?  ?
 
 " Find / replace commands
 " -range=% means range is optional (you can use selection) - http://vimdoc.sourceforge.net/htmldoc/usr_40.html
@@ -768,6 +1029,7 @@ command! -range=% ReplaceSingleQuoteWithDouble :<line1>,<line2>s/'/"/gi
 
 
 " OPEN VIMRC
+nnoremap <leader>ef <C-w>v<C-w>l<C-w>L:e ~/.config/fish/config.fish<cr>
 nnoremap <leader>ev <C-w>v<C-w>l<C-w>L:e ~/.vimrc<cr>
 nnoremap <leader>sv :source ~/.vimrc<cr>
 " Or just :so % when in this file
@@ -965,11 +1227,12 @@ endif
 " NERDTREE easy toggle. More settings for this are in ~/.vim/plugin/nerdtree.vim
 "
 map <leader>n :NERDTreeToggle<CR> :NERDTreeMirror<CR>
-map <leader>f :NERDTreeFind<CR>
+"not frequent enough to justify leader. For rarer stuff, or escalation, ctrl
+"makes more sense.
+map <C-f> :NERDTreeFind<CR>
 
 let g:NERDTreeShowHidden=1 	 " Show hidden files by default
 let NERDTreeQuitOnOpen=0 " DOESN'T WORK :(
-
 
 " autocmd! FileReadPre * call GotoNextWindow()
 
@@ -1432,8 +1695,9 @@ nmap <T-S-CR> <Plug>unimpairedBlankUp
 "nmap <C-e> <Plug>(textmanip-move-up)
 "nmap <C-n> <Plug>(textmanip-move-down)
 "http://vimcasts.org/episodes/bubbling-text/
-nmap <C-n> ]e
-nmap <C-e> [e
+" disabling for HARDTIME
+" nmap <C-n> ]e
+" nmap <C-e> [e
 
 " Move SINGLE char left/right in insert mode
 
@@ -1519,8 +1783,14 @@ nmap <silent> <leader>fc <ESC>/\v^[<=>]{7}( .*\|$)<CR>
 " map Delete to ESC and CTRL. HIGHLY experimental
 " Don't think the ctrl works properly
 "
-
+""
+" REMAP CAPS to ESCAPE key.
+""
 " nnoremap <BS> :call multiple_cursors#quit()<CR>
+" in normal mode, have it be backtick (allows us easy mark retrieval)
+nnoremap <BS> `
+nnoremap <BS><BS> <BS>
+"insert and visual mode
 inoremap <BS> <ESC>
 xnoremap <BS> <ESC>
 " Minus 1 on esc (not normal behavior)

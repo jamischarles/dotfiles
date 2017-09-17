@@ -24,7 +24,7 @@ for FILE in *.sym; do
 done;
 #for FILE in *.sym;  done;
 
-# symlink my zsh theme
+# symlink my zsh theme (TODO: DELETE?)
 FILE="jamis-doubleend.zsh-theme"
 FILE_PATH="$HOME/.oh-my-zsh/themes/$FILE"
 echo "Deleting and creating $FILE_PATH symlink"
@@ -38,11 +38,25 @@ mkdir ~/.vim
 # ~/.config/nvim -> ~/.vim
 # ~/.config/nvim/init.vim -> ~/.vimrc
 
+# FOR FISH SHELL ***************
+# symlink homebrew nvm version for fish shell to ~/.nvm
+echo "Linking homebrew nvm folder to real nvm folder"
+#rm -rf "$HOME/.nvm
+ln -s $(brew --prefix nvm)/nvm.sh "$HOME/.nvm/nvm.sh"
+
+# FISH config and FISHERMAN installed plugins, since these aren't dotfiles, I'm listing them manually here.
+
+echo "Linking FISH SHELL CONFIG FILES (config.fish and fishfile (for fisherman))"
+rm "$HOME/.config/fish/config.fish"
+ln -s "$HERE/config.fish" "$HOME/.config/fish/config.fish"
+rm "$HOME/.config/fish/fishfile"
+ln -s "$HERE/fishfile" "$HOME/.config/fish/fishfile"
+# END FOR FISH SHELL ************
 
 # symlink ~/config/nvim to ~/.vim Used for Vim and Neovim.
 echo "Linking fake nvim folder to real .vim folder"
 #rm -rf "$HOME/.vim/$FOLDER"
-ln -s "$HOME/.vim" "$HOME/.config/nvim"  
+ln -s "$HOME/.vim" "$HOME/.config/nvim"
 
 echo "Linkin .vimrc for nvim instead of nvim config file"
 ln -s "$HOME/.vimrc" "$HOME/.config/nvim/init.vim"

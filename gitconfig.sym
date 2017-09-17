@@ -9,6 +9,9 @@
   l = log --graph --pretty=format:'%C(yellow)%h%C(cyan)%d%Creset %s %C(white)- %an, %ar%Creset'
   ll = log --stat --abbrev-commit
   co = checkout
+  ignore = update-index --assume-unchanged
+  unignore = update-index --no-assume-unchanged
+  ignored = !git ls-files -v | grep "^[[:lower:]]"
 [url "https://"]
 	insteadOf = git://
 [core]

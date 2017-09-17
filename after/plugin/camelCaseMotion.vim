@@ -7,7 +7,6 @@
 " This needs to be paired with whatever is the next 'word' key
 " This needs to be placed in /after b/c vim-colemak plugin files clobber these
 " mappings
-map u <Plug>CamelCaseMotion_w
 " map y <Plug>CamelCaseMotion_w
 " previous word
-map l <Plug>CamelCaseMotion_b
+" map l <Plug>CamelCaseMotion_b
