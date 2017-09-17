@@ -17,9 +17,7 @@ nmap gs gi
 " TRY without. See what happens
 nnoremap y e|xnoremap y e|onoremap y e|
 nnoremap Y E|xnoremap Y E|onoremap Y E|
-" Use camelCaseMotion instead of this one
-" nnoremap u w|xnoremap u w|onoremap u w|
-
+nnoremap u w|xnoremap u w|onoremap u w|
 nnoremap U W|xnoremap U W|onoremap U W|
 
 
@@ -28,10 +26,11 @@ nnoremap U W|xnoremap U W|onoremap U W|
 " and we can still insert on the next line.
 " line. Try it out... This is closer to how normal vim works anyway.
 " EXPERIMENTAL: If this makes things too weird, I'll have to turn it off
-nnoremap o ;
-nnoremap O :
-nnoremap ; o
-nnoremap : O
+" THIS BROKE lots of shortcuts in weird ways.
+" nnoremap o ;
+" nnoremap O :
+" nnoremap ; o
+" nnoremap : O
 
 " Map bottom of screen to B
 nnoremap B L

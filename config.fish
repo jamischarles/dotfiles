@@ -126,6 +126,8 @@ if status --is-interactive
     abbr --add gdc 'git diff --cached --color | diff-so-fancy | less --tabs=1,5 -R'
     abbr --add gch 'git checkout'
     abbr --add gc 'git commit -v'
+    abbr --add grm 'git remote -v'
+    abbr --add gca 'git commit -v --amend'
 
     # node
     abbr --add nv 'node --version'

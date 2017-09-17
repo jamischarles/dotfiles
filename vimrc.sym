@@ -1,5 +1,6 @@
 " Short TODO LIST:
 " Stupid marks aren't being cleared properly :{
+" YANK RING?
 " Think about going back to u, y, x, d as much as possible. Would love to get
 " back to natural language.
 " Fix smooth scroll (don't go past the bottom of the line.
@@ -914,22 +915,6 @@ nnoremap <silent> <leader>= :WindowEq<CR>
     " nnoremap <silent> N @='15gj'<CR>|xnoremap <silent> N @='15gj'<CR>|onoremap <silent> N @='15gj'<CR>|
     " nnoremap <silent> E @='15gk'<CR>|xnoremap <silent> E @='15gk'<CR>|onoremap <silent> E @='15gk'<CR>|
 " }}}
-"
-" CamelCaseIs The best
-" REMAP COLEMAK presets  more mappings and settings are in
-" ~/.vim/after/plugin/colemak
-" swap o and ; for normal mode, so we can much easier trigger the vim command,
-" and we can still insert on the next line.
-" line. Try it out... This is closer to how normal vim works anyway.
-" EXPERIMENTAL: If this makes things too weird, I'll have to turn it off
-nnoremap o ;
-nnoremap O :
-nnoremap ; o
-nnoremap : O
-
-" FIX THIS. not working?
-" nnoremap B L
-
 "
 " NAVIGATION REMAPPINGS
 " SCROLLING - Turn these on after we turn the smooth scrolling off.
