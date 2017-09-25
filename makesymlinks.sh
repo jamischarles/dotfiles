@@ -54,12 +54,16 @@ ln -s "$HERE/fishfile" "$HOME/.config/fish/fishfile"
 # END FOR FISH SHELL ************
 
 # symlink ~/config/nvim to ~/.vim Used for Vim and Neovim.
+# TODO: Just make the jump already? likely never going back to vim
 echo "Linking fake nvim folder to real .vim folder"
 #rm -rf "$HOME/.vim/$FOLDER"
 ln -s "$HOME/.vim" "$HOME/.config/nvim"
 
 echo "Linkin .vimrc for nvim instead of nvim config file"
 ln -s "$HOME/.vimrc" "$HOME/.config/nvim/init.vim"
+
+echo "Linkin real main.shada to fake ~/.viminfo since nvim uses main.shada instead"
+ln -s "$HOME/.local/share/nvim/shada/main.shada" "$HOME/.viminfo"
 
 
 # symlink .vim/plugin to ~/.dotfiles/plugin. Used for Vim and Neovim.

@@ -33,7 +33,7 @@ nnoremap U W|xnoremap U W|onoremap U W|
 " nnoremap : O
 
 " Map bottom of screen to B
-nnoremap B L
+nnoremap B L|xnoremap B L|onoremap B L
 
 " Textmanip mappings that conflict
 "

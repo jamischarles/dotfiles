@@ -1,12 +1,36 @@
-" Short TODO LIST:
-" Stupid marks aren't being cleared properly :{
+" Short TODO LIST:  {{{1
+" FOLDS: Add custom folds to this file with {{{1 pattern?
+" Change buffer modified color? (have buffer share mode color?)
+" C-Z to undo in insert mode? (esc too?)
+" C-U
+" FZF:
+" - Combine all fzf modes with tab like ctrl p had. cycle modes like ctrl-p
+" - Maybe denite? Or combine the 2? basically enter FIND mode
+" Search:
+"   - on insert wipe highlidht
+"   https://vi.stackexchange.com/questions/10407/stop-highlighting-when-entering-insert-mode
+" Marks: - fix the fact that marks stay after close
+"
+" TODO TextObjects: Make some more for JS, install comment one... etc.
+" TODO Folding: remap [[ ]] to navigate the folds
+"   - add zebra striping / INCREASE CONTRAST
+"   - need to easily be able to jump to the next method / class / func
+"   - fix folds to auto fold 2 levels but load open
+"   - add folds to vimrc
+" Map git keys to ctrl+ (like leeader p,r etc)
+" Try to swatch swap O for : again (messes me up in insert mode. Use execute
+" in command? (look at learnvimscript the hard way)
+" Turn on alt for another layer of keys.
+" CTAGS: Improve btags output... Closer to ctags...
 " YANK RING?
 " Think about going back to u, y, x, d as much as possible. Would love to get
+" Maybe use ctrl for a lot of these... c-u c-y c-p
 " back to natural language.
 " Fix smooth scroll (don't go past the bottom of the line.
 " " even normal ctrl scroll goes too far :{
 " FIX: ZOOM WINDOW
-" FIX: smarter swap warning (or at least force :e)?
+" FIX: smarter swap warning (or at least force :e)? Use plugin that guy
+" wrote? auto-swap?
 " FIX t (till) in normal mode...
 " FIX TAGBAR for classes. Why not nested? Remove node_modules.
 " We can use that to show file outline if it shows up properly.
@@ -36,7 +60,7 @@
 "   across buffers / files.
 "   (LEADER-F maybe?)
 "
-"
+" }}}
 "
 "###############################3
 " PLUGINS to consider - https://vimawesome.com/
@@ -58,6 +82,7 @@
 "https://github.com/ddrscott/vim-side-search/blob/master/README.md (side
 "search)
 "https://vimawesome.com/plugin/vim-sneak (motion)
+" https://github.com/metakirby5/codi.vim Interactive REPL
 "##########################3
 "
 "
@@ -72,10 +97,14 @@
 " DEBUGGING:
 " - https://vi.stackexchange.com/questions/7722/how-to-debug-a-mapping debug
 "   mapping
-" ##############################
-" QUICK KEYS,###################
+" - Show variables in global, buffer, etc - :let g: :let :b etc...  https://codeyarns.com/2010/11/26/how-to-view-variables-in-vim/ ##############################
+"
+" QUICK KEYS:,###################
 " ~/.vim/after/plugin/ - is where several things are placed that must be
 " applied after this file
+"
+" Unassigned keys <leader> \ leader j
+" Reassign git leader keys to ctrl?
 "
 " Philosophy:
 " - use leader for frequent and very important stuff. Actions as it were.
@@ -107,16 +136,39 @@
 " Last insertion point / edit - `.   (TODO: Make it g. ?)
 " Last insertion point - gs
 " Last selection ga
-" Previous jump - Ctrl-o
+" Last normal point (when closing the file) -  `"
+" Last insert point (when closing the file) - `^
+" Previous jump - Ctrl-o (cycles back in history)
 " Jump 5 lines ahead / back -  5+/-
-"
+" last 2 jump points? -  `' (jump back) ***
+" Next METHOD - [m  ***
+" Next BLANK line - {}
+
+" TODO: Consider making these ctrl-LHM
 " H M B - Cursor to TOP MIDDLE BOTTOM of current screen. No scroll.
-"
-" Marks:
+
+" Marks: http://vim.wikia.com/wiki/Using_marks
 " mx - set mark x (uppercase mark can be retrieved across files).
 " dmx - delete marx (mx mx will set/delete)
 " m<space> - remove all marks from file
 " m/ - show all tags in current file
+" Phantom marks? https://github.com/kshenoy/vim-signature/issues/72
+
+" Folding: http://vim.wikia.com/wiki/folding
+" https://stackoverflow.com/questions/5074191/vim-fold-top-level-folds-only
+" http://learnvimscriptthehardway.stevelosh.com/chapters/48.html
+"
+" 10jF - Create fold for next 10 lines
+" Toggle fold - ja
+" jn je - next / previous fold
+" jd je - delete folds (current / all)
+" jo jc - open / close fold
+" jj je - next / previous fold
+" jM jr - Open / Close all folds
+" Make visual block a fold - jf
+" Q: How to add fold with level? 1jf?
+" Q: How to add fold at end of screen (certain colum)?
+
 "
 " Motions all over the screen (easy motion type)
 " https://github.com/easymotion/vim-easymotion
@@ -146,6 +198,7 @@
 " P - paste before cursor
 " ga - go to last selection
 " " These below replace the ctrl moving code I had before...
+" <space>v will insert a space and THEN paste it... SWEET
 "
 " SELECTION COMMANDS:
 " :125y  - copy line 125 AMAZING
@@ -159,6 +212,11 @@
 "
 " TODO: make 125 insert, 125 o work
 " TODO: Consider turning upy back on for the default actions...?
+"
+" TEXT OBJECTS: **********************
+" https://github.com/glts/vim-textobj-comment
+" https://github.com/kana/vim-textobj-user *** define your own
+"
 "
 " WORD WRAPPIN: *********************
 " Wrap, delete quotes, etc - ds* delete surrounding *, w** wrap [modifier] with *, cs** change surrounding a with b
@@ -384,9 +442,11 @@ Plug 'rodjek/vim-puppet'                           "Puppet syntax
 Plug 'neoclide/vim-jsx-improve'                    " JSX Syntax and indentation
 Plug 'aliva/vim-fish'                              "Fish syntax highlighting
 
-"MARKS
+Plug 'farmergreg/vim-lastplace' " TOO Slow? try to steal the good stuff?                   Open file at the last place you edited.
+
+" MARKS
 " Plug 'MattesGroeger/vim-bookmarks'  "mm|mx to mark. mn to jump
-Plug 'kshenoy/vim-signature' "Show marks in the sidebar
+Plug 'kshenoy/vim-signature' " Show marks in the sidebar
 
 Plug 'tpope/vim-obsession'                          " Resurrect vim. Obsession.
 
@@ -527,6 +587,32 @@ set shortmess+=A 		" Ignore 'swapfile exists' warnings
 "
 "
 set vb                   " enable visual bell (disable audio bell)
+
+" General FOLDING for all files? esp vimrc
+" au BufReadPre * setlocal foldmethod=marker
+" autocmd FileType vim set foldmethod=marker
+
+" Reading on auto-groups http://learnvimscriptthehardway.stevelosh.com/chapters/14.html
+augroup vimrc
+  autocmd!
+  " you need filetype, OR event and filename
+  autocmd BufEnter *.vimrc set foldmethod=marker
+augroup END
+
+" set foldmethod=syntax " Set folding defaults. Fold by syntax (defined by js syntax)
+" Only mark functions / outside level for folding
+" FIXME: Read up on how to set augroups...
+augroup javascript " just a name
+  "clears it so we can source this file several times...
+  autocmd!
+  autocmd FileType javascript set foldlevel=0
+  autocmd FileType javascript set foldmethod=syntax
+  " " Only use fn (outside level)
+  autocmd FileType javascript set foldnestmax=2
+  " " Have them be open by default
+  " autocmd FileType javascript set nofoldenable
+  " au BufWinEnter * if &fdm == 'indent' | setlocal foldmethod=manual | endif
+augroup END
 ""
 "" Whitespace (from Janus)
 ""
@@ -577,6 +663,69 @@ set incsearch   " incremental searching
 set ignorecase  " searches are case insensitive...
 set smartcase   " ... unless they contain at least one capital letter
 
+""
+" FOLDING:
+""
+" function! MyFoldText() " {{{
+"     let line = getline(v:foldstart)
+"
+"     let nucolwidth = &fdc + &number * &numberwidth
+"     let windowwidth = winwidth(0) - nucolwidth - 3
+"     let foldedlinecount = v:foldend - v:foldstart
+"
+"     " expand tabs into spaces
+"     let onetab = strpart('          ', 0, &tabstop)
+"     let line = substitute(line, '\t', onetab, 'g')
+"
+"     let line = strpart(line, 0, windowwidth - 2 -len(foldedlinecount))
+"     let fillcharcount = windowwidth - len(line) - len(foldedlinecount)
+"     return line . '…' . repeat(" ",fillcharcount) . foldedlinecount . '…' . ' '
+" endfunction " }}}
+" set foldtext=MyFoldText()
+"
+"
+" http://gregsexton.org/2011/03/27/improving-the-text-displayed-in-a-vim-fold.html
+function! CustomFoldText() abort
+    let fs = v:foldstart
+    while getline(fs) !~ '\w'
+        let fs = nextnonblank(fs + 1)
+    endwhile
+    if fs > v:foldend
+        let line = getline(v:foldstart)
+    else
+        let line = substitute(getline(fs), '\t', repeat(' ', &tabstop), 'g')
+    endif
+
+    let w = winwidth(0) - &foldcolumn - (&number ? 8 : 0)
+    let foldSize = 1 + v:foldend - v:foldstart
+    let foldSizeStr = " " . foldSize . " lines "
+    let foldLevelStr = repeat("  +  ", v:foldlevel)
+    let lineCount = line("$")
+    let foldPercentage = printf("[%.1f", (foldSize*1.0)/lineCount*100) . "%] "
+    let expansionString = repeat(" ", w - strwidth(foldSizeStr.line.foldLevelStr))
+    return line . expansionString . foldSizeStr . foldPercentage . foldLevelStr
+endfunction
+" fu! CustomFoldText()
+"     "get first non-blank line
+"     let fs = v:foldstart
+"     while getline(fs) =~ '^\s*$' | let fs = nextnonblank(fs + 1)
+"     endwhile
+"     if fs > v:foldend
+"         let line = getline(v:foldstart)
+"     else
+"         let line = substitute(getline(fs), '\t', repeat(' ', &tabstop), 'g')
+"     endif
+"
+"     let w = winwidth(0) - &foldcolumn - (&number ? 8 : 0)
+"     let foldSize = 1 + v:foldend - v:foldstart
+"     let foldSizeStr = " " . foldSize . " lines "
+"     let foldLevelStr = repeat("+--", v:foldlevel)
+"     let lineCount = line("$")
+"     let foldPercentage = printf("[%.1f", (foldSize*1.0)/lineCount*100) . "%] "
+"     let expansionString = repeat(".", w - strwidth(foldSizeStr.line.foldLevelStr.foldPercentage))
+"     return line . expansionString . foldSizeStr . foldPercentage . foldLevelStr
+" endf
+set foldtext=CustomFoldText()
 
 ""
 "" Open link under cursor in Browser
@@ -687,6 +836,22 @@ command! CtagGenerate :call plug#helptags()
 " Does tagbar generate these on the fly?!? Is that why they are sticking
 " around?
 " let g:tagbar_ctags_bin='/usr/local/opt/universal-ctags/bin/ctags'
+" Tell tagbar to use btags for Tagbar
+let g:tagbar_type_javascript = {
+    \ 'replace' : 1,
+    \ 'kinds' : [
+        \ 'c:classes',
+        \ 'f:methods',
+        \ 'v:variables',
+        \ 'i:imports',
+    \ ],
+    \ 'sro' : '.',
+    \ 'kind2scope' : {
+        \ 'c' : 'class',
+    \ },
+    \ 'ctagsbin' : 'btags',
+    \ 'ctagsargs' : ''
+\ }
 
 " Leader> b   activates buffer tags
 " g] or :ts shows all places it is
@@ -879,7 +1044,7 @@ nmap <leader><tab> <C-w>w
 
 " CLOSE all other windows. Changed because we remapped these in vim-after in
 " .vim/after/plugins
-nmap <leader>; :only<CR>
+nmap <leader>o :only<CR>
 
 " Window SIZING
 " 'normal' allows us to type is just like on the command line (useful when
@@ -915,6 +1080,12 @@ nnoremap <silent> <leader>= :WindowEq<CR>
     " nnoremap <silent> N @='15gj'<CR>|xnoremap <silent> N @='15gj'<CR>|onoremap <silent> N @='15gj'<CR>|
     " nnoremap <silent> E @='15gk'<CR>|xnoremap <silent> E @='15gk'<CR>|onoremap <silent> E @='15gk'<CR>|
 " }}}
+"
+" REMAP O to : since I use : all the time, and almost never use O
+nnoremap O :
+" TODO: See which one of these I end up using more...
+" nnoremap <C-o> :
+nnoremap > :
 "
 " NAVIGATION REMAPPINGS
 " SCROLLING - Turn these on after we turn the smooth scrolling off.
@@ -1125,9 +1296,14 @@ function! GotoNextBuffer()
     " If currently focused on NERDtree, don't allow to change buffer
     " Instead change window, and then change buffer
     if exists("b:NERDTree")
-        echo "Can't navigate on NERDTree"
-	" Go to next window
-	wincmd p
+      echo "Can't navigate on NERDTree"
+      wincmd p
+    endif
+
+    if exists("b:tagbar_mapped_keys")
+      echo "Can't navigate on Tagbar"
+      " Go to next window
+      wincmd p
     endif
 
     " Go to next
@@ -1774,7 +1950,8 @@ nmap <silent> <leader>fc <ESC>/\v^[<=>]{7}( .*\|$)<CR>
 " nnoremap <BS> :call multiple_cursors#quit()<CR>
 " in normal mode, have it be backtick (allows us easy mark retrieval)
 nnoremap <BS> `
-nnoremap <BS><BS> <BS>
+" use `` for jump back
+nnoremap <BS><BS> `'
 "insert and visual mode
 inoremap <BS> <ESC>
 xnoremap <BS> <ESC>
@@ -1807,15 +1984,15 @@ xnoremap <S-BS> <Del>
 " This forces backspace to behave properly
 " ! overrides if already exists. Helps prevent errors
 func! Backspace()
-if col('.') == 1
-  if line('.')  != 1
-    return  "\<ESC>kA\<Del>"
+  if col('.') == 1
+    if line('.')  != 1
+      return  "\<ESC>kA\<Del>"
+    else
+      return ""
+    endif
   else
-    return ""
+    return "\<Left>\<Del>"
   endif
-else
-  return "\<Left>\<Del>"
-endif
 endfunc
 
 

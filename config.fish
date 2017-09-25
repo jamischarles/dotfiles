@@ -1,4 +1,5 @@
 # TODO:
+# fix switching iterm prompts in fish. !!!
 # - remap alt ne to up down sequences in iterm
 # - Add git status back... - https://stackoverflow.com/questions/866989/fish-interactive-shell-full-path
 # 	- duration and status right side?
