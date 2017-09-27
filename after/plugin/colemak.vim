@@ -35,6 +35,8 @@ nnoremap U W|xnoremap U W|onoremap U W|
 " Map bottom of screen to B
 nnoremap B L|xnoremap B L|onoremap B L
 
+" source $HOME/.vim/vimrc/keys.vimrc " Key bindings for Vim and Vim Plugins
+
 " Textmanip mappings that conflict
 "
 " nnoremap <C-h> <Plug>(textmanip-move-left)

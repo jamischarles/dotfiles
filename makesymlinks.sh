@@ -1,5 +1,7 @@
 #!/bin/bash
 
+#TODO: Clean this up and remove a bunch of them...
+#TODO: consider grouping vim or nvim folders in a folder named nvim?
 #TODO: Consider suffixing these files with -symlink so we know which to fetch specifically. And so it doesn't include the shell script...
 
 # this script links all the dotfiles (.*) in the ~/.dotfiles folder and symlinks them to ~/
@@ -62,9 +64,20 @@ ln -s "$HOME/.vim" "$HOME/.config/nvim"
 echo "Linkin .vimrc for nvim instead of nvim config file"
 ln -s "$HOME/.vimrc" "$HOME/.config/nvim/init.vim"
 
-echo "Linkin real main.shada to fake ~/.viminfo since nvim uses main.shada instead"
-ln -s "$HOME/.local/share/nvim/shada/main.shada" "$HOME/.viminfo"
+# echo "Linkin real main.shada to fake ~/.viminfo since nvim uses main.shada instead"
+# ln -s "$HOME/.local/share/nvim/shada/main.shada" "$HOME/.viminfo"
 
+# symlink .vim/vimrc to ~/.dotfiles/vimrc
+FOLDER='vimrc'
+echo "Deleting and creating ~/.vim/$FOLDER symlink"
+rm -rf "$HOME/.vim/$FOLDER"
+ln -s "$HERE/$FOLDER" "$HOME/.vim/$FOLDER"
+
+# symlink .vim/ftplugin to ~/.dotfiles/ftplugin
+FOLDER='ftplugin'
+echo "Deleting and creating ~/.vim/$FOLDER symlink"
+rm -rf "$HOME/.vim/$FOLDER"
+ln -s "$HERE/$FOLDER" "$HOME/.vim/$FOLDER"
 
 # symlink .vim/plugin to ~/.dotfiles/plugin. Used for Vim and Neovim.
 FOLDER='plugin'

@@ -1,4 +1,5 @@
 # TODO:
+# add folds here? Using modeline? Use ## for 1, and # for 2
 # fix switching iterm prompts in fish. !!!
 # - remap alt ne to up down sequences in iterm
 # - Add git status back... - https://stackoverflow.com/questions/866989/fish-interactive-shell-full-path
@@ -12,7 +13,6 @@
 # - get the terminal switch to work...
 # 	- try my method above
 # 	- ask on SO, try the escape route...
-# - install fish-done?
 # - install fasd or similar? so I can just type the folder name?
 # - use informative prompt? Or shop around?
 # http://mariuszs.github.io/blog/2013/informative_git_prompt.html
@@ -141,6 +141,7 @@ if status --is-interactive
 
     abbr --add profile "fish --profile prompt.prof -ic 'fish_prompt; exit'; sort -nk 2 prompt.prof" # Profile fish startup time. https://github.com/fish-shell/fish-shell/issues/2854
 
+    abbr --add list "find . | fzf" # list files and pass to fzf
     #
 end
 
