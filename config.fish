@@ -142,6 +142,10 @@ if status --is-interactive
     abbr --add profile "fish --profile prompt.prof -ic 'fish_prompt; exit'; sort -nk 2 prompt.prof" # Profile fish startup time. https://github.com/fish-shell/fish-shell/issues/2854
 
     abbr --add list "find . | fzf" # list files and pass to fzf
+
+    # history?
+    # history --merge # will merge history from other sessions
+    # history | fzf # goodness. TODO: bind this to ctrl-r?
     #
 end
 

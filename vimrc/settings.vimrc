@@ -41,9 +41,9 @@ set directory=~/.vim/backup " where to put swap files.
 set hidden " persist beyond buffer switching
 set undofile                    " Allow persistent undo
 set undodir=~/.vim/undo         " Store undo files here. You have to make the folder if it doesn't exist
-set undoreload=10000            " 10000 levels of undo!
+set undoreload=10000            " Not sure what this does?
 " set undolevels=1000
-set undolevels=5
+set undolevels=100 " This controls how far back you can undo"
 
 
 "" STATUSLINE (from Janus)  https://github.com/carlhuda/janus/blob/master/janus/vim/core/before/plugin/statusline.vim. FIXME: add to plugin file?

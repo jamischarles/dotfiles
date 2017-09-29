@@ -84,7 +84,21 @@ command! -range=% ReplaceSingleQuoteWithDouble :<line1>,<line2>s/'/"/gi
 " JSON Pretty print
 command! PrettyJSON %!python -m json.tool
 
-"" CUSTOM FUNCTIONS #####################################
+function! Dontopeninnerdtree(e)
+  " if NERDTree has focus, go to next window
+  if exists("b:NERDTree")
+    " echo "Can't navigate on NERDTree"
+    " Go to next window
+    execute 'wincmd w'
+  endif
+
+  " Open selected file
+  execute 'e ' a:e
+
+endfunction
+
+""CUSTOM FUNCTIONS #####################################
+
 function! s:getNumberOfOpenBuffers()
 " This is how you run a command from a script...
 " If there's one buffer open, and it's not a nerdtree buffer...

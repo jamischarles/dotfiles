@@ -8,8 +8,8 @@ nmap <leader>o :only<CR>| " CLOSE all other windows.
 nnoremap <leader>w :w<CR>
 
 nnoremap <leader>fr :%s/| " SEARCH/REPLACE
-nnoremap <leader>ef <C-w>v<C-w>l<C-w>L:e ~/.config/fish/config.fish<cr>| " Open fish config
-nnoremap <leader>ev <C-w>v<C-w>l<C-w>L:e ~/.vimrc<cr>| " Open Vimrc
+" nnoremap <leader>ef <C-w>v<C-w>l<C-w>L:e ~/.config/fish/config.fish<cr>| " Open fish config
+" nnoremap <leader>ev <C-w>v<C-w>l<C-w>L:e ~/.vimrc<cr>| " Open Vimrc
 nnoremap <leader>sv :source ~/.vimrc<cr>| " Source vimrc - Or just :so % when in this file
 
 nnoremap <leader>; A;<esc>| " Append ; to eol
@@ -49,8 +49,8 @@ map <C-f> :NERDTreeFind<CR>
 " Comment: Line
 map <leader>/ gcc<CR>
 
-" Snippets: Edit JS snippets file
-nnoremap <leader>es <C-w>v<C-w>l<C-w>L:e ~/.dotfiles/_codesnippets/snippets/javascript.snippets<cr>
+" Snippets: Edit JS snippets file (now handled by <Leader>e)
+" nnoremap <leader>es <C-w>v<C-w>l<C-w>L:e ~/.dotfiles/_codesnippets/snippets/javascript.snippets<cr>
 
 " Indentation: Left / right
 vmap <leader>[ <Plug>(textmanip-move-left)
@@ -119,20 +119,28 @@ nnoremap <silent> <Leader>t :call fzf#run({
 \   'source': 'ag -g "" --hidden --ignore .git ',
 \   'options': '--multi --exact --tiebreak=end,length',
 \   'down': '~40%',
-\   'sink': function('<sid>dontopeninnerdtree')
+\   'sink': function('Dontopeninnerdtree')
 \ })<CR>
 
 " include node_modules
 nnoremap <silent> <Leader>T :call fzf#run({
 \   'options': '--exact --tiebreak=end,length',
 \   'down': '~40%',
-\   'sink': function('<sid>dontopeninnerdtree')
+\   'sink': function('Dontopeninnerdtree')
+\ })<CR>
+
+"  https://github.com/junegunn/fzf/issues/274 https://unix.stackexchange.com/questions/64736/combine-output-from-two-commands-in-bash
+nnoremap <silent> <Leader>e :call fzf#run({
+ \'source': '{find ~/.vim/vimrc/* -type f; find ~/.vimrc; find ~/.dotfiles/_codesnippets/snippets/javascript.snippets; find ~/.config/fish/config.fish;}',
+\   'options': '--multi --exact --tiebreak=end,length',
+\   'down': '~40%',
+\   'sink': function('Dontopeninnerdtree')
 \ })<CR>
 
 nnoremap <silent> <Leader>m :FzfHistory<CR>| " Use the MRU cache
 nnoremap <silent> <Leader>g :FzfGitFiles?<CR>
 nnoremap <silent> <Leader>b :FzfBTags<CR>
-" nnoremap <silent> <Leader>b :FzfBuffers<CR>
+nnoremap <silent> <Leader>B :FzfBuffers<CR>
 
 
 "" MACROS ###################################################################
