@@ -1,6 +1,3 @@
-" This is for things that HAVE to be loaded after the plugins. This is kind of
-" a catch-all similar to what Janus is using. TODO: Consider moving all the
-" .vimrc stuff in here, and just make sure that it gets loaded after the
 " plugin stuff. For now, let's prefer to place specific overrides in the
 " after/plugin folder
 "
@@ -11,8 +8,6 @@
 " gi should be gs for us since we use 's' for insert
 " Goes to the last insertion point and gets in insert mode
 nmap gs gi
-
-
 " vim-colemak gets word, eow keys wrong. Swap them.
 " TRY without. See what happens
 nnoremap y e|xnoremap y e|onoremap y e|
@@ -42,3 +37,26 @@ nnoremap B L|xnoremap B L|onoremap B L
 " nnoremap <C-h> <Plug>(textmanip-move-left)
 " xmap <C-h> <Plug>(textmanip-move-left)
 " nnoremap <C-i> <Plug>(textmanip-move-right)
+"
+"
+
+"" Git Gutter Colors
+" highlight clear SignColumn
+
+" try these
+" highlight jsObject keys as 'Label' https://github.com/pangloss/vim-javascript/issues/138
+" hi def link jsObjectKey Label " Type is nice. Use :hi to see all the
+" Type is nice. Use :hi to see all the colors...
+" remove the hilight link set by gitgutter plugin. Must live in this file so
+" it's applied after gitgutter colors
+" To troubleshoot hilights use :verbose hi [highligtName]
+highlight! link SignColumn NONE
+highlight SignColumn ctermbg=red
+
+highlight GitGutterAdd ctermfg=28 guifg=darkgreen
+highlight GitGutterChange ctermfg=100 guifg=darkyellow
+highlight GitGutterDelete ctermfg=red guifg=darkred
+highlight GitGutterChangeDelete ctermfg=yellow guifg=darkyellow
+
+" https://github.com/altercation/vim-colors-solarized/blob/master/colors/solarized.vim#L285
+highlight SignColumn ctermbg=8

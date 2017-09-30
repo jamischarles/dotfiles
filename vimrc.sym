@@ -1,9 +1,10 @@
+" vim: set nofoldenable: " Modeline to keep fold open by default in this file
 "" SOURCE MAIN CONFIG FILES - Order MATTERS
 " Vim Load order for folders, autoload, plugins etc http://learnvimscriptthehardway.stevelosh.com/chapters/42.html
-
 " TODO: Consider adding these to a vimscript LIST, and then using those to
 " popluate <leader>e, and sourcing them all
 " When you add one here, add it to fzf list in keys.vimrc
+" ORDER MATTERS -  Vim Load order for folders, autoload, plugins etc http://learnvimscriptthehardway.stevelosh.com/chapters/42.html
 source $HOME/.vim/vimrc/command-funcs.vimrc " (Auto-)Commands, Custom functions
 source $HOME/.vim/vimrc/plugin-list.vimrc " All the plugins
 source $HOME/.vim/vimrc/plugin-settings.vimrc " Plugin settings

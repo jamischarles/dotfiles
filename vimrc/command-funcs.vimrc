@@ -9,6 +9,12 @@ augroup vimrc
   autocmd BufEnter *.vimrc set foldexpr=GetVimFoldLevel()
 augroup END
 
+augroup markdown
+  autocmd!
+  autocmd BufEnter *.md set foldmethod=expr
+  autocmd BufEnter *.md set foldexpr=GetMarkdownLevel()
+augroup END
+
 " Golang settings for Neoformat
 augroup fmtgo
   autocmd!
@@ -160,6 +166,17 @@ function! GetVimFoldLevel()
   endif
   " TODO: Consider making it uppercase? REGEX: :help magic
   if getline(v:lnum) =~ '^" \w\+\s\?\w\+:\s' "  quote, space, one or two words followed by colon, followed by whitespace (removes urls)
+    return ">2"
+  endif
+  return "="
+endfunction
+
+function! GetMarkdownLevel()
+  if getline(v:lnum) =~ '^# .*$'
+    return ">1"
+  endif
+  " TODO: Consider making it uppercase? REGEX: :help magic
+  if getline(v:lnum) =~ '^## .*$' "  quote, space, one or two words followed by colon, followed by whitespace (removes urls)
     return ">2"
   endif
   return "="

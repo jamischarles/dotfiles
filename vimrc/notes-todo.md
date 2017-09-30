@@ -1,13 +1,94 @@
-
 # NOTES:
+
+
+## Airline Tab color changes
+- Can we change tab color / tab symbol based on uncomiited
+- Top tab color in normal:
+   - 1 color for unsaved changes
+   - 1 (color /) symbol for uncommitted changes (use gitgutter for that?) (then) (start small)
+   - for unselected tabs, just fade the above symbols / colors. Let
+   - write a post on how to do this?!? after I do it...
+
+   Things to fix after this:
+   - why does hunk info on bottom disappear?
+   - why do all the same buffers keep opening?
+
+
+
+## TODO: PROCESS TIHIS!!!!
+
+from vimrc
+```
+
+hi airline_tabmod
+" let g:airline#themes#solarized#palette.inactive.airline_c=['#073642', '#657b83', '0', 11, '']
+" Changes file area when in normal mode in othre tabs?
+autocmd VimEnter * :highlight airline_c ctermfg=28 ctermbg=16| " :highlight airline_c
+" this seems to clobber the bottom one?
+autocmd BufEnter * :highlight airline_c ctermfg=28 ctermbg=16| " :highlight airline_c
+
+
+" Changes file area for each mode !!! in statusline
+autocmd BufEnter *
+      \ let g:airline#themes#solarized#palette.insert_modified = {
+      \ 'airline_c': [ '#000000' , '#5f005f' , 255     , 53      , ''     ] ,
+      \ }
+
+" Changes file area for inactivve modified?
+autocmd BufEnter *
+      \ let g:airline#themes#solarized#palette.inactive_modified = {
+      \ 'airline_c': [ '#000000' , '' , 97 , '' , '' ] ,
+      \ }
+
+```
+
+```
+" hi TabLine      ctermfg=Black  ctermbg=Green     cterm=NONE
+" hi TabLineFill  ctermfg=Black  ctermbg=Green     cterm=NONE
+" hi TabLineSel   ctermfg=White  ctermbg=DarkBlue  cterm=NONE
+autocmd BufEnter * hi clear airline_tabmod
+" autocmd BufEnter * hi airline_tabmod ctermfg=White ctermbg=Green cterm=NONE
+autocmd BufEnter * hi airline_tabmod ctermfg=White ctermbg=Red cterm=reverse
+
+" Change buffer color based on MODE!!!
+" autocmd InsertEnter * hi airline_tabmod ctermfg=Red ctermbg=White cterm=reverse
+autocmd InsertEnter * hi airline_tabmod cterm=bold ctermfg=15 ctermbg=3 gui=bold guifg=#fdf6e3 guibg=#b58900
+" autocmd VisualEnter * hi airline_tabmod cterm=bold ctermfg=15 ctermbg=3 gui=bold guifg=#fdf6e3 guibg=#b58900
+autocmd InsertLeave * hi airline_tabmod ctermfg=Red ctermbg=White cterm=NONE
+" https://stackoverflow.com/questions/15561132/run-command-when-vim-enters-visual-mode
+" this is
+" default tab_mod color
+" airline_tabmod cterm=bold ctermfg=15 ctermbg=3 gui=bold guifg=#fdf6e3 guibg=#b58900
+
+" TODO: Ask them for this...
+" https://github.com/vim-airline/vim-airline/blob/a914cfb75438c36eefd2d7ee73da5196b0b0c2da/autoload/airline/highlighter.vim
+"
+" autocmd BufEnter * let g:airline#themes#solarized#palette.inactive.airline_c=['#657b83' , '#073642', '0', 11, '']
+" autocmd BufEnter * let g:airline#themes#solarized#palette.inactive.airline_c=['#657b83' , '#073642', '5', 3, '']
+" autocmd BufEnter * let g:airline#themes#solarized#palette.inactive.airline_c=['White' , 'Red', '0', 11, '']
+
+" inactive_modified.airline_c
+
+autocmd VimEnter *
+   \ let g:airline#themes#solarized#palette.tabline = {
+   \    'airline_tabmod':       ['#f8f8f8','#780000',231,88,''],
+   \    'airline_tabmod_unsel': ['#dddddd','#463030',231,52,''],
+   \ } | :AirlineRefresh
+
+" let g:airline#themes#solarized#palette.tabline.airline_tab = ['#eee8d5', '#657b83', 7, 11, '']
+autocmd VimEnter * let g:airline#themes#solarized#palette.tabline.airline_tab = ['red', '#657b83', 7, 11, ''] | :AirlineRefresh
+```
+
 
  List other implied files
 ## Short TODO LIST:
+ - fix markdown folding text. Just use my own, and remove the plugin
+ - Add this: https://github.com/tpope/vim-repeat (allows you to repeat other motions with . (like searches))
  - fix t, insert modes in visual mode...
    fix t in normal mode too? swap with ctrl?
    fix the surround motions
    make MRU be local project only...
-   - make this file foldable (use the plugin)
+
 ## BUFFER COLOR: Change buffer changed color (see email
 ## Edit:
  - <leader>e send dotfiles/vimrc to fzf
@@ -17,8 +98,7 @@
  Make key for "CLOSE" current window. instead of having to jump to the other.
  'q' should always do that... In all kinds of windows (help, location, etc)
  one...
-## UNDO: Add keystroke / command for clearing undo history
-   - add undo visualizer plugin...
+## UNDO: Add keystroke / command for clearing undo history - add undo visualizer plugin...
    - add an undo stage limit... 100?!?
 
 
@@ -122,6 +202,10 @@ https://vimawesome.com/plugin/vim-sneak (motion)
  - think about more sensible general purpose shortcuts
    or commands for many things. leader-r doesn't make
    much sense. I need more senisble eaiser to remimber stuff
+
+## HELP Section:
+ - :h [topic]
+ - C-] on link will take you there. Ctrl-t will return
 
 ## DEBUGGING:
  - https://vi.stackexchange.com/questions/7722/how-to-debug-a-mapping debug

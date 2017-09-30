@@ -1,4 +1,4 @@
-
+" vim: set nofoldenable:
 " let g:OrigamiMap = {
 "         \ 'Leader'           : "j",
 "         \ 'Align'            : "a",
@@ -182,15 +182,4 @@ let g:neomake_error_sign = {
 " JSX: - Allow JSX syntax highlighting in JS files
 let g:jsx_ext_required = 0
 
-"" Git Gutter Colors
-highlight clear SignColumn
-highlight GitGutterAdd ctermfg=28 guifg=darkgreen
-highlight GitGutterChange ctermfg=100 guifg=darkyellow
-highlight GitGutterDelete ctermfg=red guifg=darkred
-highlight GitGutterChangeDelete ctermfg=yellow guifg=darkyellow
-
-" https://github.com/altercation/vim-colors-solarized/blob/master/colors/solarized.vim#L285
-" 10, 0, 8 are similar options from the colorscheme...
-" Not sure why this has to be re-applied...
-highlight SignColumn ctermbg=8
-
+"" Git Gutter -> Goto vimrc.after.vim
