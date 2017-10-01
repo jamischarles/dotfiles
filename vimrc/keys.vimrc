@@ -3,6 +3,7 @@
 " LEADER: commands. | means new command. This is a hack, but works?
 nmap <leader>l :set list!<CR>| " Toggle hidden chars
 nmap <leader>q :call CloseCurrentBufferOrWindow()<CR>
+nmap qq :close
 nmap <leader><tab> <C-w>w| " Go to next window
 nmap <leader>o :only<CR>| " CLOSE all other windows.
 nnoremap <leader>w :w<CR>

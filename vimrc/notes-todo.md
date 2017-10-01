@@ -8,6 +8,7 @@
    - 1 (color /) symbol for uncommitted changes (use gitgutter for that?) (then) (start small)
    - for unselected tabs, just fade the above symbols / colors. Let
    - write a post on how to do this?!? after I do it...
+- top tab color in non-normal modes...
 
    Things to fix after this:
    - why does hunk info on bottom disappear?

@@ -1,6 +1,68 @@
 " vim: set nofoldenable: " Modeline to keep fold open by default in this file
 "" SOURCE MAIN CONFIG FILES - Order MATTERS
 " Vim Load order for folders, autoload, plugins etc http://learnvimscriptthehardway.stevelosh.com/chapters/42.html
+
+
+"" EXPERIMENTAL
+" do not colorize buffer tab modified
+let g:airline_detect_modified = 0
+
+" let g:airline_theme_patch_func = 'AirlineThemePatch'
+" function! AirlineThemePatch(palette)
+" 	if g:airline_theme == 'solarized'
+" 		" a:palette.normal_modified.airline_c
+" 		" https://github.com/vim-airline/vim-airline/search?utf8=%E2%9C%93&q=tabmod&type=
+" 		for colors in values(a:palette.normal_modified.airline_c)
+" 			" echo a:palette
+" 			let colors[3] = 245
+" 		endfor
+" 	endif
+" endfunction
+
+" TODO: Set up all my jamis colors, and then see if we can tweak to my hearts
+" The down below names don't seem to be working... Try to just change the
+" names that are already set? Via the code they sent
+"
+" content. First job: just get it working...
+" airline_tabmod xxx cterm=bold ctermfg=15 ctermbg=3 gui=bold guifg=#fdf6e3 guibg=#b58900
+" airline_tabsel xxx cterm=bold ctermfg=15 ctermbg=14 gui=bold guifg=#fdf6e3 guibg=#93a1a1
+" airline_tabmod_unsel xxx ctermfg=14 ctermbg=0 guifg=#93a1a1 guibg=#073642
+" airline_tab    xxx ctermfg=7 ctermbg=11 guifg=#eee8d5 guibg=#657b83
+" airline_tabhid xxx ctermfg=10 ctermbg=0 guifg=#586e75 guibg=#073642
+
+"
+" "
+" hi jamis_tabmod cterm=NONE ctermfg=9 gui=reverse
+" hi jamis_tabsel cterm=NONE ctermfg=19 gui=reverse
+" hi jamis_tabmod_unsel cterm=NONE ctermfg=10 gui=reverse
+" hi jamis_tabod cterm=NONE ctermfg=12 gui=reverse
+" hi jamis_tab cterm=NONE ctermfg=13 gui=reverse
+" hi jamis_tab_hid cterm=NONE ctermfg=15 gui=reverse
+"
+" let group = 'jamis_tabmod'
+" let group = 'jamis_tabsel'
+" let group = 'jamis_tabmod_unsel'
+" let group = 'jamis_tab'
+" let group = 'jamis_tabhid'
+
+
+" function! InsertStatuslineColor(mode)
+"   if a:mode == 'i'
+"     hi statusline guibg=magenta
+"   elseif a:mode == 'r'
+"     hi statusline guibg=blue
+"   else
+"     hi statusline guibg=red
+"   endif
+" endfunction
+"
+" au InsertEnter * call InsertStatuslineColor(v:insertmode)
+" au InsertChange * call InsertStatuslineColor(v:insertmode)
+" au InsertLeave * hi statusline guibg=green
+"
+" default the statusline to green when entering Vim
+" hi statusline guibg=green
+
 " TODO: Consider adding these to a vimscript LIST, and then using those to
 " popluate <leader>e, and sourcing them all
 " When you add one here, add it to fzf list in keys.vimrc
