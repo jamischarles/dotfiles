@@ -2,6 +2,11 @@
 
 
 ## Airline Tab color changes
+- 1) adjust the color palette for edited, but not saved in the command line...
+- 2) See if I can write my own that is this good...?
+- 3) Add total buffer number?
+- 4) Remove hunks? Pair down the mode lenght?
+
 - Can we change tab color / tab symbol based on uncomiited
 - Top tab color in normal:
    - 1 color for unsaved changes
@@ -207,6 +212,9 @@ https://vimawesome.com/plugin/vim-sneak (motion)
 ## HELP Section:
  - :h [topic]
  - C-] on link will take you there. Ctrl-t will return
+
+## VARIABLES:
+ - :h internal-variables
 
 ## DEBUGGING:
  - https://vi.stackexchange.com/questions/7722/how-to-debug-a-mapping debug

@@ -3,7 +3,7 @@
 " LEADER: commands. | means new command. This is a hack, but works?
 nmap <leader>l :set list!<CR>| " Toggle hidden chars
 nmap <leader>q :call CloseCurrentBufferOrWindow()<CR>
-nmap qq :close
+nmap qq :close<CR>
 nmap <leader><tab> <C-w>w| " Go to next window
 nmap <leader>o :only<CR>| " CLOSE all other windows.
 nnoremap <leader>w :w<CR>
@@ -140,8 +140,8 @@ nnoremap <silent> <Leader>e :call fzf#run({
 
 nnoremap <silent> <Leader>m :FzfHistory<CR>| " Use the MRU cache
 nnoremap <silent> <Leader>g :FzfGitFiles?<CR>
-nnoremap <silent> <Leader>b :FzfBTags<CR>
-nnoremap <silent> <Leader>B :FzfBuffers<CR>
+nnoremap <silent> <Leader>B :FzfBTags<CR>
+nnoremap <silent> <Leader>b :FzfBuffers<CR>
 
 
 "" MACROS ###################################################################

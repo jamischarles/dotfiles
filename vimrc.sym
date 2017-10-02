@@ -3,9 +3,15 @@
 " Vim Load order for folders, autoload, plugins etc http://learnvimscriptthehardway.stevelosh.com/chapters/42.html
 
 
-"" EXPERIMENTAL
-" do not colorize buffer tab modified
+"" EXPERIMENTAL """"""""""""""""""""
+" do not colorize buffer tab modified - chg tab color https://github.com/vim-airline/vim-airline/issues/553
 let g:airline_detect_modified = 0
+" Patched the airline  stuff... TODO: FOrk it, or apply it properly
+let g:airline_statusline_ontop = 1
+set laststatus=0 " Hide on the bottom
+
+"^ is pretty great. It's not as awesome as down below (still some lag, but
+"it's pretty dang good for a first quick try...
 
 " let g:airline_theme_patch_func = 'AirlineThemePatch'
 " function! AirlineThemePatch(palette)
@@ -18,6 +24,78 @@ let g:airline_detect_modified = 0
 " 		endfor
 " 	endif
 " endfunction
+
+" autocmd InsertEnter * set tabline=%!MyTabLabel()
+" autocmd InsertLeave * set tabline=%!MyTabLabel()
+
+" https://github.com/neovim/neovim/blob/master/runtime/doc/tabpage.txt
+" set tabline=%!airline#statusline(1)
+:set tabline=%!MyTabLine(v:insertmode)
+
+" Then define the MyTabLine() function to list all the tab pages labels.  A
+" convenient method is to split it in two parts:  First go over all the tab
+" pages and define labels for them.  Then get the label for each tab page. >
+
+function MyTabLine()
+	let s = ''
+
+	" echo len(filter(range(1, bufnr('$')), 'buflisted(v:val)'))
+	let bufferCount = len(filter(range(1, bufnr('$')), 'buflisted(v:val)'))
+
+	" jamis add?
+	" echo a:mode
+	if v:insertmode == 'i'
+	" if a:mode == 'i'
+		let s .= '%#Airline_Tabmod#' . 'INSERT' . " "
+	elseif v:insertmode == 'r'
+		let s .= '%#Airline_error#' . 'REPLACE' . " "
+	else
+		let s .= "Normal" . " "
+	endif
+
+	for i in range(tabpagenr('$'))
+		" select the highlighting
+		if i + 1 == tabpagenr()
+			let s .= '%#TabLineSel#'
+		else
+			let s .= '%#TabLine#'
+		endif
+
+		" set the tab page number (for mouse clicks)
+		let s .= '%' . (i + 1) . 'T'
+
+		" the label is made by MyTabLabel()
+		let s .= ' %{MyTabLabel(' . (i + 1) . ')} '
+	endfor
+
+	" after the last tab fill with TabLineFill and reset tab page nr
+	let s .= '%#TabLineFill#%T'
+
+	" add buffercount
+	let s.= ' [' . bufferCount . ']'
+
+	" right-align the label to close the current tab page
+	if tabpagenr('$') > 1
+		let s .= '%=%#TabLine#%999Xclose'
+	endif
+
+	return s
+endfunction
+
+" Now the MyTabLabel() function is called for each tab page to get its label. >
+
+function MyTabLabel(n)
+
+	" jamis add?
+	" let s .= v:insertmode
+
+	let buflist = tabpagebuflist(a:n)
+	let winnr = tabpagewinnr(a:n)
+	" return bufname(buflist[winnr - 1]) . v:insertmode
+	return bufname(buflist[winnr - 1])
+endfunction
+
+""""" [END EXPERIMENTAL] """""""""""
 
 " TODO: Set up all my jamis colors, and then see if we can tweak to my hearts
 " The down below names don't seem to be working... Try to just change the
@@ -45,8 +123,9 @@ let g:airline_detect_modified = 0
 " let group = 'jamis_tab'
 " let group = 'jamis_tabhid'
 
-
+"
 " function! InsertStatuslineColor(mode)
+"   echo a:mode
 "   if a:mode == 'i'
 "     hi statusline guibg=magenta
 "   elseif a:mode == 'r'
@@ -60,9 +139,9 @@ let g:airline_detect_modified = 0
 " au InsertChange * call InsertStatuslineColor(v:insertmode)
 " au InsertLeave * hi statusline guibg=green
 "
-" default the statusline to green when entering Vim
+" " default the statusline to green when entering Vim
 " hi statusline guibg=green
-
+"
 " TODO: Consider adding these to a vimscript LIST, and then using those to
 " popluate <leader>e, and sourcing them all
 " When you add one here, add it to fzf list in keys.vimrc

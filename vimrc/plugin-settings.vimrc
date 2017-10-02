@@ -60,7 +60,7 @@ let g:comfortable_motion_impulse_multiplier = 0.8 " Feel free to increase/decrea
 "" Limit Motion nav HARD-TIME. Limits using the nav easy nav above...
 let g:hardtime_showmsg = 1
 let g:hardtime_default_on = 1
-let g:hardtime_maxcount = 3
+let g:hardtime_maxcount = 5
 
 let g:list_of_normal_keys = ["h", "n", "e", "i", "x", "<UP>", "<DOWN>", "<LEFT>", "<RIGHT>"]
 let g:list_of_visual_keys = ["h", "n", "e", "i", "x", "<UP>", "<DOWN>", "<LEFT>", "<RIGHT>"]
