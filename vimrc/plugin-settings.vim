@@ -12,6 +12,12 @@
 
 
 
+"" SEARCHING using Ctrlsf
+" let g:ctrlsf_ackprg = 'rg'
+let g:esearch = {'adapter': 'rg'}
+
+" https://github.com/brooth/far.vim " Find and replace. Looks great*** "
+
 ""
 "" SEARCHING from ACK / AG. Silver Searcher. Use AG instead of ack for ack plugin...
 ""
@@ -59,7 +65,7 @@ let g:comfortable_motion_impulse_multiplier = 0.8 " Feel free to increase/decrea
 
 "" Limit Motion nav HARD-TIME. Limits using the nav easy nav above...
 let g:hardtime_showmsg = 1
-let g:hardtime_default_on = 1
+let g:hardtime_default_on = 0 "Change to 1 for on
 let g:hardtime_maxcount = 5
 
 let g:list_of_normal_keys = ["h", "n", "e", "i", "x", "<UP>", "<DOWN>", "<LEFT>", "<RIGHT>"]
@@ -183,3 +189,10 @@ let g:neomake_error_sign = {
 let g:jsx_ext_required = 0
 
 "" Git Gutter -> Goto vimrc.after.vim
+
+" Vim signature: Marks in the sidebar
+" TODO: Turn off for PS
+let g:SignatureForceRemoveGlobal=1"
+
+" Vim Markdown fenced language support. TODO: just make that default?
+let g:vim_markdown_fenced_languages = ['javascript=js']

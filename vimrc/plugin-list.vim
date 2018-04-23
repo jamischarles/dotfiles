@@ -16,16 +16,19 @@ call plug#begin('~/.vim/plugged')
 "" Plugins
 " TODO:
 " - group these into sensible groupings
-"
+
 " STARTUP
 Plug 'mhinz/vim-startify'                          " Fancy Startup screen
-"
+
 " GIT / DIFFING
 Plug 'tpope/vim-fugitive'                          " Git commands in Vim. Consider https://github.com/carlhuda/janus/blob/master/janus/vim/tools/janus/after/plugin/fugitive.vim
 Plug 'AndrewRadev/linediff.vim'
 Plug 'airblade/vim-gitgutter'                      " Git gutter
-" Undo / History
+Plug 'jreybert/vimagit'   " vim magit. Magic git stuff?
+
+" Undo / History / Swap
 Plug 'jamischarles/vim-mundo' " Fork of Gundo
+Plug 'CharlesPatterson/vim-autoswap' "NO WORKY :{ Switch to open window insetad of opening another one
 
 " Navigation
 Plug 'takac/vim-hardtime'                          " Disable lazy nav (like the other one)
@@ -61,7 +64,7 @@ Plug 'tomtom/tlib_vim'
 Plug 'ervandew/supertab'                           " Sweet tab completion
 Plug 'zerowidth/vim-copy-as-rtf'                   " Copy to rtf (and paste code to Keynote)
 Plug 'bronson/vim-trailing-whitespace'             " Trail whitespace finder
-Plug 'godlygeek/tabular'                           " easy aligning. :Tab /= http://vimcasts.org/episodes/aligning-text-with-tabular-vim/
+Plug 'godlygeek/tabular'                           " easy aligning. :Tab /                                                                       = http://vimcasts.org/episodes/aligning-text-with-tabular-vim/
 Plug 'tpope/vim-sleuth'                            " Better indentation. Give it a try... Sigh.
 Plug 'tpope/vim-surround'                          " easy surround with quote etc
 " Plugin 'jwhitley/vim-matchit'                      " better % matching. Does this even do anything? Not sure it's worth having around. REMOVE?
@@ -79,7 +82,8 @@ Plug 'elzr/vim-json'                               " Hide quotes, json highlight
 Plug 'moll/vim-node'                               " node sugar like gf, gd?
 " Plug 'lambdatoast/elm.vim'                         " Elm syntax
 " Plug 'ElmCast/elm-vim'                             " Elm error sugar etc
-Plug 'nikvdp/ejs-syntax'                           " EJS Highlighting
+" Plug 'nikvdp/ejs-syntax'                           " EJS Highlighting
+Plug 'briancollins/vim-jst'
 Plug 'motus/pig.vim'                               "Pig script highlighting
 
 " Find / Search                                    "Incremental search numbers
@@ -87,6 +91,8 @@ Plug 'osyo-manga/vim-anzu' "Does incsearch handle this?
 Plug 'haya14busa/incsearch.vim'                    " Show all results as you're typing
 Plug 'haya14busa/incsearch-index.vim' 			   " Shows the current search count? Q: Integrate this with the other one?
 Plug 'numkil/ag.nvim'                              "Ag search
+" Plug 'dyng/ctrlsf.vim' " Seperate window for project-wide search. WHY WON'T YOU WORK?
+Plug 'eugen0329/vim-esearch'
 
 "Golang
 Plug 'sbdchd/neoformat'                            " Formats your code
@@ -121,12 +127,25 @@ Plug 'rodjek/vim-puppet'                           "Puppet syntax
 " Plugin 'mxw/vim-jsx'                                 " JSX syntax highlighting.
 Plug 'neoclide/vim-jsx-improve'                    " JSX Syntax and indentation
 Plug 'aliva/vim-fish'                              "Fish syntax highlighting
+Plug 'plasticboy/vim-markdown' " Markdown syntax highlighting
+Plug 'nathanielc/vim-tickscript' "Tickscript for influxdb
+Plug 'cespare/vim-toml' "Toml for influxdb
+Plug 'dzeban/vim-log-syntax'                       "Log files
+Plug 'leafgarland/typescript-vim'
+Plug 'posva/vim-vue'
+Plug 'reasonml-editor/vim-reason-plus' "ReasonML
+Plug 'kchmck/vim-coffee-script' "Coffee
+
+"Prettier
+Plug 'prettier/vim-prettier', {
+  \ 'do': 'npm install',
+  \ 'for': ['javascript', 'typescript', 'css', 'less', 'scss', 'json', 'graphql', 'markdown'] }
 
 " Plug 'farmergreg/vim-lastplace' " TOO Slow? try to steal the good stuff?                   Open file at the last place you edited.
 
 " MARKS
 " Plug 'MattesGroeger/vim-bookmarks'  "mm|mx to mark. mn to jump
-Plug 'kshenoy/vim-signature' " Show marks in the sidebar
+" Plug 'kshenoy/vim-signature' " Show marks in the sidebar
 " FOLDING
 " Plug 'kshenoy/vim-origami' " Right aligns fold markers. FIXME: Mappings
 " don't work

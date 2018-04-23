@@ -1,5 +1,39 @@
-# NOTES:
+" vim: set nofoldenable: " Modeline to keep fold open by default in this file
 
+
+# EASY TODO:
+- make this a markdown file...
+- add blank line above back in... need it all the time...
+    ctrl o? (and map ctrl o to ctrl j?) ctrl enter? Shift enter?
+
+# NOTES:
+TODO:
+- FIX TAGBAR ORDER. ITs ALMOST THERE...
+- fix search to ignore folders properly... Just doesn't work well :{ ***
+
+- highlight color yello? Or pink? Find something nice... Blue?
+- are [h ]h in swapped? Isn't one NEXT and the other previous?
+- fix di to work the same way dt does
+- consider hiding statusline from time to time... JUST COLOR THE CURSOR FOR MODES. This could actually be amazing...
+      - hard to do with neovim. Either turn on truecolor... which messes up the themes, or it doesn't work.
+- Jump to JS comments (make ]m. ]c work)
+   - / // OR /* [ up o ]down... YES
+   - add 'motion' for jump to code section (after space or comment)
+   https://github.com/okcompute/vim-javascript-motions/blob/master/autoload/javascript/motions.vim
+
+## DO MVP now...
+- make di" work... OR learn all the motions and remap to something better...?
+- read up on ^ https://vi.stackexchange.com/questions/2543/how-can-i-map-dcountd
+
+- Configure magit properly
+- Add total number of buffers next to the file name
+- add colorization for saved, etc (dirty (bonus))
+- move the statusline stuff off into a statusline file...
+- at the very least, having git status, and mode in the top left is awesome. I don't use top right much... Maybe bottom right more.
+
+- If I really really love this, try to get this working with a nvim custom build...
+- fix nvim close behavior. Don't like being blocked when I know I want to leave
+- figure out how to restore the O behavior proprely. Try going back on the o->; thing.
 
 ## Airline Tab color changes
 - 1) adjust the color palette for edited, but not saved in the command line...
@@ -234,6 +268,9 @@ https://vimawesome.com/plugin/vim-sneak (motion)
    context.
  - Use ctrl+ for infrequent actions, and / or if it's an escalation.
    Letter -> shift+letter -> ctrl+letter
+ - consider using double letters for firm / confirmation actions like qq to quit, CC to commit, etc
+
+ Having contextual keys / strokes by buffer type / mode is awesome. Treat git staging as a MODE. Love it!
 
  Embrace modes! That's really the key I think. Think about how modes differ
  and how you can use context and modifier keys to work in your advantage. ie:
@@ -251,6 +288,9 @@ https://vimawesome.com/plugin/vim-sneak (motion)
    there. Either group classes of things (like nav), or move them by
    frequency used... After using them I can usually feel how nice or awkward
    they are...
+
+## INBOX: ********************************
+gqq - format the current line
 
 ## DEBUGGING: ********************************
  http://inlehmansterms.net/2014/10/31/debugging-vim/
@@ -353,13 +393,15 @@ https://vimawesome.com/plugin/vim-sneak (motion)
  https://github.com/glts/vim-textobj-comment
  https://github.com/kana/vim-textobj-user *** define your own
 
-
-## WORD WRAPPIN: *********************
+## MOTIONS / WORD WRAPPING: ***************
  Wrap, delete quotes, etc - ds* delete surrounding *, w** wrap [modifier] with *, cs** change surrounding a with b
  dst - Delete surrounding Tag - dst
  ds( delete surrounding (
  cs"' change surrounding "
  cst - Change surrounding Tag - cst<em>
+
+ ds" Delete " around text ***
+ dr" delete text inside " ***
 
 
 ## BUFFER Managment: **************************
@@ -394,6 +436,14 @@ https://vimawesome.com/plugin/vim-sneak (motion)
  OPEN URL IN BROWSER - gx   (consider mapping to gb) - http://stackoverflow.com/questions/9458294/open-url-under-cursor-in-vim-with-browser
 
 ## GIT ********************************
+
+VIM DIFF
+nvim -d file1 file2
+then inside
+   - :diffget - pull other file hunk into current file
+   - :diffput - push current file hunk to other file
+    - :diffupdate  will re-scan the files for changes.
+
  Cheatsheet - https://gist.github.com/dialelo/5902072
  :Gedit develop:public/js/view/transfer/page/enter.js - open this file in github
  Gtabedit HEAD^:public/templates/transfer/index.dust

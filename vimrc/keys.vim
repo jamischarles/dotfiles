@@ -37,9 +37,13 @@ inoremap {<cr> {<cr>}<c-o><s-o>
 inoremap [<cr> [<cr>]<c-o><s-o>
 inoremap (<cr> (<cr>)<c-o><s-o>
 
-" REMAP O to : since I use : all the time, and almost never use O
+" REMAP O to : since I use : all the time, and almost never use O. See if this
+" breaks stuff again..
 nnoremap O :
-nnoremap > :
+" nnoremap : O
+nnoremap > O
+
+
 
 "" PLUGIN Keys ###########################################################
 
@@ -117,7 +121,7 @@ nnoremap <silent> <leader>= :WindowEq<CR>
 
 " Fuzzy Finder: FZF
 nnoremap <silent> <Leader>t :call fzf#run({
-\   'source': 'ag -g "" --hidden --ignore .git ',
+\   'source': 'ag -g "" --hidden --ignore .git --ignore node_modules',
 \   'options': '--multi --exact --tiebreak=end,length',
 \   'down': '~40%',
 \   'sink': function('Dontopeninnerdtree')

@@ -1,70 +1,11 @@
 
-"" AU GROUPS #####################################
-
-" Reading on auto-groups http://learnvimscriptthehardway.stevelosh.com/chapters/14.html
-augroup vimrc
-  autocmd!
-  autocmd BufRead,BufNewFile .vimrc setfiletype vim
-  autocmd BufEnter *.vimrc set foldmethod=expr
-  autocmd BufEnter *.vimrc set foldexpr=GetVimFoldLevel()
-augroup END
-
-augroup markdown
-  autocmd!
-  autocmd BufEnter *.md set foldmethod=expr
-  autocmd BufEnter *.md set foldexpr=GetMarkdownLevel()
-augroup END
-
-" Golang settings for Neoformat
-augroup fmtgo
-  autocmd!
-  autocmd BufWritePre *.go undojoin | Neoformat
-augroup END
-
-augroup json
-	autocmd!
-	autocmd BufRead,BufNewFile .*rc setfiletype json
-augroup END
-
-" set foldmethod=syntax " Set folding defaults. Fold by syntax (defined by js syntax)
-" Only mark functions / outside level for folding
-" FIXME: Read up on how to set augroups...
-augroup javascript " just a name
-  "clears it so we can source this file several times...
-  autocmd!
-  autocmd FileType javascript set foldlevel=0
-  autocmd FileType javascript set foldmethod=syntax
-  " " Only use fn (outside level)
-  autocmd FileType javascript set foldnestmax=2
-  autocmd BufWritePost *.js Neomake
-  " " Have them be open by default
-  " autocmd FileType javascript set nofoldenable
-  " au BufWinEnter * if &fdm == 'indent' | setlocal foldmethod=manual | endif
-augroup END
-
-augroup allFiles
-	autocmd!
-	" Strip whitespace on save for all files
-	autocmd FileType * autocmd BufWritePre <buffer> StripWhitespace
-	" INDENTATION
-	autocmd FileType * set tabstop=4|set shiftwidth=4
-
-	if has("autocmd")
-		if exists("g:autosave_on_blur")
-			au FocusLost * silent! wall
-		endif
-	endif
-augroup END
-
-" GIT COMMIT defaults. This runs these commands on vim startup (for the gitcommit file type instead of in the editor)
-autocmd Filetype gitcommit setlocal spell textwidth=72
-
-
-
 "" COMMANDS ###############################
 " convert spaces to tabs
 command! UseTabs set noet|retab!
 command! ReTab set noet|retab!
+
+" SEARCH conviences (FIXME: Remove the range error). Use <leader>ff
+command! Search :call esearch#init()<CR>
 
 " Window SIZING
 " 'normal' allows us to type is just like on the command line (useful when
@@ -89,6 +30,10 @@ command! -range=% ReplaceSingleQuoteWithDouble :<line1>,<line2>s/'/"/gi
 
 " JSON Pretty print
 command! PrettyJSON %!python -m json.tool
+command! -range=% PrettyJSONRange :<line1>,<line2>%!python -m json.tool
+
+" XML pretty print
+command! PrettyXML %!xmllint --format %
 
 function! Dontopeninnerdtree(e)
   " if NERDTree has focus, go to next window
@@ -103,7 +48,110 @@ function! Dontopeninnerdtree(e)
 
 endfunction
 
+
+"" AU GROUPS #####################################
+
+" Reading on auto-groups http://learnvimscriptthehardway.stevelosh.com/chapters/14.html
+augroup vimrc
+  autocmd!
+  autocmd BufRead,BufNewFile .vimrc setfiletype vim
+  autocmd BufEnter *.vimrc set foldmethod=expr
+  autocmd BufEnter *.vimrc set foldexpr=GetVimFoldLevel()
+augroup END
+
+" Sets folding, and auto-wrap
+augroup markdown
+  autocmd!
+  autocmd BufEnter *.md set foldmethod=expr
+  autocmd BufEnter *.md set foldexpr=GetMarkdownLevel()
+  autocmd BufRead,BufNewFile *.md setlocal textwidth=80
+augroup END
+
+" Golang settings for Neoformat
+augroup fmtgo
+  autocmd!
+  autocmd BufWritePre *.go undojoin | Neoformat
+augroup END
+
+" augroup fmtReasonMl
+"   autocmd!
+"   autocmd BufWritePre *.re ! refmt %
+" augroup END
+
+augroup json
+	autocmd!
+	autocmd BufRead,BufNewFile .*rc setfiletype json
+augroup END
+
+" set foldmethod=syntax " Set folding defaults. Fold by syntax (defined by js syntax)
+" Only mark functions / outside level for folding
+" FIXME: Read up on how to set augroups...
+augroup javascript " just a name
+  "clears it so we can source this file several times...
+  autocmd!
+  autocmd FileType javascript set foldlevel=0
+  autocmd FileType javascript set foldmethod=syntax
+  " " Only use fn (outside level)
+  autocmd FileType javascript set foldnestmax=2
+  autocmd BufWritePost *.js Neomake
+  "Save with prettier
+  autocmd BufWritePost *.js PrettierAsync
+  " " Have them be open by default
+  " autocmd FileType javascript set nofoldenable
+  " au BufWinEnter * if &fdm == 'indent' | setlocal foldmethod=manual | endif
+augroup END
+
+augroup ejs " just a name
+  autocmd!
+  " set filetype of ejs files as jst so it doesn't mess up the highlighting
+  autocmd BufRead,BufNewFile .ejs setfiletype jst
+augroup END
+
+
+augroup css
+  autocmd!
+  "Save with prettier
+  autocmd BufWritePost *.css PrettierAsync
+augroup END
+
+augroup allFiles
+	autocmd!
+	" Strip whitespace on save for all files
+	autocmd FileType * autocmd BufWritePre <buffer> call StripAllFilesButMarkdown()
+	" INDENTATION
+	autocmd FileType * set tabstop=4|set shiftwidth=4
+
+	" Fix fugitive collision with colemak mappings causing y to stall.
+	" https://github.com/jooize/vim-colemak#tpopevim-fugitive-keymap-collision
+	autocmd BufEnter * silent! execute "nunmap <buffer> <silent> y<C-G>"
+
+	if has("autocmd")
+		if exists("g:autosave_on_blur")
+			au FocusLost * silent! wall
+		endif
+	endif
+augroup END
+
+" GIT COMMIT defaults. This runs these commands on vim startup (for the gitcommit file type instead of in the editor)
+autocmd Filetype gitcommit setlocal spell textwidth=72
+
+
+
+
 ""CUSTOM FUNCTIONS #####################################
+
+" Don't strip whitespace in markdown files...
+function! StripAllFilesButMarkdown()
+  " If filetype is whitespace, don't do anything
+  if &ft =~ 'markdown'
+    return
+  endif
+
+  StripWhitespace
+
+endfunction
+
+
 
 function! s:getNumberOfOpenBuffers()
 " This is how you run a command from a script...

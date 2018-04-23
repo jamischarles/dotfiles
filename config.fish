@@ -1,5 +1,8 @@
 # TODO:
 # add folds here? Using modeline? Use ## for 1, and # for 2
+# only show timing data when command is slower than 5 seconds...
+# consider starting to use tmux again
+
 # fix switching iterm prompts in fish. !!!
 # - remap alt ne to up down sequences in iterm
 # - Add git status back... - https://stackoverflow.com/questions/866989/fish-interactive-shell-full-path
@@ -49,22 +52,24 @@ function fish_prompt
 	echo -n (getPWDFromHome) # consider using prompt_pwd
 	# echo -n $PWD | sed -e "s|^$HOME|~|" -e 's|^/private||'
 	set_color normal
-	if test $FISH_STARTUP_DONE
-	  printf '%s ' (__fish_git_prompt) # adds 600ms, so delay loading this to 2nd prompt. FIXME: Makes others slow too...
-	end
 
 	# log startup or priopr command duration
 	if test ! $FISH_STARTUP_DONE
 	  echo " "(getTimeSinceStart) # more accurate to have it after GIT. FIXME: Put this in function
 	  set -g FISH_STARTUP_DONE true # Never enter this block again
 	else
-	  echo $duration
+	  echo " "$duration
 	end
 
 	echo "→ "
 
 end
 
+function fish_right_prompt
+  if test $FISH_STARTUP_DONE
+    printf '%s ' (__fish_git_prompt) # adds 600ms, so delay loading this to 2nd prompt. FIXME: Makes others slow too...
+  end
+end
 
 
 #################
@@ -135,6 +140,7 @@ if status --is-interactive
 
     # vim
     abbr --add ns 'nvim -S' # resume session
+    abbr --add nps 'nvim --cmd "let is_ps=1"' # Launch nvim with PS settings
 
     # system
     abbr --add ka 'kill -9 (pgrep "")' # resume session
@@ -142,6 +148,11 @@ if status --is-interactive
     abbr --add profile "fish --profile prompt.prof -ic 'fish_prompt; exit'; sort -nk 2 prompt.prof" # Profile fish startup time. https://github.com/fish-shell/fish-shell/issues/2854
 
     abbr --add list "find . | fzf" # list files and pass to fzf
+
+    abbr --add rmf "rm -rf"
+
+    # docker
+    abbr --add dp "docker ps"
 
     # history?
     # history --merge # will merge history from other sessions
@@ -164,7 +175,13 @@ end
 # fast-nvm-fish - use my fork of it anyway
 # z (folder jumping) - https://github.com/fisherman/z
 
+######
+# PATH
+######
+# manually set the path for golang and rust
+set -x PATH $PATH $HOME/go $HOME/.cargo/bin
 
+# set -x PATH $GOPATH $HOME/go $HOME/.cargo/bin
 ###########################
 # CUSTOM FUNCTIONS
 ###########################

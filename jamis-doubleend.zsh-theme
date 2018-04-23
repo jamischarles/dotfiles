@@ -33,6 +33,7 @@ function put_spacing() {
 
   local termwidth
   ## JAMIS - added  -1 for the lighning bolt
+ # (( termwidth = ${COLUMNS} - 3 - ${#$(echo "Mjølner")} -1  - ${#$(get_pwd)} - ${bat} - ${git} ))
   (( termwidth = ${COLUMNS} - 3 - ${#HOST} -1  - ${#$(get_pwd)} - ${bat} - ${git} ))
 
   local spacing=""

@@ -328,7 +328,7 @@ typeset -Ag abbreviations
 abbreviations=(
   "ez"    "nvim ~/.zshrc"
   "sz"    "source ~/.zshrc"
-  "nvps" 'nvim --cmd "let is_ps=1"'
+  "nps" 'nvim --cmd "let is_ps=1"'
   "itermNvim" "set_iterm_profile Nvim"
   "itermNormal" "set_iterm_profile Nvim"
   "iterm0" "set_iterm_profile Nvim"

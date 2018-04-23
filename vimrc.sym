@@ -1,14 +1,20 @@
 " vim: set nofoldenable: " Modeline to keep fold open by default in this file
+"
+"" [Don't add anything here that you don't understand!!!]
 "" SOURCE MAIN CONFIG FILES - Order MATTERS
 " Vim Load order for folders, autoload, plugins etc http://learnvimscriptthehardway.stevelosh.com/chapters/42.html
 
 
 "" EXPERIMENTAL """"""""""""""""""""
 " do not colorize buffer tab modified - chg tab color https://github.com/vim-airline/vim-airline/issues/553
-let g:airline_detect_modified = 0
-" Patched the airline  stuff... TODO: FOrk it, or apply it properly
-let g:airline_statusline_ontop = 1
-set laststatus=0 " Hide on the bottom
+"
+"
+"
+if ! exists("is_ps")
+	" let g:airline_detect_modified = 0
+	" Patched the airline  stuff... TODO: FOrk it, or apply it properly
+	" let g:airline_statusline_ontop = 1
+endif
 
 "^ is pretty great. It's not as awesome as down below (still some lag, but
 "it's pretty dang good for a first quick try...
@@ -144,13 +150,13 @@ endfunction
 "
 " TODO: Consider adding these to a vimscript LIST, and then using those to
 " popluate <leader>e, and sourcing them all
-" When you add one here, add it to fzf list in keys.vimrc
+" When you add one here, add it to fzf list in keys.vim
 " ORDER MATTERS -  Vim Load order for folders, autoload, plugins etc http://learnvimscriptthehardway.stevelosh.com/chapters/42.html
-source $HOME/.vim/vimrc/command-funcs.vimrc " (Auto-)Commands, Custom functions
-source $HOME/.vim/vimrc/plugin-list.vimrc " All the plugins
-source $HOME/.vim/vimrc/plugin-settings.vimrc " Plugin settings
-source $HOME/.vim/vimrc/settings.vimrc " General VIM / UI Settings
-source $HOME/.vim/vimrc/keys.vimrc " Key bindings for Vim and Vim Plugins
+source $HOME/.vim/vimrc/command-funcs.vim " (Auto-)Commands, Custom functions
+source $HOME/.vim/vimrc/plugin-list.vim " All the plugins
+source $HOME/.vim/vimrc/plugin-settings.vim " Plugin settings
+source $HOME/.vim/vimrc/settings.vim " General VIM / UI Settings
+source $HOME/.vim/vimrc/keys.vim " Key bindings for Vim and Vim Plugins
 " $HOME/.vim/vimrc/notes-todo.md " Notes and TODO
 
 " Mapped keys from colemak file...

@@ -33,9 +33,11 @@ set incsearch   " incremental searching
 set ignorecase  " searches are case insensitive...
 set smartcase   " ... unless they contain at least one capital letter
 
-"" Backup and swap files
+"" Backup and swap files (titlestring needed for auto-swap plugin).
+" Titlestring sets iterm tabtitle for name of file. AMAZING***
 set backupdir=~/.vim/backup " where to put backup files.
 set directory=~/.vim/backup " where to put swap files.
+set title titlestring=
 
 "" UNDO - Save beyond closing Persistent undo - http://stackoverflow.com/questions/2732267/vim-loses-undo-history-when-changing-buffers
 set hidden " persist beyond buffer switching
