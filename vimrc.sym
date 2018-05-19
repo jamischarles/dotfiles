@@ -19,76 +19,11 @@ endif
 "^ is pretty great. It's not as awesome as down below (still some lag, but
 "it's pretty dang good for a first quick try...
 
-" let g:airline_theme_patch_func = 'AirlineThemePatch'
-" function! AirlineThemePatch(palette)
-" 	if g:airline_theme == 'solarized'
-" 		" a:palette.normal_modified.airline_c
-" 		" https://github.com/vim-airline/vim-airline/search?utf8=%E2%9C%93&q=tabmod&type=
-" 		for colors in values(a:palette.normal_modified.airline_c)
-" 			" echo a:palette
-" 			let colors[3] = 245
-" 		endfor
-" 	endif
-" endfunction
-
-" autocmd InsertEnter * set tabline=%!MyTabLabel()
-" autocmd InsertLeave * set tabline=%!MyTabLabel()
-
-" https://github.com/neovim/neovim/blob/master/runtime/doc/tabpage.txt
-" set tabline=%!airline#statusline(1)
-
-" TEMP: not using this anyway...
-":set tabline=%!MyTabLine(v:insertmode)
 
 " Then define the MyTabLine() function to list all the tab pages labels.  A
 " convenient method is to split it in two parts:  First go over all the tab
 " pages and define labels for them.  Then get the label for each tab page. >
 
-function MyTabLine()
-	let s = ''
-
-	" echo len(filter(range(1, bufnr('$')), 'buflisted(v:val)'))
-	let bufferCount = len(filter(range(1, bufnr('$')), 'buflisted(v:val)'))
-
-	" jamis add?
-	" echo a:mode
-	if v:insertmode == 'i'
-	" if a:mode == 'i'
-		let s .= '%#Airline_Tabmod#' . 'INSERT' . " "
-	elseif v:insertmode == 'r'
-		let s .= '%#Airline_error#' . 'REPLACE' . " "
-	else
-		let s .= "Normal" . " "
-	endif
-
-	for i in range(tabpagenr('$'))
-		" select the highlighting
-		if i + 1 == tabpagenr()
-			let s .= '%#TabLineSel#'
-		else
-			let s .= '%#TabLine#'
-		endif
-
-		" set the tab page number (for mouse clicks)
-		let s .= '%' . (i + 1) . 'T'
-
-		" the label is made by MyTabLabel()
-		let s .= ' %{MyTabLabel(' . (i + 1) . ')} '
-	endfor
-
-	" after the last tab fill with TabLineFill and reset tab page nr
-	let s .= '%#TabLineFill#%T'
-
-	" add buffercount
-	let s.= ' [' . bufferCount . ']'
-
-	" right-align the label to close the current tab page
-	if tabpagenr('$') > 1
-		let s .= '%=%#TabLine#%999Xclose'
-	endif
-
-	return s
-endfunction
 
 " Now the MyTabLabel() function is called for each tab page to get its label. >
 
@@ -105,50 +40,6 @@ endfunction
 
 """"" [END EXPERIMENTAL] """""""""""
 
-" TODO: Set up all my jamis colors, and then see if we can tweak to my hearts
-" The down below names don't seem to be working... Try to just change the
-" names that are already set? Via the code they sent
-"
-" content. First job: just get it working...
-" airline_tabmod xxx cterm=bold ctermfg=15 ctermbg=3 gui=bold guifg=#fdf6e3 guibg=#b58900
-" airline_tabsel xxx cterm=bold ctermfg=15 ctermbg=14 gui=bold guifg=#fdf6e3 guibg=#93a1a1
-" airline_tabmod_unsel xxx ctermfg=14 ctermbg=0 guifg=#93a1a1 guibg=#073642
-" airline_tab    xxx ctermfg=7 ctermbg=11 guifg=#eee8d5 guibg=#657b83
-" airline_tabhid xxx ctermfg=10 ctermbg=0 guifg=#586e75 guibg=#073642
-
-"
-" "
-" hi jamis_tabmod cterm=NONE ctermfg=9 gui=reverse
-" hi jamis_tabsel cterm=NONE ctermfg=19 gui=reverse
-" hi jamis_tabmod_unsel cterm=NONE ctermfg=10 gui=reverse
-" hi jamis_tabod cterm=NONE ctermfg=12 gui=reverse
-" hi jamis_tab cterm=NONE ctermfg=13 gui=reverse
-" hi jamis_tab_hid cterm=NONE ctermfg=15 gui=reverse
-"
-" let group = 'jamis_tabmod'
-" let group = 'jamis_tabsel'
-" let group = 'jamis_tabmod_unsel'
-" let group = 'jamis_tab'
-" let group = 'jamis_tabhid'
-
-"
-" function! InsertStatuslineColor(mode)
-"   echo a:mode
-"   if a:mode == 'i'
-"     hi statusline guibg=magenta
-"   elseif a:mode == 'r'
-"     hi statusline guibg=blue
-"   else
-"     hi statusline guibg=red
-"   endif
-" endfunction
-"
-" au InsertEnter * call InsertStatuslineColor(v:insertmode)
-" au InsertChange * call InsertStatuslineColor(v:insertmode)
-" au InsertLeave * hi statusline guibg=green
-"
-" " default the statusline to green when entering Vim
-" hi statusline guibg=green
 "
 " TODO: Consider adding these to a vimscript LIST, and then using those to
 " popluate <leader>e, and sourcing them all
