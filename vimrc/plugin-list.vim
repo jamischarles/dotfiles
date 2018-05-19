@@ -75,6 +75,8 @@ Plug 'tpope/vim-surround'                          " easy surround with quote et
 Plug 'tyru/open-browser.vim'                       " Open in test
 
 Plug 'Raimondi/delimitMate'                        " quote, bracket, etc autocompletion
+
+"Plug 'rizzatti/dash.vim'
 Plug 't9md/vim-textmanip'                          " Move selected text around easily
 Plug 'ntpeters/vim-better-whitespace'              " Strip whitespace on save
 Plug 'elzr/vim-json'                               " Hide quotes, json highlighting
@@ -98,7 +100,7 @@ Plug 'eugen0329/vim-esearch'
 Plug 'sbdchd/neoformat'                            " Formats your code
 
 " THEMES
-Plug 'vim-airline/vim-airline' | Plug 'vim-airline/vim-airline-themes'
+"Plug 'vim-airline/vim-airline' | Plug 'vim-airline/vim-airline-themes'
 " Status bar (bottom)
 " Themes for statusbar
 Plug 'altercation/vim-colors-solarized'            " Color scheme

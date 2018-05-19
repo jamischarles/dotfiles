@@ -153,6 +153,28 @@ endfunction
 
 
 
+""" FocusMode
+function! ToggleFocusMode()
+  if (&foldcolumn != 42)
+    set laststatus=0
+    set numberwidth=10
+    set foldcolumn=42
+    set noruler
+    hi FoldColumn ctermbg=none
+    hi LineNr ctermfg=0 ctermbg=none
+    hi NonText ctermfg=0
+  else
+    set laststatus=2
+    set numberwidth=4
+    set foldcolumn=0
+    set ruler
+    execute 'colorscheme ' . g:colors_name
+  endif
+endfunc
+nnoremap <leader>F :call ToggleFocusMode()<cr>
+command! ToggleFocusMode :call ToggleFocusMode()<CR>
+
+
 function! s:getNumberOfOpenBuffers()
 " This is how you run a command from a script...
 " If there's one buffer open, and it's not a nerdtree buffer...
