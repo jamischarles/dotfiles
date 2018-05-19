@@ -89,6 +89,8 @@ augroup END
 augroup javascript " just a name
   "clears it so we can source this file several times...
   autocmd!
+
+  autocmd BufRead,BufNewFile *.js setfiletype javascript
   autocmd FileType javascript set foldlevel=0
   autocmd FileType javascript set foldmethod=syntax
   " " Only use fn (outside level)

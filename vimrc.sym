@@ -36,7 +36,9 @@ endif
 
 " https://github.com/neovim/neovim/blob/master/runtime/doc/tabpage.txt
 " set tabline=%!airline#statusline(1)
-:set tabline=%!MyTabLine(v:insertmode)
+
+" TEMP: not using this anyway...
+":set tabline=%!MyTabLine(v:insertmode)
 
 " Then define the MyTabLine() function to list all the tab pages labels.  A
 " convenient method is to split it in two parts:  First go over all the tab
