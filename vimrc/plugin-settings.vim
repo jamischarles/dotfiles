@@ -166,6 +166,7 @@ endif
 
 " let g:neomake_javascript_eslint_args = ['--no-ignore', '-c', '/Users/jacharles/dev/p2pnodeweb/.eslintes6rc', '-f', 'compact']
 
+
 " Keep tray closed
 let g:neomake_open_list = 0 "2 to open
 
@@ -183,6 +184,16 @@ let g:neomake_error_sign = {
 " let g:neomake_verbose=3
 " let g:neomake_open_list = 2
 " let g:neomake_logfile='/tmp/error.log'
+
+
+" Prettier - NeoFormat
+let g:neoformat_javascript_prettier = {
+  \ 'exe': '/Users/jacharles/.nvm/versions/node/v8.11.0/bin/prettier',
+  \ }
+let g:neoformat_only_msg_on_error = 1
+let g:neoformat_enabled_javascript= ['prettier']
+"
+
 
 "" Syntax Highlighting
 " JSX: - Allow JSX syntax highlighting in JS files

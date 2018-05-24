@@ -99,7 +99,7 @@ augroup javascript " just a name
   autocmd FileType javascript set foldnestmax=2
   autocmd BufWritePost *.js Neomake
   "Save with prettier
-  autocmd BufWritePost *.js PrettierAsync
+  autocmd BufWritePre *.js undojoin | Neoformat
   " " Have them be open by default
   " autocmd FileType javascript set nofoldenable
   " au BufWinEnter * if &fdm == 'indent' | setlocal foldmethod=manual | endif
@@ -115,7 +115,7 @@ augroup END
 augroup css
   autocmd!
   "Save with prettier
-  autocmd BufWritePost *.css PrettierAsync
+  autocmd BufWritePre *.css undojoin | Neoformat
 augroup END
 
 augroup allFiles

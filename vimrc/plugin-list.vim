@@ -52,7 +52,6 @@ Plug 'tomtom/tcomment_vim'
 " Plugin 'scrooloose/nerdcommenter'                  " Awesome commenting
 " Plugin 'tpope/vim-commentary'                      "
 " Plugin 'scrooloose/syntastic'                        " Syntax checker
-Plug 'benekastah/neomake'                          " Async make (for syntax checking etc)
 Plug 'tpope/vim-unimpaired'                        " Buffer switching
 Plug 'duff/vim-bufonly'                            " Close all buffers but current
 " Plugin 'mihaifm/bufstop'                             " MOST Amazing MRU Buffer switcher
@@ -97,7 +96,6 @@ Plug 'numkil/ag.nvim'                              "Ag search
 Plug 'eugen0329/vim-esearch'
 
 "Golang
-Plug 'sbdchd/neoformat'                            " Formats your code
 
 " THEMES
 Plug 'vim-airline/vim-airline' | Plug 'vim-airline/vim-airline-themes'
@@ -138,10 +136,11 @@ Plug 'posva/vim-vue'
 Plug 'reasonml-editor/vim-reason-plus' "ReasonML
 Plug 'kchmck/vim-coffee-script' "Coffee
 
+"Eslint. FIXME: do we need both?
+Plug 'benekastah/neomake'                          " Async make (for syntax checking etc)
+
 "Prettier
-Plug 'prettier/vim-prettier', {
-  \ 'do': 'npm install',
-  \ 'for': ['javascript', 'typescript', 'css', 'less', 'scss', 'json', 'graphql', 'markdown'] }
+Plug 'sbdchd/neoformat'
 
 " Plug 'farmergreg/vim-lastplace' " TOO Slow? try to steal the good stuff?                   Open file at the last place you edited.
 
