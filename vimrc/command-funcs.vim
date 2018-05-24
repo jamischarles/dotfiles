@@ -55,6 +55,8 @@ endfunction
 augroup vimrc
   autocmd!
   autocmd BufRead,BufNewFile .vimrc setfiletype vim
+  autocmd BufRead,BufNewFile vimrc.sym setfiletype vim
+  autocmd BufRead,BufNewFile *.vim setfiletype vim
   autocmd BufEnter *.vimrc set foldmethod=expr
   autocmd BufEnter *.vimrc set foldexpr=GetVimFoldLevel()
 augroup END
