@@ -189,6 +189,7 @@ let g:neomake_error_sign = {
 " Prettier - NeoFormat
 let g:neoformat_javascript_prettier = {
   \ 'exe': '/Users/jacharles/.nvm/versions/node/v8.11.0/bin/prettier',
+  \ 'stdin': 1,
   \ }
 let g:neoformat_only_msg_on_error = 1
 let g:neoformat_enabled_javascript= ['prettier']

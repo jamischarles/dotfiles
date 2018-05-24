@@ -93,10 +93,13 @@ augroup javascript " just a name
   autocmd!
 
   autocmd BufRead,BufNewFile *.js setfiletype javascript
-  autocmd FileType javascript set foldlevel=0
-  autocmd FileType javascript set foldmethod=syntax
+  " TURN off folding for now, because it's conflicting with neoformat
+  " It's causing the folding to happen after each save "ANNOYING"
+  " autocmd FileType javascript set foldlevel=0
+  " autocmd FileType javascript set foldmethod=syntax
   " " Only use fn (outside level)
-  autocmd FileType javascript set foldnestmax=2
+  " autocmd FileType javascript set foldnestmax=2
+
   autocmd BufWritePost *.js Neomake
   "Save with prettier
   autocmd BufWritePre *.js undojoin | Neoformat
