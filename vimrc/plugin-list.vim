@@ -100,7 +100,7 @@ Plug 'eugen0329/vim-esearch'
 Plug 'sbdchd/neoformat'                            " Formats your code
 
 " THEMES
-"Plug 'vim-airline/vim-airline' | Plug 'vim-airline/vim-airline-themes'
+Plug 'vim-airline/vim-airline' | Plug 'vim-airline/vim-airline-themes'
 " Status bar (bottom)
 " Themes for statusbar
 Plug 'altercation/vim-colors-solarized'            " Color scheme
