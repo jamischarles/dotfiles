@@ -100,9 +100,21 @@ augroup javascript " just a name
   " " Only use fn (outside level)
   " autocmd FileType javascript set foldnestmax=2
 
-  autocmd BufWritePost *.js Neomake
+  " autocmd BufWritePost *.js Neomake
+
   "Save with prettier
-  autocmd BufWritePre *.js undojoin | Neoformat
+  " autocmd BufWritePost *.js undojoin | Neoformat
+  " autocmd BufWritePre *.js undojoin | Neoformat
+  "https://hashrocket.com/blog/posts/writing-prettier-javascript-in-vim
+  " autocmd FileType javascript setlocal formatprg=prettier\
+  "                                            \ --stdin\
+  "                                            \ --print-width\ 80\
+  "                                            \ --single-quote\
+  "                                            \ --trailing-comma\ es5
+  " autocmd BufWritePre *.js Neoformat
+  autocmd BufWritePre *.js PrettierAsync
+  " autocmd BufWritePre *.js :normal gggqG
+
   " " Have them be open by default
   " autocmd FileType javascript set nofoldenable
   " au BufWinEnter * if &fdm == 'indent' | setlocal foldmethod=manual | endif

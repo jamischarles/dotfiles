@@ -141,6 +141,7 @@ Plug 'benekastah/neomake'                          " Async make (for syntax chec
 
 "Prettier
 Plug 'sbdchd/neoformat'
+Plug 'prettier/vim-prettier' " trying this again :|. Last time was SOO slow
 
 " Plug 'farmergreg/vim-lastplace' " TOO Slow? try to steal the good stuff?                   Open file at the last place you edited.
 
