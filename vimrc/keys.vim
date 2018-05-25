@@ -104,10 +104,45 @@ nmap <leader>d <Plug>(textmanip-duplicate-down)
 
 
 " Smooth Scrolling: -
-nnoremap <silent> N :call comfortable_motion#flick(g:comfortable_motion_impulse_multiplier * winheight(0) * 2.7)<CR>
-nnoremap <silent> E :call comfortable_motion#flick(g:comfortable_motion_impulse_multiplier * winheight(0) * -2.7)<CR>
-nnoremap <silent> <C-n> :call comfortable_motion#flick(g:comfortable_motion_impulse_multiplier * winheight(0) * 4)<CR>
-nnoremap <silent> <C-e> :call comfortable_motion#flick(g:comfortable_motion_impulse_multiplier * winheight(0) * -4)<CR>
+" DISABLED for now...
+" nnoremap <silent> N :call comfortable_motion#flick(g:comfortable_motion_impulse_multiplier * winheight(0) * 2.7)<CR>
+" nnoremap <silent> E :call comfortable_motion#flick(g:comfortable_motion_impulse_multiplier * winheight(0) * -2.7)<CR>
+" nnoremap <silent> <C-n> :call comfortable_motion#flick(g:comfortable_motion_impulse_multiplier * winheight(0) * 4)<CR>
+" nnoremap <silent> <C-e> :call comfortable_motion#flick(g:comfortable_motion_impulse_multiplier * winheight(0) * -4)<CR>
+
+
+" Scrolling: Non-smooth - https://github.com/jooize/vim-colemak#restore-turbo-navigation
+" Turbo navigation (Colemak) {{{
+    " Works with counts, see ":help complex-repeat"
+    " nnoremap <silent> H @='5h'<CR>|xnoremap <silent> H @='5h'<CR>|onoremap <silent> H @='5h'<CR>|
+    " nnoremap <silent> N @='5gj'<CR>|xnoremap <silent> N @='5gj'<CR>|onoremap <silent> N @='5gj'<CR>|
+    " nnoremap <silent> E @='5gk'<CR>|xnoremap <silent> E @='5gk'<CR>|onoremap <silent> E @='5gk'<CR>|
+    " nnoremap <silent> I @='5l'<CR>|xnoremap <silent> I @='5l'<CR>|onoremap <silent> I @='5l'<CR>|
+" }}}
+" Full page up/down in all the modes
+nnoremap <silent> <C-E> <C-U><C-U>
+vnoremap <silent> <C-E> <C-U><C-U>
+inoremap <silent> <C-E> <C-\><C-O><C-U><C-\><C-O><C-U>
+
+nnoremap <silent> <C-N> <C-D><C-D>
+vnoremap <silent> <C-N> <C-D><C-D>
+inoremap <silent> <C-N> <C-\><C-O><C-D><C-\><C-O><C-D>
+
+
+" Half page up/down in all the modes
+" FIXME: hacky for my fixed size... Calc this so it caluclates half page
+" naturally
+nnoremap <silent> E 22<C-Y>
+vnoremap <silent> E 22<C-Y>
+inoremap <silent> E 22<C-Y>
+nnoremap <silent> N 22<C-E>
+vnoremap <silent> N 22<C-E>
+inoremap <silent> N 22<C-E>
+" nnoremap <silent> E :call comfortable_motion#flick(g:comfortable_motion_impulse_multiplier * winheight(0) * -4)<CR>
+
+" nnoremap <silent> E <C-Y>
+" map N :set scroll=0<CR>:set scroll^=2<CR>:set scroll-=1<CR><C-D>:set scroll=0<CR>
+" map E :set scroll=0<CR>:set scroll^=2<CR>:set scroll-=1<CR><C-U>:set scroll=0<CR>
 
 
 " WINDOW RE-SIZING. FIXME: Add zoom window back?

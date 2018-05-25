@@ -7,6 +7,8 @@ TODO:
 - [ ] Make a note about colemak
 - [ ] Abbreviations, git sugar, colemak etc
 
+Currently using neovim on the terminal
+
 Any serious plugin modifications (like a whole file's worth, should go in /plugin, which is linked to ~/.vim/plugin)
 
 Modifying Macvim should first be attempted in .vimrc. Anything that can't be done there (like rebinding 'cmd + x' controls) should be done in

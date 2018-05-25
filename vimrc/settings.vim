@@ -7,7 +7,8 @@ set shortmess+=A 		" Ignore 'swapfile exists' warnings
 set vb                   " enable visual bell (disable audio bell)
 set tabstop=4 softtabstop=0 noexpandtab shiftwidth=4 " http://stackoverflow.com/questions/1878974/redefine-tab-as-4-spaces
 set autoindent                  " Automatic indention
-set nowrap                        " don't wrap lines
+" set nowrap                        " don't wrap lines
+set wrap                        " wrap lines
 set backspace=indent,eol,start    " backspace through everything in insert mode FIXME: Still needed?
 set listchars=tab:\|\ ,eol:¬,trail:· " HIDDEN CHARS
 

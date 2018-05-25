@@ -59,9 +59,9 @@ let g:tagbar_type_javascript = {
 \ }
 
 
-"" Smooth Scrolling Plugin
-let g:comfortable_motion_no_default_key_mappings = 1
-let g:comfortable_motion_impulse_multiplier = 0.8 " Feel free to increase/decrease this value.
+"" Smooth Scrolling Plugin - Disabled for now
+" let g:comfortable_motion_no_default_key_mappings = 1
+" let g:comfortable_motion_impulse_multiplier = 0.8 " Feel free to increase/decrease this value.
 
 "" Limit Motion nav HARD-TIME. Limits using the nav easy nav above...
 let g:hardtime_showmsg = 1

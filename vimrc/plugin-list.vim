@@ -33,7 +33,7 @@ Plug 'CharlesPatterson/vim-autoswap' "NO WORKY :{ Switch to open window insetad 
 " Navigation
 Plug 'takac/vim-hardtime'                          " Disable lazy nav (like the other one)
 " Plug 'bkad/CamelCaseMotion'                        " Next word considers camelcase as part of it :). LOVE IT!!! SO AMAZING
-Plug 'yuttie/comfortable-motion.vim'               " Smooth scrolling
+" Plug 'yuttie/comfortable-motion.vim'               " Smooth scrolling
 
 " Plug 'scrooloose/nerdtree' | Plug 'Xuyuanp/nerdtree-git-plugin'
 Plug 'scrooloose/nerdtree' | Plug 'Xuyuanp/nerdtree-git-plugin'
