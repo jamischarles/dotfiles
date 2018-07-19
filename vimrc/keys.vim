@@ -54,6 +54,10 @@ map <C-f> :NERDTreeFind<CR>
 " Comment: Line
 map <leader>/ gcc<CR>
 
+" Disable leader leader and bind to leader f
+map <Leader>f <Plug>(easymotion-bd-f)
+map <Leader> <Plug>(easymotion-prefix)
+
 " Snippets: Edit JS snippets file (now handled by <Leader>e)
 " nnoremap <leader>es <C-w>v<C-w>l<C-w>L:e ~/.dotfiles/_codesnippets/snippets/javascript.snippets<cr>
 
@@ -134,10 +138,8 @@ inoremap <silent> <C-N> <C-\><C-O><C-D><C-\><C-O><C-D>
 " naturally
 nnoremap <silent> E 22<C-Y>
 vnoremap <silent> E 22<C-Y>
-inoremap <silent> E 22<C-Y>
 nnoremap <silent> N 22<C-E>
 vnoremap <silent> N 22<C-E>
-inoremap <silent> N 22<C-E>
 " nnoremap <silent> E :call comfortable_motion#flick(g:comfortable_motion_impulse_multiplier * winheight(0) * -4)<CR>
 
 " nnoremap <silent> E <C-Y>

@@ -32,6 +32,7 @@ Plug 'CharlesPatterson/vim-autoswap' "NO WORKY :{ Switch to open window insetad 
 
 " Navigation
 Plug 'takac/vim-hardtime'                          " Disable lazy nav (like the other one)
+Plug 'easymotion/vim-easymotion' "Jump easily to spots on screen
 " Plug 'bkad/CamelCaseMotion'                        " Next word considers camelcase as part of it :). LOVE IT!!! SO AMAZING
 " Plug 'yuttie/comfortable-motion.vim'               " Smooth scrolling
 
@@ -87,6 +88,9 @@ Plug 'moll/vim-node'                               " node sugar like gf, gd?
 Plug 'briancollins/vim-jst'
 Plug 'motus/pig.vim'                               "Pig script highlighting
 
+" Plug 'Quramy/vim-js-pretty-template'    "html in es6 template strings
+Plug 'jonsmithers/experimental-lit-html-vim' "html in es6 template strings
+
 " Find / Search                                    "Incremental search numbers
 Plug 'osyo-manga/vim-anzu' "Does incsearch handle this?
 Plug 'haya14busa/incsearch.vim'                    " Show all results as you're typing
@@ -96,6 +100,8 @@ Plug 'numkil/ag.nvim'                              "Ag search
 Plug 'eugen0329/vim-esearch'
 
 "Golang
+Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
+Plug 'jodosha/vim-godebug' " Debugger for go
 
 " THEMES
 Plug 'vim-airline/vim-airline' | Plug 'vim-airline/vim-airline-themes'
@@ -157,6 +163,7 @@ Plug 'tpope/vim-obsession'                          " Resurrect vim. Obsession.
 Plug 'christoomey/vim-tmux-navigator'              " Tmux / Vim window integration
 Plug 'tmux-plugins/vim-tmux'                       " Tmux conf syntax highlighting
 
+Plug 'chrisbra/NrrwRgn' " Open code in new window
 
 " Q: This still needed?
 Plug 'sjl/vitality.vim/'                           "Fix cursor issues in tmux

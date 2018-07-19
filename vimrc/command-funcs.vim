@@ -83,6 +83,8 @@ augroup END
 augroup json
 	autocmd!
 	autocmd BufRead,BufNewFile .*rc setfiletype json
+	autocmd BufRead,BufNewFile .json setfiletype json
+	autocmd BufWritePre *.json PrettierAsync
 augroup END
 
 " set foldmethod=syntax " Set folding defaults. Fold by syntax (defined by js syntax)

@@ -25,7 +25,7 @@ endif
 
 set clipboard=unnamed    " yank will go to the system clipboard. Allows copy paste to outside
 
-filetype off                  " required for Vundle. FIXME: Still needed?
+filetype on                  " required for Vundle. FIXME: Still needed?
 set foldtext=CustomFoldText() " Nicer foldtext
 
 "" SEARCHING (from JANUS)

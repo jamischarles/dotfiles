@@ -126,6 +126,7 @@ if status --is-interactive
     # git
     abbr --add gpu 'git pull --rebase upstream'
     abbr --add grb 'git rebase -i upstream/develop'
+    abbr --add grc 'git rebase --continue'
     abbr --add gs  'git status -s'
     abbr --add gb  'git branch -v'
     abbr --add gd  'git diff --color | diff-so-fancy | less --tabs=1,5 -R'
@@ -179,7 +180,10 @@ end
 # PATH
 ######
 # manually set the path for golang and rust
-set -x PATH $PATH $HOME/go $HOME/.cargo/bin
+set -x PATH $PATH $HOME/go $HOME/go/bin $HOME/.cargo/bin
+
+# path for genymotion android simulator
+set -x PATH $PATH /Applications/Genymotion.app/Contents/MacOS/tools/
 
 # set -x PATH $GOPATH $HOME/go $HOME/.cargo/bin
 ###########################

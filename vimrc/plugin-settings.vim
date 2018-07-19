@@ -85,7 +85,7 @@ let g:UltiSnipsExpandTrigger="<tab>"
 
 "" Files: Nerdtree
 let g:NERDTreeShowHidden=1 	 " Show hidden files by default
-let NERDTreeQuitOnOpen=0 " DOESN'T WORK :(
+let NERDTreeQuitOnOpen=1 " Close Nerdtree after opening file
 
 "" Files: FZF
 let g:fzf_command_prefix = 'Fzf'
