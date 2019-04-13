@@ -98,11 +98,11 @@ endfunction
 " popluate <leader>e, and sourcing them all
 " When you add one here, add it to fzf list in keys.vim
 " ORDER MATTERS -  Vim Load order for folders, autoload, plugins etc http://learnvimscriptthehardway.stevelosh.com/chapters/42.html
-source $HOME/.vim/vimrc/command-funcs.vim " (Auto-)Commands, Custom functions
 source $HOME/.vim/vimrc/plugin-list.vim " All the plugins
 source $HOME/.vim/vimrc/plugin-settings.vim " Plugin settings
 source $HOME/.vim/vimrc/settings.vim " General VIM / UI Settings
 source $HOME/.vim/vimrc/keys.vim " Key bindings for Vim and Vim Plugins
+source $HOME/.vim/vimrc/command-funcs.vim " (Auto-)Commands, Custom functions
 " $HOME/.vim/vimrc/notes-todo.md " Notes and TODO
 
 " Mapped keys from colemak file...

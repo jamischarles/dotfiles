@@ -39,9 +39,9 @@ inoremap (<cr> (<cr>)<c-o><s-o>
 
 " REMAP O to : since I use : all the time, and almost never use O. See if this
 " breaks stuff again..
-nnoremap O :
+" nnoremap O :
 " nnoremap : O
-nnoremap > O
+" nnoremap > O
 
 
 

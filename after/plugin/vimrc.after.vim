@@ -84,6 +84,11 @@ nnoremap Y E|xnoremap Y E|onoremap Y E|
 nnoremap u w|xnoremap u w|onoremap u w|
 nnoremap U W|xnoremap U W|onoremap U W|
 
+" fix the colissions on y (causes a delay)
+"https://github.com/jooize/vim-colemak#tpopevim-fugitive-keymap-collision
+"Doesn't work :(
+" nnoremap y<C-G>
+
 
 " REMAP COLEMAK presets  more mappings and settings are in
 " swap o and ; for normal mode, so we can much easier trigger the vim command,
@@ -95,6 +100,8 @@ nnoremap U W|xnoremap U W|onoremap U W|
 " nnoremap O :
 " nnoremap ; o
 " nnoremap : O
+"
+
 
 " Map bottom of screen to B
 nnoremap B L|xnoremap B L|onoremap B L

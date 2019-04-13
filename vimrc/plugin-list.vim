@@ -18,7 +18,7 @@ call plug#begin('~/.vim/plugged')
 " - group these into sensible groupings
 
 " STARTUP
-Plug 'mhinz/vim-startify'                          " Fancy Startup screen
+" Plug 'mhinz/vim-startify'                          " Fancy Startup screen
 
 " GIT / DIFFING
 Plug 'tpope/vim-fugitive'                          " Git commands in Vim. Consider https://github.com/carlhuda/janus/blob/master/janus/vim/tools/janus/after/plugin/fugitive.vim
@@ -53,7 +53,8 @@ Plug 'tomtom/tcomment_vim'
 " Plugin 'scrooloose/nerdcommenter'                  " Awesome commenting
 " Plugin 'tpope/vim-commentary'                      "
 " Plugin 'scrooloose/syntastic'                        " Syntax checker
-Plug 'tpope/vim-unimpaired'                        " Buffer switching
+" Turned off unimpaired because of y delay conflict it caused.
+" Plug 'tpope/vim-unimpaired'                        " Buffer switching
 Plug 'duff/vim-bufonly'                            " Close all buffers but current
 " Plugin 'mihaifm/bufstop'                             " MOST Amazing MRU Buffer switcher
 Plug 'SirVer/ultisnips'                            " Snippet engine
@@ -80,7 +81,7 @@ Plug 'Raimondi/delimitMate'                        " quote, bracket, etc autocom
 Plug 't9md/vim-textmanip'                          " Move selected text around easily
 Plug 'ntpeters/vim-better-whitespace'              " Strip whitespace on save
 Plug 'elzr/vim-json'                               " Hide quotes, json highlighting
-" Plug 'jimmyhchan/dustjs.vim'
+Plug 'jimmyhchan/dustjs.vim'
 Plug 'moll/vim-node'                               " node sugar like gf, gd?
 " Plug 'lambdatoast/elm.vim'                         " Elm syntax
 " Plug 'ElmCast/elm-vim'                             " Elm error sugar etc
@@ -134,6 +135,7 @@ Plug 'rodjek/vim-puppet'                           "Puppet syntax
 Plug 'neoclide/vim-jsx-improve'                    " JSX Syntax and indentation
 Plug 'aliva/vim-fish'                              "Fish syntax highlighting
 Plug 'plasticboy/vim-markdown' " Markdown syntax highlighting
+Plug 'jxnblk/vim-mdx-js' "MDX syntax
 Plug 'nathanielc/vim-tickscript' "Tickscript for influxdb
 Plug 'cespare/vim-toml' "Toml for influxdb
 Plug 'dzeban/vim-log-syntax'                       "Log files
@@ -141,6 +143,7 @@ Plug 'leafgarland/typescript-vim'
 Plug 'posva/vim-vue'
 Plug 'reasonml-editor/vim-reason-plus' "ReasonML
 Plug 'kchmck/vim-coffee-script' "Coffee
+Plug 'jparise/vim-graphql'
 
 "Eslint. FIXME: do we need both?
 Plug 'benekastah/neomake'                          " Async make (for syntax checking etc)

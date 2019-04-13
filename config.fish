@@ -116,6 +116,8 @@ set -g __fish_git_prompt_color_cleanstate green
 
 # these are adding overhead... think about ripping them out... .05s -> .06s (added 10ms)
 # TODO: Look at this for placeholders
+# > https://github.com/fish-shell/fish-shell/issues/2287
+# > Params !!! https://github.com/fish-shell/fish-shell/issues/731
 if status --is-interactive
     set -g fish_user_abbreviations
     abbr --add ef 'nvim ~/.config/fish/config.fish'
@@ -135,6 +137,8 @@ if status --is-interactive
     abbr --add gc 'git commit -v'
     abbr --add grm 'git remote -v'
     abbr --add gca 'git commit -v --amend'
+    abbr --add gsp 'git stash pop'
+    abbr --add gsgd 'git stash; git stash drop'
 
     # node
     abbr --add nv 'node --version'
@@ -154,6 +158,12 @@ if status --is-interactive
 
     # docker
     abbr --add dp "docker ps"
+
+    # file searching utils
+    abbr --add rgf "rg --files . | grep"
+    abbr --add rgfi "rg --files-with-matches"
+    abbr --add fbat "fzf | xargs bat" # find and then bat the file
+    abbr --add rbat "rg --files-with-matches | xargs bat" #bat files with matches
 
     # history?
     # history --merge # will merge history from other sessions
