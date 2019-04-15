@@ -54,6 +54,7 @@ Plug 'tomtom/tcomment_vim'
 " Plugin 'tpope/vim-commentary'                      "
 " Plugin 'scrooloose/syntastic'                        " Syntax checker
 " Turned off unimpaired because of y delay conflict it caused.
+Plug 'jamischarles/vim-unimpaired' " Fork to remove y keybinding conflict
 " Plug 'tpope/vim-unimpaired'                        " Buffer switching
 Plug 'duff/vim-bufonly'                            " Close all buffers but current
 " Plugin 'mihaifm/bufstop'                             " MOST Amazing MRU Buffer switcher

@@ -84,11 +84,13 @@ nnoremap Y E|xnoremap Y E|onoremap Y E|
 nnoremap u w|xnoremap u w|onoremap u w|
 nnoremap U W|xnoremap U W|onoremap U W|
 
-" fix the colissions on y (causes a delay)
-"https://github.com/jooize/vim-colemak#tpopevim-fugitive-keymap-collision
-"Doesn't work :(
-" nnoremap y<C-G>
 
+" PASTE should NOT chante the paste buffer (I should be able to paste 6 times
+" check .vimrc.after
+" w/o having the previously replaced content show up now...
+"https://superuser.com/questions/321547/how-do-i-replace-paste-yanked-text-in-vim-without-yanking-the-deleted-lines
+vnoremap v :<C-U>let @p = @+<CR>gvp:let @+ = @p<CR>
+vnoremap V :<C-U>let @p = @+<CR>gvp:let @+ = @p<CR>
 
 " REMAP COLEMAK presets  more mappings and settings are in
 " swap o and ; for normal mode, so we can much easier trigger the vim command,

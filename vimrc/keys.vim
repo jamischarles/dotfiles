@@ -37,6 +37,9 @@ inoremap {<cr> {<cr>}<c-o><s-o>
 inoremap [<cr> [<cr>]<c-o><s-o>
 inoremap (<cr> (<cr>)<c-o><s-o>
 
+" PASTE should NOT chante the paste buffer (I should be able to paste 6 times
+" check .vimrc.after
+
 " REMAP O to : since I use : all the time, and almost never use O. See if this
 " breaks stuff again..
 " nnoremap O :
@@ -94,8 +97,11 @@ nnoremap <leader>R :silent !tmux send-keys -t 1 C-c C-c hr space - Enter Up Up C
 " Undo Tree: - Mundo -
 nnoremap <leader>u :MundoToggle<CR>
 
-" Insert Blank: Line - Unimpaired
+" Insert Blank Line: - Unimpaired. Below and above
 nmap <leader><CR> <Plug>unimpairedBlankDown
+" Had to modify iterm2 for this one so it would send the proper keys that nvim
+" expects https://stackoverflow.com/questions/16359878/vim-how-to-map-shift-enter
+nmap <S-CR> <Plug>unimpairedBlankUp
 
 " Move Line: Vim-TextManip. Move selection down/up   (Ctrl+n, Ctrl+e) in Normal / VISUAL MODE - disabling for HARDTIME
 " nmap <C-n> ]e
