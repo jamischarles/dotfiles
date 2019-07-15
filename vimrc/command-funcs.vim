@@ -48,6 +48,12 @@ function! Dontopeninnerdtree(e)
 
 endfunction
 
+" Echo current file path
+" https://vi.stackexchange.com/questions/104/how-can-i-see-the-full-path-of-the-current-file
+command! Cwd :exe "echo @%"
+command! CurrentPath :exe "echo @%"
+command! CurrentFullPath :exe "echo expand('%:p')"
+
 
 "" AU GROUPS #####################################
 
@@ -145,6 +151,9 @@ augroup allFiles
 	" Fix fugitive collision with colemak mappings causing y to stall.
 	" https://github.com/jooize/vim-colemak#tpopevim-fugitive-keymap-collision
 	autocmd BufEnter * silent! execute "nunmap <buffer> <silent> y<C-G>"
+	autocmd BufRead,BufEnter * CurrentFullPath
+	" autocmd BufCreate * silent! execute "CurrentFullPath" "All use cases
+	" work excep opening a file from Cmd+t
 
 	if has("autocmd")
 		if exists("g:autosave_on_blur")

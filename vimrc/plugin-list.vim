@@ -58,7 +58,13 @@ Plug 'jamischarles/vim-unimpaired' " Fork to remove y keybinding conflict
 " Plug 'tpope/vim-unimpaired'                        " Buffer switching
 Plug 'duff/vim-bufonly'                            " Close all buffers but current
 " Plugin 'mihaifm/bufstop'                             " MOST Amazing MRU Buffer switcher
+
+" Snippets #############
 Plug 'SirVer/ultisnips'                            " Snippet engine
+" Plug 'Shougo/deoplete.nvim'
+" Plug 'Shougo/neosnippet.vim'
+" Plug 'Shougo/neosnippet-snippets'
+
 " Vim Snippets (local)
 Plug 'MarcWeber/vim-addon-mw-utils'
 Plug 'tomtom/tlib_vim'

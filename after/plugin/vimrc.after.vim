@@ -70,6 +70,7 @@ endif
 " gi should be gs for us since we use 's' for insert
 " Goes to the last insertion point and gets in insert mode
 nmap gs gi
+nmap g. gi
 
 " restore delete INNER functinoality. I now want some of the original stuff
 " back from vim. and this is one of them

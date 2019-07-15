@@ -82,6 +82,10 @@ let g:incsearch#auto_nohlsearch = 1 " Turn off highlight automagically when it m
 
 "" Autocompletion, and snippets... Util-snips. http://vimcasts.org/episodes/meet-ultisnips/
 let g:UltiSnipsExpandTrigger="<tab>"
+"https://github.com/Shougo/neosnippet.vim
+" let g:deoplete#enable_at_startup = 1
+" let g:neosnippet#enable_snipmate_compatibility = 1
+" let g:neosnippet#snippets_directory='~/.dotfiles/_codesnippets/snippets'
 
 "" Files: Nerdtree
 let g:NERDTreeShowHidden=1 	 " Show hidden files by default

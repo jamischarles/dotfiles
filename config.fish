@@ -139,6 +139,9 @@ if status --is-interactive
     abbr --add gca 'git commit -v --amend'
     abbr --add gsp 'git stash pop'
     abbr --add gsgd 'git stash; git stash drop'
+    # open coflicted files in nvim
+    abbr --add gfc 'git diff --name-only --diff-filter=U | xargs nvim'
+    abbr --add gfca 'git diff --name-only --diff-filter=U | xargs git add'
 
     # node
     abbr --add nv 'node --version'
@@ -164,6 +167,16 @@ if status --is-interactive
     abbr --add rgfi "rg --files-with-matches"
     abbr --add fbat "fzf | xargs bat" # find and then bat the file
     abbr --add rbat "rg --files-with-matches | xargs bat" #bat files with matches
+
+
+    # search hidden files (not node_modules or .git but other ones), including dotfiles and files hidden by .gitignore
+    abbr --add rgh "rg --follow --no-ignore-vcs  --files-with-matches --hidden -g \"!.git\" -g \"!node_modules\""
+    # abbr --add rgh "rg --follow --no-ignore-vcs --ignore-file node_modules --ignore-file .gitt" #bat files with matches
+    # abbr --add rghf "rg --files-with-matches " #bat files with matches
+
+
+    # Estimate JS Size after minify and gzip... from clipboard. TODO: add a before/after size...
+    abbr --add jssize "pbpaste | terser -c -m | gzip -c9n | wc -c | awk '{\$1=\$1/1000; print \$1,\"KB\";}'"
 
     # history?
     # history --merge # will merge history from other sessions
