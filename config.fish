@@ -33,6 +33,8 @@ set -g START_TIME (getTime)
 
 
 
+
+
 # This fn seems to be the last thing that runs (makes sense), so good place to profile.
 # FIXME: Move this to fns or into /functions?
 
@@ -76,7 +78,7 @@ end
 ### Config
 #################
 # nvm use 8 # relies on https://github.com/brigand/fast-nvm-fish
-nvm use v8 # Running this at prompt adds 200 - 500ms. Can we delay this? Or manually do it?
+nvm use v10 # Running this at prompt adds 200 - 500ms. Can we delay this? Or manually do it?
 
 # This kind of breaks nvm... Consider another way to do it...? Maybe do it on 2nd prompt? Or wait for a special command?
 # alias node="/Users/jacharles/.nvm/versions/node/v8.4.0/bin/node" # usually use abbr instead, but here it's justified
@@ -105,6 +107,9 @@ set -g __fish_git_prompt_color_stagedstate yellow
 set -g __fish_git_prompt_color_invalidstate red
 set -g __fish_git_prompt_color_untrackedfiles $fish_color_normal
 set -g __fish_git_prompt_color_cleanstate green
+
+# Set nvim as default editor for crontab etc
+set -x EDITOR "nvim"
 
 #################
 ### Abbreviations
@@ -153,6 +158,8 @@ if status --is-interactive
     # system
     abbr --add ka 'kill -9 (pgrep "")' # resume session
 
+    abbr --add kport  "sudo lsof -i tcp:8000"
+
     abbr --add profile "fish --profile prompt.prof -ic 'fish_prompt; exit'; sort -nk 2 prompt.prof" # Profile fish startup time. https://github.com/fish-shell/fish-shell/issues/2854
 
     abbr --add list "find . | fzf" # list files and pass to fzf
@@ -163,6 +170,8 @@ if status --is-interactive
     abbr --add dp "docker ps"
 
     # file searching utils
+    # FD is my util, like rg but for files
+    # list of special utils I use: z, rg, fd, bat, fzf (not often anymore)
     abbr --add rgf "rg --files . | grep"
     abbr --add rgfi "rg --files-with-matches"
     abbr --add fbat "fzf | xargs bat" # find and then bat the file

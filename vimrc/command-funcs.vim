@@ -60,6 +60,8 @@ command! CurrentFullPath :exe "echo expand('%:p')"
 " Reading on auto-groups http://learnvimscriptthehardway.stevelosh.com/chapters/14.html
 augroup vimrc
   autocmd!
+  " For crontab files... ensures we edit properly
+  autocmd filetype crontab setlocal nobackup nowritebackup
   autocmd BufRead,BufNewFile .vimrc setfiletype vim
   autocmd BufRead,BufNewFile vimrc.sym setfiletype vim
   autocmd BufRead,BufNewFile *.vim setfiletype vim
@@ -151,7 +153,10 @@ augroup allFiles
 	" Fix fugitive collision with colemak mappings causing y to stall.
 	" https://github.com/jooize/vim-colemak#tpopevim-fugitive-keymap-collision
 	autocmd BufEnter * silent! execute "nunmap <buffer> <silent> y<C-G>"
-	autocmd BufRead,BufEnter * CurrentFullPath
+
+	" Doesn't work properly...
+	autocmd BufEnter * CurrentFullPath
+	" autocmd BufEnter * CurrentFullPath
 	" autocmd BufCreate * silent! execute "CurrentFullPath" "All use cases
 	" work excep opening a file from Cmd+t
 

@@ -188,6 +188,7 @@ nnoremap <silent> <Leader>e :call fzf#run({
 nnoremap <silent> <Leader>m :FzfHistory<CR>| " Use the MRU cache
 nnoremap <silent> <Leader>g :FzfGitFiles?<CR>
 nnoremap <silent> <Leader>B :FzfBTags<CR>
+nnoremap <silent> <Leader>C :FzfTags<CR>
 nnoremap <silent> <Leader>b :FzfBuffers<CR>
 
 
