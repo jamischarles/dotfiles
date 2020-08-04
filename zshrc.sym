@@ -512,3 +512,4 @@ END_TIME=$(getTime)
 # echo $END_TIME
 STARTUP_TIME=$(echo "$END_TIME - $START_TIME" | bc)
 echo "zsh took ${STARTUP_TIME}s to start up."
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion

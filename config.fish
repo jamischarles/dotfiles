@@ -1,3 +1,7 @@
+# DEPS we need to isntall for fish shell to work as we have it set up...
+# - gdate via  '$brew install coreutils'        (for gdate)
+# - nvm (or alternative with fish. see lower section on NVM)
+
 # TODO:
 # add folds here? Using modeline? Use ## for 1, and # for 2
 # only show timing data when command is slower than 5 seconds...
@@ -21,6 +25,12 @@
 # http://mariuszs.github.io/blog/2013/informative_git_prompt.html
 # - git prompt? https://www.martinklepsch.org/posts/git-prompt-for-fish-shell.html
 # - vim mode? https://fedragon.github.io/vimode-fishshell-osx/
+
+# Needs to be done first for gDate... to be available below...
+set -x PATH $PATH /usr/local/opt/coreutils/libexec/gnubin
+# Add all the utils that are normally in the path. Need to set this up now, so all the other commands work...
+set -x PATH $PATH /usr/local/bin/
+
 
 # Gets nanoseconds for current timestamp. Could also use this for ms timestamp. (gdate '+%s.%3N')
 function getTime
@@ -78,7 +88,11 @@ end
 ### Config
 #################
 # nvm use 8 # relies on https://github.com/brigand/fast-nvm-fish
-nvm use v10 # Running this at prompt adds 200 - 500ms. Can we delay this? Or manually do it?
+
+# Use fnm instead of NVM (faster for fish) https://github.com/Schniz/fnm
+# Set up fnm
+fnm env --multi | source
+# nvm use v10 # Running this at prompt adds 200 - 500ms. Can we delay this? Or manually do it?
 
 # This kind of breaks nvm... Consider another way to do it...? Maybe do it on 2nd prompt? Or wait for a special command?
 # alias node="/Users/jacharles/.nvm/versions/node/v8.4.0/bin/node" # usually use abbr instead, but here it's justified
@@ -136,8 +150,8 @@ if status --is-interactive
     abbr --add grc 'git rebase --continue'
     abbr --add gs  'git status -s'
     abbr --add gb  'git branch -v'
-    abbr --add gd  'git diff --color | diff-so-fancy | less --tabs=1,5 -R'
-    abbr --add gdc 'git diff --cached --color | diff-so-fancy | less --tabs=1,5 -R'
+    abbr --add gd  'git diff --color | delta --diff-so-fancy | less --tabs=1,5 -R'
+    abbr --add gdc 'git diff --cached --color | delta --diff-so-fancy | less --tabs=1,5 -R'
     abbr --add gch 'git checkout'
     abbr --add gc 'git commit -v'
     abbr --add grm 'git remote -v'
@@ -210,15 +224,27 @@ end
 # FIXME: I manually put in and edited the nvm one... just use a gist?!?
 # fast-nvm-fish - use my fork of it anyway
 # z (folder jumping) - https://github.com/fisherman/z
+#z-> fasd |brew install fasd|
+
+# https://github.com/fishgretel/fasd
+alias z='fasd_cd -d'
 
 ######
 # PATH
 ######
+#FIXME: Is the problem here that we haven't set the path in zsh...? So we have to add everythign manually?
+
+# For gdate...
+set -x PATH $PATH /usr/local/opt/coreutils/libexec/gnubin
+
 # manually set the path for golang and rust
 set -x PATH $PATH $HOME/go $HOME/go/bin $HOME/.cargo/bin
 
 # path for genymotion android simulator
 set -x PATH $PATH /Applications/Genymotion.app/Contents/MacOS/tools/
+
+# for z didntwor k
+# sh /usr/local/etc/profile.d/z.sh
 
 # set -x PATH $GOPATH $HOME/go $HOME/.cargo/bin
 ###########################
