@@ -16,6 +16,12 @@ Any serious plugin modifications (like a whole file's worth, should go in /plugi
 ## Update:
 Now uses fish instead of zsh. Update this every time I change laptops.
 
+### How to set up Vim:
+0. Run makemysymlinks.sh
+1. `brew install neovim`
+2. Setup plugin system by copying `plug.vim` to `~/.vim/autoload` folder https://github.com/junegunn/vim-plug#installation
+3. Start neovim. Run `PlugInstall` to install all the plugins.
+
 --------------
 
 This readme is very out of date...
