@@ -174,7 +174,8 @@ if status --is-interactive
     # file searching utils
     # FD is my util, like rg but for files
     # list of special utils I use: z, rg, fd, bat, fzf (not often anymore)
-    abbr --add rgf "rg --files . | grep"
+    # abbr --add rgf "rg --files . | grep"
+    abbr --add rgf "fd "
     abbr --add rgfi "rg --files-with-matches"
     abbr --add fbat "fzf | xargs bat" # find and then bat the file
     abbr --add rbat "rg --files-with-matches | xargs bat" #bat files with matches
