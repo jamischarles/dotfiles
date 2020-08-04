@@ -144,7 +144,9 @@ if status --is-interactive
     abbr --add gca 'git commit -v --amend'
     abbr --add gsp 'git stash pop'
     abbr --add gsgd 'git stash; git stash drop'
-    # open coflicted files in nvim
+    # stash unstaged files (including new ones)
+    abbr --add gsu 'git stash -k -u; git status -s'
+    # open conflicted files in nvim
     abbr --add gfc 'git diff --name-only --diff-filter=U | xargs nvim'
     abbr --add gfca 'git diff --name-only --diff-filter=U | xargs git add'
 

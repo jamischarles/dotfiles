@@ -111,6 +111,9 @@ Plug 'eugen0329/vim-esearch'
 Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 Plug 'jodosha/vim-godebug' " Debugger for go
 
+"Elixir
+Plug 'elixir-editors/vim-elixir'
+
 " THEMES
 Plug 'vim-airline/vim-airline' | Plug 'vim-airline/vim-airline-themes'
 " Status bar (bottom)

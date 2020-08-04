@@ -16,6 +16,11 @@ command! WindowMin :vertical resize 0
 command! WindowVInc :vertical resize +20
 command! WindowVDec :vertical resize -20
 
+" Vertical and horizontal split
+command! Vsplit :vsp
+command! Split :sp
+
+
 " Restore vim session
 command! SessionSave :Obsession
 command! SaveSession :Obsession
