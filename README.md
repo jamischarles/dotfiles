@@ -12,6 +12,12 @@ Currently using neovim on the terminal
 Any serious plugin modifications (like a whole file's worth, should go in /plugin, which is linked to ~/.vim/plugin)
 
 
+
+## Update:
+Now uses fish instead of zsh. Update this every time I change laptops.
+
+--------------
+
 This readme is very out of date...
 
 If you want to override plugins, like for keyboard collisions, place a file in after/plugin. That will be loaded AFTER the plugins.
