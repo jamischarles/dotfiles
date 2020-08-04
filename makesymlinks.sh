@@ -27,11 +27,11 @@ done;
 #for FILE in *.sym;  done;
 
 # symlink my zsh theme (TODO: DELETE?)
-FILE="jamis-doubleend.zsh-theme"
-FILE_PATH="$HOME/.oh-my-zsh/themes/$FILE"
-echo "Deleting and creating $FILE_PATH symlink"
-rm "$FILE_PATH"
-ln -s "$HERE/$FILE" "$FILE_PATH"
+# FILE="jamis-doubleend.zsh-theme"
+# FILE_PATH="$HOME/.oh-my-zsh/themes/$FILE"
+# echo "Deleting and creating $FILE_PATH symlink"
+# rm "$FILE_PATH"
+# ln -s "$HERE/$FILE" "$FILE_PATH"
 
 # make .vim folder if it doesn't exist...
 mkdir ~/.vim
