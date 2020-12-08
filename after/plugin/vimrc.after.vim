@@ -66,11 +66,14 @@ endif
 
 " END STATUSLINE
 
-"" COLEMAK FIXES
+"" COLEMAK FIXES:
 " gi should be gs for us since we use 's' for insert
 " Goes to the last insertion point and gets in insert mode
 nmap gs gi
 nmap g. gi
+
+
+
 
 " restore delete INNER functinoality. I now want some of the original stuff
 " back from vim. and this is one of them
@@ -86,12 +89,20 @@ nnoremap u w|xnoremap u w|onoremap u w|
 nnoremap U W|xnoremap U W|onoremap U W|
 
 
-" PASTE should NOT chante the paste buffer (I should be able to paste 6 times
+" PASTE should NOT change the paste buffer (I should be able to paste 6 times
 " check .vimrc.after
 " w/o having the previously replaced content show up now...
 "https://superuser.com/questions/321547/how-do-i-replace-paste-yanked-text-in-vim-without-yanking-the-deleted-lines
-vnoremap v :<C-U>let @p = @+<CR>gvp:let @+ = @p<CR>
-vnoremap V :<C-U>let @p = @+<CR>gvp:let @+ = @p<CR>
+" vnoremap v :<C-U>let @p = @+<CR>gvp:let @+ = @p<CR>
+" vnoremap V :<C-U>let @p = @+<CR>gvp:let @+ = @p<CR>
+
+" For visual block mode remap the append and insert commands to act as I
+" expect
+" in visual mode T should go to end of line (most useful for visual block edit)
+" S should go to beginning of line and insert (still with multi cursor
+" working...)
+vnoremap T $$A
+vnoremap S ^I
 
 " REMAP COLEMAK presets  more mappings and settings are in
 " swap o and ; for normal mode, so we can much easier trigger the vim command,
@@ -133,11 +144,47 @@ if ! exists("is_ps")
 	highlight! link SignColumn NONE
 	highlight SignColumn ctermbg=red
 
-	highlight GitGutterAdd ctermfg=28 guifg=darkgreen
-	highlight GitGutterChange ctermfg=100 guifg=darkyellow
-	highlight GitGutterDelete ctermfg=red guifg=darkred
-	highlight GitGutterChangeDelete ctermfg=yellow guifg=darkyellow
+
+
+	highlight GitGutterAdd ctermfg=28 guifg=darkgreen ctermbg=8
+	highlight GitGutterChange ctermfg=100 guifg=darkyellow ctermbg=8
+	highlight GitGutterDelete ctermfg=red guifg=darkred ctermbg=8
+	highlight GitGutterChangeDelete ctermfg=yellow guifg=darkyellow ctermbg=8
 
 	" https://github.com/altercation/vim-colors-solarized/blob/master/colors/solarized.vim#L285
 	highlight SignColumn ctermbg=8
+
+
+	"Signify gutter colors (this is what we're using now...
+	"makes the signcolumn not have a separate color
+	highlight SignColumn guibg=NONE
+
+	highlight SignifySignAdd ctermfg=28 guifg=darkgreen ctermbg=8
+	highlight SignifySignChange ctermfg=100 guifg=darkyellow ctermbg=8
+	highlight SignifySignDelete ctermfg=red guifg=darkred ctermbg=8
+	" highlight  ctermfg=yellow guifg=darkyellow ctermbg=8
+	highlight SignifyLineAdd ctermfg=28 guifg=darkgreen ctermbg=8
+	highlight link SignifyLineChange DiffText
+
+
+	" Signcolumn color changes for CoC and other linters etc...
+	" Removes the BG from them for all themes...
+	highlight ALEInfo guibg=NONE
+	highlight ALEInfoSign guibg=NONE
+	highlight ALEError guibg=NONE
+	highlight ALEErrorSign guibg=NONE
+	highlight ALEWarning guibg=NONE
+	highlight ALEWarningSign guibg=NONE
+
+
+
+	" Change bg color of the tokyo
+	" hi Normal guifg=#a9b1d6 guibg=#1a1b26
+	" hi Normal guifg=#a9b1d6 guibg=red
+
+
+	" Changes the bg color of autocomplete box...  https://github.com/dracula/vim/issues/14
+	" hi Pmenu ctermfg=NONE ctermbg=236 cterm=NONE guifg=NONE guibg=#64666d gui=NONE
+	" hi PmenuSel ctermfg=NONE ctermbg=24 cterm=NONE guifg=NONE guibg=#204a87 gui=NONE
+
 endif

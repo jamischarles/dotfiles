@@ -55,6 +55,7 @@ rm "$HOME/.config/fish/fishfile"
 ln -s "$HERE/fishfile" "$HOME/.config/fish/fishfile"
 # END FOR FISH SHELL ************
 
+
 # symlink ~/config/nvim to ~/.vim Used for Vim and Neovim.
 # TODO: Just make the jump already? likely never going back to vim
 echo "Linking fake nvim folder to real .vim folder"
@@ -93,6 +94,28 @@ rm -rf "$HOME/.vim/$FOLDER"
 ln -s "$HERE/$FOLDER" "$HOME/.vim/$FOLDER"
 
 
-# symlink ~/.config/ files (powerline mainly for now)
+# NOTE: if it's a HIDDEN file, then name it *.sym without . prefix. This is important but I can't rememeber why
+# Probably because you can't symlink to hidden files, only from
+
+# symlink ~/.config/ files
 rm ~/.config/powerline
 ln -s ~/.dotfiles/powerline.sym ~/.config/powerline # do these need to be quoted?
+
+# symlink ~/.config/karabiner.edn
+rm ~/.config/karabiner.edn
+ln -s ~/.dotfiles/karabiner.edn ~/.config/karabiner.edn
+
+rm ~/.config/alacritty.yml
+ln -s ~/.dotfiles/alacritty.yml ~/.config/alacritty.yml
+
+# tmux flavor for window management. #gotta name folders .sym to avoid symlinking weirdness
+# TODO must do this when byobu is NOT running
+rm ~/.byobu/.tmux.conf
+rm ~/.byobu/color.tmux
+rm ~/.byobu/keybindings.tmux
+ln -s ~/.dotfiles/byobu-tmux.conf ~/.byobu/.tmux.conf
+ln -s ~/.dotfiles/byobu-color.tmux ~/.byobu/color.tmux
+ln -s ~/.dotfiles/byobu-keybindings.tmux ~/.byobu/keybindings.tmux
+
+rm ~/.config/starship.toml
+ln -s ~/.dotfiles/starship.toml ~/.config/starship.toml

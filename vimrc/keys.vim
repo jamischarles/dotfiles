@@ -18,6 +18,9 @@ nnoremap <leader>, A,<esc>| " Append , to eol
 nnoremap <leader><leader> <C-^>| " Goto last buffer
 nnoremap <leader>N :below 20sp term://node<cr>i| " Node scratch buffer
 
+" maybe do <l>? instead?
+nnoremap <leader>h :split ~/.vim/vimrc/help-shortcuts.md<cr>
+
 " Non Leader: commands
 nnoremap <silent> <tab> :call GotoNextBuffer()<CR>
 nnoremap <silent> <S-tab> :call GotoPriorBuffer()<CR>
@@ -40,13 +43,22 @@ inoremap (<cr> (<cr>)<c-o><s-o>
 " PASTE should NOT chante the paste buffer (I should be able to paste 6 times
 " check .vimrc.after
 
+" https://dalibornasevic.com/posts/43-12-vim-tips
+nnoremap <expr> gb '`[' . strpart(getregtype(), 0, 1) . '`]'
+
 " REMAP O to : since I use : all the time, and almost never use O. See if this
 " breaks stuff again..
 " nnoremap O :
 " nnoremap : O
 " nnoremap > O
 
+" https://medium.com/@schtoeffel/you-don-t-need-more-than-one-cursor-in-vim-2c44117d51db
+xnoremap @ :<C-u>call ExecuteMacroOverVisualRange()<CR>
 
+function! ExecuteMacroOverVisualRange()
+  echo "@".getcmdline()
+  execute ":'<,'>normal @".nr2char(getchar())
+endfunction
 
 "" PLUGIN Keys ###########################################################
 
@@ -81,11 +93,20 @@ nnoremap <silent> <Plug>(anzu-mode-N) :<C-u>call anzu#mode#start(@/, "K", "", ""
 nnoremap <silent> <Plug>(anzu-mode) :<C-u>call anzu#mode#start(@/, "", "", "")<CR>
 
 " GIT Gutter: TODO: Replace with crtl+
-nmap <leader>s <Plug>GitGutterStageHunk
-nmap <leader>r <Plug>GitGutterUndoHunk
-nmap <leader>p <Plug>GitGutterPreviewHunk
-nmap [h <Plug>GitGutterNextHunk
-nmap ]h <Plug>GitGutterPrevHunk
+" Gitgutter
+" nmap <leader>s <Plug>(GitGutterStageHunk)
+" nmap <leader>r <Plug>(GitGutterUndoHunk)
+" nmap <leader>p <Plug>(GitGutterPreviewHunk)
+" nmap [h <Plug>(GitGutterNextHunk)
+" nmap ]h <Plug>(GitGutterPrevHunk)
+
+"Vim signify (like gitgutter
+nmap <leader>s <Plug>(GitGutterStageHunk)
+nmap <leader>r :SignifyHunkUndo<CR>
+nmap <leader>p :SignifyHunkDiff<CR>
+nmap [h <Plug>(signify-next-hunk)
+nmap ]h <Plug>(signify-prev-hunk)
+
 
 nmap <silent> <leader>fc <ESC>/\v^[<=>]{7}( .*\|$)<CR>| " find merge conflict markers - from janus
 
@@ -163,25 +184,28 @@ nnoremap <silent> <leader>_ :WindowMin<CR>
 nnoremap <silent> <leader>= :WindowEq<CR>
 
 " Fuzzy Finder: FZF
+" FIXME: use rg or fd instead (FASTER)
+" \   'source': 'ag -g \"\" --hidden --ignore .git --ignore node_modules',
+" \   'source': 'fd --type file --hidden --exclude .git',
 nnoremap <silent> <Leader>t :call fzf#run({
-\   'source': 'ag -g "" --hidden --ignore .git --ignore node_modules',
-\   'options': '--multi --exact --tiebreak=end,length',
-\   'down': '~40%',
+\   'source': 'rg --files --hidden',
+\   'options': '--multi --exact --tiebreak=begin,length,index --preview="~/.vim/plugged/fzf.vim/bin/preview.sh {}" --preview-window right:60% ',
+\   'window': { 'width': 1, 'height': 1 },
 \   'sink': function('Dontopeninnerdtree')
 \ })<CR>
 
 " include node_modules
 nnoremap <silent> <Leader>T :call fzf#run({
-\   'options': '--exact --tiebreak=end,length',
-\   'down': '~40%',
+\   'options': '--exact --tiebreak=end,length --preview="~/.vim/plugged/fzf.vim/bin/preview.sh {}" --preview-window right:60%',
+\   'window': { 'width': 1, 'height': 1 },
 \   'sink': function('Dontopeninnerdtree')
 \ })<CR>
 
 "  https://github.com/junegunn/fzf/issues/274 https://unix.stackexchange.com/questions/64736/combine-output-from-two-commands-in-bash
 nnoremap <silent> <Leader>e :call fzf#run({
- \'source': 'find ~/.vim/vimrc/* -type f; find ~/.vimrc; find ~/.dotfiles/_codesnippets/snippets/javascript.snippets; find ~/.config/fish/config.fish; find ~/.vim/after/plugin/* -type f;',
-\   'options': '--multi --exact --tiebreak=end,length',
-\   'down': '~40%',
+ \'source': 'find ~/.vim/vimrc/* -type f; find ~/.vimrc; find ~/.dotfiles/_codesnippets/snippets/javascript.snippets; find ~/.config/fish/config.fish; find ~/.vim/after/plugin/* -type f; find ~/.config/karabiner.edn; find ~/.config/starship.toml; find ~/.dotfiles/.byobu/* -type f; find ~/.dotfiles/makesymlinks.sh; find ~/.config/alacritty.yml',
+\   'options': '--multi --exact --tiebreak=end,length --preview="~/.vim/plugged/fzf.vim/bin/preview.sh {}" --preview-window right:60% ',
+\   'down': '~90%',
 \   'sink': function('Dontopeninnerdtree')
 \ })<CR>
 
@@ -190,6 +214,9 @@ nnoremap <silent> <Leader>g :FzfGitFiles?<CR>
 nnoremap <silent> <Leader>B :FzfBTags<CR>
 nnoremap <silent> <Leader>C :FzfTags<CR>
 nnoremap <silent> <Leader>b :FzfBuffers<CR>
+
+" scratch paper
+nnoremap <silent> <Leader>s :e ~/.dotfiles/scratchpaper.md<CR>
 
 
 "" MACROS ###################################################################

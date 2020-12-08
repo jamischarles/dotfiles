@@ -55,6 +55,12 @@ TODO:
 
 
 
+How to see highlight for current char
+" If you don't know what the name of a particular hightlight is, you can use
+" `What`. It will print out the syntax group that the cursor is currently above.
+" from https://www.reddit.com/r/vim/comments/6z4aau/how_to_stop_vim_from_autohighlighting_italics_in/
+command! What echo synIDattr(synID(line('.'), col('.'), 1), 'name')
+
 ## TODO: PROCESS TIHIS!!!!
 
 from vimrc
@@ -252,7 +258,7 @@ https://vimawesome.com/plugin/vim-sneak (motion)
 
 ## DEBUGGING:
  - https://vi.stackexchange.com/questions/7722/how-to-debug-a-mapping debug
-   mapping
+   mapping key conflicts
  - Show variables in global, buffer, etc - :let g: :let :b etc...  https://codeyarns.com/2010/11/26/how-to-view-variables-in-vim/ ##############################
 
 ## QUICK KEYS:,###################

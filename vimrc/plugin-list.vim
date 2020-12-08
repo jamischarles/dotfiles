@@ -17,14 +17,28 @@ call plug#begin('~/.vim/plugged')
 " TODO:
 " - group these into sensible groupings
 
+"" INSTRUCTIONS
+" after changes:
+" :so %
+" :PlugInstall
+
+
 " STARTUP
 " Plug 'mhinz/vim-startify'                          " Fancy Startup screen
+"
+Plug 'liuchengxu/vim-which-key'
+Plug 'unblevable/quick-scope'
 
 " GIT / DIFFING
-Plug 'tpope/vim-fugitive'                          " Git commands in Vim. Consider https://github.com/carlhuda/janus/blob/master/janus/vim/tools/janus/after/plugin/fugitive.vim
+Plug 'jamischarles/vim-fugitive'                          " Git commands in Vim. Consider https://github.com/carlhuda/janus/blob/master/janus/vim/tools/janus/after/plugin/fugitive.vim
+
+
+Plug 'alok/vim-gitignore' " Syntax highlighting for .gitignore (should come from fugitive?)
+
 Plug 'AndrewRadev/linediff.vim'
-Plug 'airblade/vim-gitgutter'                      " Git gutter
-Plug 'jreybert/vimagit'   " vim magit. Magic git stuff?
+" Plug 'airblade/vim-gitgutter'                      " Git gutter
+Plug 'mhinz/vim-signify' " Another git gutter? Trying it out...
+" Plug 'jreybert/vimagit'   " vim magit. Magic git stuff?
 
 " Undo / History / Swap
 Plug 'jamischarles/vim-mundo' " Fork of Gundo
@@ -45,6 +59,7 @@ Plug 'scrooloose/nerdtree' | Plug 'Xuyuanp/nerdtree-git-plugin'
 
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' } " Have it
 Plug 'junegunn/fzf.vim'
+Plug 'chengzeyi/fzf-preview.vim' " Preview for search etc
 " Plug 'kien/ctrlp.vim'                              " Fuzzy file finder
 " Plug 'mileszs/ack.vim'                             " Ack in Vim. TODO: Consider trying ag instead of ack in here
 " Plug 'rking/ag.vim'                                " Try AG instead of ACK
@@ -64,6 +79,11 @@ Plug 'SirVer/ultisnips'                            " Snippet engine
 " Plug 'Shougo/deoplete.nvim'
 " Plug 'Shougo/neosnippet.vim'
 " Plug 'Shougo/neosnippet-snippets'
+
+
+" CoC for snippets and intellisense and all that
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+
 
 " Vim Snippets (local)
 Plug 'MarcWeber/vim-addon-mw-utils'
@@ -88,7 +108,7 @@ Plug 'Raimondi/delimitMate'                        " quote, bracket, etc autocom
 Plug 't9md/vim-textmanip'                          " Move selected text around easily
 Plug 'ntpeters/vim-better-whitespace'              " Strip whitespace on save
 Plug 'elzr/vim-json'                               " Hide quotes, json highlighting
-Plug 'jimmyhchan/dustjs.vim'
+" Plug 'jimmyhchan/dustjs.vim'
 Plug 'moll/vim-node'                               " node sugar like gf, gd?
 " Plug 'lambdatoast/elm.vim'                         " Elm syntax
 " Plug 'ElmCast/elm-vim'                             " Elm error sugar etc
@@ -121,8 +141,145 @@ Plug 'vim-airline/vim-airline' | Plug 'vim-airline/vim-airline-themes'
 Plug 'altercation/vim-colors-solarized'            " Color scheme
 " Plug 'lifepillar/vim-solarized8'                   " Trying this to avoid the colors changing slightly?!?
 " Plug 'frankier/neovim-colors-solarized-truecolor-only' "24 bit version? Needed for hyperterm...
-Plug 'tomasr/molokai'                              " Color scheme based on monokai
+" Plug 'tomasr/molokai'                              " Color scheme based on monokai
 Plug 'sickill/vim-monokai'
+Plug 'ErichDonGubler/vim-sublime-monokai' "sublime-monokai Q: Can we have monokai with same bg color...
+Plug 'dracula/vim', { 'as': 'dracula' }
+Plug 'patstockwell/vim-monokai-tasty' "colorscheme vim-monokai-tasty
+Plug 'haishanh/night-owl.vim' " Sara drasner theme
+" Consider monokai with same bg I use in solarized terminal (see that with
+" bat)
+
+" # Best light themes
+Plug 'morhetz/gruvbox' "8/10 for dark (nice for both) esp high contrast mode. 9/10 for light. TODO: try a bold font
+Plug 'rakr/vim-one' " TODO: give light a chance... maybe increase bg contrast 5/10 (nice for light & dark)
+" ^ Gruvbox is light theme WINNER
+" TODO: Try material light
+"https://github.com/kaicataldo/material.vim
+"
+"
+" #Favorite Dark themes
+" - Tokyo night (try this one for a while... ) (purple)
+"
+" - Winter is coming?
+"https://marketplace.visualstudio.com/items?itemName=johnpapa.winteriscoming
+"(convert to vim using converter thing... 2 options for that)
+" How to convert themes:
+" 1) https://github.com/jacoborus/estilo
+"
+"
+" - Night owl (purple & blue)
+" - Night owl fork https://github.com/cevr/overnight
+" - monokai tasty
+"   Gruvbox?
+" - Sonokai
+" - Dracula (purple)
+"   - nord (blue)
+"
+" ## iterm / Terminal themes to try (order of pref)
+" - Dracula
+" - OneHalf Dark
+" - OneHalf Light
+" - Night Owl
+" https://github.com/sonph/onehalf (GOOD). both light & dark
+"
+" Terminal coloring info
+" https://gist.github.com/XVilka/8346728
+"
+"
+Plug 'https://github.com/zefei/vim-colortuner'
+"
+"
+" # nice dark themes (trying out...) (best to least)
+Plug 'ghifarit53/tokyonight-vim' "NICE. try it out more similar to night owl
+Plug 'sainnhe/sonokai' "NICE. Maybe change bg color though...?
+Plug 'arcticicestudio/nord-vim' "Nice, but needs darker bg
+Plug 'kaicataldo/material.vim', { 'branch': 'main' } "so-so
+Plug 'sonph/onehalf' " not working?
+
+" set termguicolors
+" let g:tokyonight_style = 'night' " available: night, storm (too low contrast for me)
+" let g:tokyonight_enable_italic = 0
+" colorscheme tokyonight
+
+
+" TODO: try treesitter for better syntax highlighting...
+
+"
+"THEME WINNER
+"Light - Gruvbox (give one a chance...)
+"Dark ->
+"night owl (LEADER try for a while...)
+"vim-monookai-tasty (try both)
+"Dracula
+"monokai
+"
+"
+"TRY:
+"https://vimcolorschemes.com/ghifarit53/tokyonight-vim
+"https://vimcolorschemes.com/sonph/onehalf
+"https://vimcolorschemes.com/sainnhe/sonokai
+"https://vimcolorschemes.com/kaicataldo/material.vim
+"https://vimcolorschemes.com/arcticicestudio/nord-vim
+"
+"https://vimcolorschemes.com/ **************** this is great!
+"
+"FONT WINNER
+"Fira Mono Medium (wish we could disable half the ligatures only)... Q: Can I
+"fork it and do that?
+
+" temp for now... remove later
+" Having a bolder font with more contrast actually makes a huge diff...
+" can tell very little difference... but I like hard the best, but let's try
+" with one for a while... font choice seems to matter more...
+" let g:gruvbox_contrast_dark = "hard"
+" let g:gruvbox_contrast_light = "hard"
+"
+" TODO: blog about this after I make some choices...
+" FONTS:
+" Fira mono medium is a KEEPER (TODO: try it with all the themes I like...)
+"https://github.com/mozilla/Fira (ancestor)
+"https://github.com/tonsky/FiraCode (became this...)
+"https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/FiraMono/Medium (patched for powerline...)
+"(use furamono)
+"https://github.com/ryanoasis/nerd-fonts?
+"
+"
+
+" TODO try out other fonts (based on what these themes recommend...
+" Goal is higher contrast and easier on the eyes
+" https://github.com/belluzj/fantasque-sans
+" https://mozilla.github.io/Fira/
+" Try out Dracula (paid)
+
+" Themes to try
+" 1) Night-owl - set termguicolors (makes a diff)
+" 2) Dracula
+" 3) Monokai with custom bg color (that's the part I always dislike)
+" 4) Dracula Pro... ?
+"
+" TODO: maybe set a function to do all the stuff together... sincet that's
+" what it'll take anyway...
+
+
+" set iterm the same color...
+" Q: Can I override the bg color?
+" https://vi.stackexchange.com/questions/18212/prevent-colorscheme-from-changing-background-color
+"highlight Normal ctermbg=NONE guibg=#22222c
+"highlight Normal ctermbg=NONE guibg=NONE (matches the terminal BG color...)
+
+" highlight Normal ctermbg=NONE guibg=#191D1D (monokai tasty)
+
+
+" ## New light themes to try...
+" TODO: make functions to switch between these...
+" rakr/vim-one (nice for light & dark)
+" /morhetz/gruvbox (nice for both) esp high contrast mode
+" wimstefan/vim-artesanal/
+" https://github.com/tomasr/molokai
+
+" https://www.reddit.com/r/vim/comments/9lnduh/light_highcontrast_colortheme/
+
 
 Plug 'jooize/vim-colemak'                          " Remap keyboard shortcuts to colemak
 
@@ -130,8 +287,10 @@ Plug 'jooize/vim-colemak'                          " Remap keyboard shortcuts to
 Plug 'Shougo/denite.nvim'
 
 " CTAGS
-" Plug 'ludovicchabant/vim-gutentags'                " Ctag manager
+" Plug 'ludovicchabant/vim-gutentags'                " Ctag manager (keeps them up to date...)
 Plug 'majutsushi/tagbar'                           " Navbar with tags
+" Plug 'kristijanhusak/vim-js-file-import', {'do': 'npm install'} " tag-based smart js-imports
+Plug 'Galooshi/vim-import-js' " Another js import... (requires  npm install -g import-js)
 " Plug 'ternjs/tern_for_vim', { 'do': 'npm install' } " js ctags? Requires npm install after
 
 " SYNTAX
@@ -142,7 +301,17 @@ Plug 'hashivim/vim-vagrant'                        "Vagrant Syntax
 Plug 'rodjek/vim-puppet'                           "Puppet syntax
 " Plug 'terryma/vim-multiple-cursors'
 " Plugin 'mxw/vim-jsx'                                 " JSX syntax highlighting.
-Plug 'neoclide/vim-jsx-improve'                    " JSX Syntax and indentation
+" Plug 'neoclide/vim-jsx-improve'                    " JSX Syntax and indentation
+
+" Plug 'yuezk/vim-js'
+Plug 'maxmellon/vim-jsx-pretty'
+
+
+" TypeScript
+" Plug 'HerringtonDarkholme/yats.vim'
+" Plug 'maxmellon/vim-jsx-pretty'
+
+
 Plug 'aliva/vim-fish'                              "Fish syntax highlighting
 Plug 'plasticboy/vim-markdown' " Markdown syntax highlighting
 Plug 'jxnblk/vim-mdx-js' "MDX syntax
@@ -150,6 +319,7 @@ Plug 'nathanielc/vim-tickscript' "Tickscript for influxdb
 Plug 'cespare/vim-toml' "Toml for influxdb
 Plug 'dzeban/vim-log-syntax'                       "Log files
 Plug 'leafgarland/typescript-vim'
+Plug 'peitalin/vim-jsx-typescript' "TSX support
 Plug 'posva/vim-vue'
 Plug 'reasonml-editor/vim-reason-plus' "ReasonML
 Plug 'kchmck/vim-coffee-script' "Coffee

@@ -56,7 +56,8 @@ endfunction
 " Echo current file path
 " https://vi.stackexchange.com/questions/104/how-can-i-see-the-full-path-of-the-current-file
 command! Cwd :exe "echo @%"
-command! CurrentPath :exe "echo @%"
+" feedkeys() - https://stackoverflow.com/questions/890802/how-do-i-disable-the-press-enter-or-type-command-to-continue-prompt-in-vim
+command! CurrentPath :exe "echo @%; call feedkeys(" ")"
 command! CurrentFullPath :exe "echo expand('%:p')"
 
 
@@ -98,6 +99,14 @@ augroup json
 	autocmd BufRead,BufNewFile .*rc setfiletype json
 	autocmd BufRead,BufNewFile .json setfiletype json
 	autocmd BufWritePre *.json PrettierAsync
+augroup END
+
+
+augroup tmux " just a name
+  "clears it so we can source this file several times...
+  autocmd!
+
+  autocmd BufRead,BufNewFile *.tmux setfiletype tmux
 augroup END
 
 " set foldmethod=syntax " Set folding defaults. Fold by syntax (defined by js syntax)
@@ -157,9 +166,10 @@ augroup allFiles
 
 	" Fix fugitive collision with colemak mappings causing y to stall.
 	" https://github.com/jooize/vim-colemak#tpopevim-fugitive-keymap-collision
-	autocmd BufEnter * silent! execute "nunmap <buffer> <silent> y<C-G>"
+	" autocmd BufEnter * silent! execute "nunmap <buffer> <silent> y<C-G>"
 
 	" Doesn't work properly...
+	" autocmd BufEnter * CurrentFullPath
 	autocmd BufEnter * CurrentFullPath
 	" autocmd BufEnter * CurrentFullPath
 	" autocmd BufCreate * silent! execute "CurrentFullPath" "All use cases
@@ -179,6 +189,16 @@ autocmd Filetype gitcommit setlocal spell textwidth=72
 
 
 ""CUSTOM FUNCTIONS #####################################
+" FZF rg (other fzf stuff found in keys file
+command! -bang -nargs=* Rg
+  \ call fzf#vim#grep(
+  \   'rg  --max-count 1 --column --line-number --no-heading --color=always --smart-case -- '.shellescape(<q-args>), 1,
+  \   fzf#vim#with_preview(), <bang>0)
+
+  " Limit to 1st result per file
+  " \   'rg  --max-count 1 --column --line-number --no-heading --color=always --smart-case -- '.shellescape(<q-args>), 1,
+  " only show 1 file per result, but don't hihglight the line
+  " \   'rg --files-with-matches -H --column --line-number --no-heading --color=always --smart-case -- '.shellescape(<q-args>), 1,
 
 " Don't strip whitespace in markdown files...
 function! StripAllFilesButMarkdown()
@@ -386,3 +406,11 @@ endfunction
     endif
   endfunc
 
+
+" Find highlight color group of current cursor
+" https://stackoverflow.com/questions/9464844/how-to-get-group-name-of-highlighting-under-cursor-in-vim
+" https://vi.stackexchange.com/questions/18454/how-to-know-which-highlighting-group-is-used-for-the-background-of-a-word
+command FindColorGroup  echo synIDattr(synID(line("."), col("."), 1), "name")
+
+" Ensure that Term can close easily after it's done (with enter) https://vi.stackexchange.com/questions/15535/neovim-how-to-close-the-terminal-buffer-by-just-pressing-enter
+autocmd TermOpen * startinsert

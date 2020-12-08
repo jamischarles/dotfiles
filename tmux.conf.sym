@@ -1,14 +1,14 @@
 # Forces tmux to use the same colors as nvim. :)
-set -g default-terminal "screen-256color"
+# set -g default-terminal "screen-256color"
 
 # Smart pane switching with awareness of vim splits
 # See: https://github.com/christoomey/vim-tmux-navigator
 is_vim='echo "#{pane_current_command}" | grep -iqE "(^|\/)g?(view|n?vim?x?)(diff)?$"'
-bind -n C-h if-shell "$is_vim" "send-keys C-h" "select-pane -L"
-bind -n C-j if-shell "$is_vim" "send-keys C-j" "select-pane -D"
-bind -n C-k if-shell "$is_vim" "send-keys C-k" "select-pane -U"
-bind -n C-l if-shell "$is_vim" "send-keys C-l" "select-pane -R"
-bind -n C-\ if-shell "$is_vim" "send-keys C-\\" "select-pane -l"
+bind-key -n 'C-h' if-shell "$is_vim" "send-keys C-h" "select-pane -L"
+bind-key -n 'C-j' if-shell "$is_vim" "send-keys C-j" "select-pane -D"
+bind-key -n 'C-k' if-shell "$is_vim" "send-keys C-k" "select-pane -U"
+bind-key -n 'C-l' if-shell "$is_vim" "send-keys C-l" "select-pane -R"
+bind-key -n 'C-\' if-shell "$is_vim" "send-keys C-\\" "select-pane -l"
 
 # http://dan.carley.co/blog/2013/01/11/tmux-scrollback-with-iterm2/
 # allow scrollback in iterm. Don't need this anymore...
@@ -17,7 +17,7 @@ bind -n C-\ if-shell "$is_vim" "send-keys C-\\" "select-pane -l"
 
 
 
-## PREFIX KEY
+## PREFIX KEY (ctrl space?)
 unbind-key C-b
 set -g prefix C-space
 bind-key C-space send-prefix
@@ -36,8 +36,9 @@ bind -n WheelDownPane select-pane -t= \; send-keys -M
 # setw -g mode-keys vi
 set-window-option -g mode-keys vi
 #set -g status-keys vi
-bind-key -t vi-edit Up   history-up
-bind-key -t vi-edit Down history-down
+# bind-key -t vi-edit Up   history-up
+bind-key -T edit-mode-vi Up send-keys -X history-up
+bind-key -T edit-mode-vi Down send-keys -X history-down
 # bind-key -t vi-edit n   history-down
 # bind-key -t vi-edit e history-up
 
@@ -45,16 +46,16 @@ bind-key -t vi-edit Down history-down
 # https://sanctum.geek.nz/arabesque/vi-mode-in-tmux/
 # :list-keys -t vi-copy     lists all the bindings
 # TODO: Brind the other vim movement stuff here...
-bind-key -t vi-copy n cursor-down
-bind-key -t vi-copy e cursor-up
-bind-key -t vi-copy i cursor-right
-bind-key -t vi-copy E halfpage-up
-bind-key -t vi-copy N halfpage-down
-bind-key -t vi-copy C-e page-up
-bind-key -t vi-copy C-n page-down
+bind-key -T copy-mode-vi n send-keys -X cursor-down
+bind-key -T copy-mode-vi e send-keys -X cursor-up
+bind-key -T copy-mode-vi i send-keys -X cursor-right
+bind-key -T copy-mode-vi E send-keys -X halfpage-up
+bind-key -T copy-mode-vi N send-keys -X halfpage-down
+bind-key -T copy-mode-vi C-e send-keys -X page-up
+bind-key -T copy-mode-vi C-n send-keys -X page-down
 
-bind-key -t vi-copy a begin-selection
-bind-key -t vi-copy c copy-pipe "reattach-to-user-namespace pbcopy; tmux display 'Copied to clipboard!'"
+bind-key -T copy-mode-vi a send-keys -X begin-selection
+bind-key -T copy-mode-vi c send-keys -X copy-pipe "reattach-to-user-namespace pbcopy; tmux display 'Copied to clipboard!'"
 
 
 ##
@@ -82,12 +83,13 @@ bind % split-window
 # load in powerline (since we installed it via pip it's here)
 
 run-shell "powerline-daemon -q" # recommended. Not sure why...
-source "/Library/Python/2.7/site-packages/powerline/bindings/tmux/powerline.conf"
+# FIXME: add this back in?
+# source "/Library/Python/2.7/site-packages/powerline/bindings/tmux/powerline.conf"
 
 
 set-option -g status on
 set-option -g status-interval 2
-set-option -g status-utf8 on
+# set-option -g status-utf8 on
 set-option -g status-justify "left"
 set-option -g status-left-length 60
 set-option -g status-right-length 90
@@ -124,3 +126,6 @@ set -g @plugin 'tmux-plugins/tmux-yank' # copy from tmux :}. Not sure it's neede
 
 # Initialize TMUX plugin manager (keep this line at the very bottom of tmux.conf)
 run '~/.tmux/plugins/tpm/tpm'
+
+# Set fish as default shell
+set-option -g default-shell /usr/local/bin//fish

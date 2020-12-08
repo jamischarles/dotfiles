@@ -17,6 +17,10 @@
 let g:esearch = {'adapter': 'rg'}
 
 " https://github.com/brooth/far.vim " Find and replace. Looks great*** "
+"
+"
+"higlight when f,F is pressed https://github.com/unblevable/quick-scope
+let g:qs_highlight_on_keys = ['f', 'F']
 
 ""
 "" SEARCHING from ACK / AG. Silver Searcher. Use AG instead of ack for ack plugin...
@@ -87,12 +91,50 @@ let g:UltiSnipsExpandTrigger="<tab>"
 " let g:neosnippet#enable_snipmate_compatibility = 1
 " let g:neosnippet#snippets_directory='~/.dotfiles/_codesnippets/snippets'
 
+
+" COC and TAB
+" go the proper direction with tab
+let g:SuperTabDefaultCompletionType = "<c-n>"
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? coc#_select_confirm() :
+      \ coc#expandableOrJumpable() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
+
+
+" COC and ENTER
+" Make <CR> auto-select the first completion item and notify coc.nvim to
+" format on enter, <cr> could be remapped by other vim plugin
+" TODO: change single quotes back to boudle quotes if uncommended
+" inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm()
+                              " \: '\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>'
+                              "
+" After confirm via enter, leave the insert mode...
+inoremap <silent><expr> <cr> pumvisible() ? "\<C-r>=coc#_select_confirm()\<CR>\<ESC>"
+                              \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+
+
+" https://github.com/neoclide/coc.nvim/issues/1445
+" Map gd to function definition using COC
+nmap <silent> gd <Plug>(coc-definition)
+
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+
+let g:coc_snippet_next = '<tab>'
+
+
 "" Files: Nerdtree
 let g:NERDTreeShowHidden=1 	 " Show hidden files by default
 let NERDTreeQuitOnOpen=1 " Close Nerdtree after opening file
 
 "" Files: FZF
 let g:fzf_command_prefix = 'Fzf'
+
+" Always enable preview window on the right with 60% width
+let g:fzf_preview_window = 'right:60%'
 
 
 " This is the default extra key bindings
@@ -104,7 +146,10 @@ let g:fzf_action = {
 " Default fzf layout
 " - down / up / left / right
 " - window (nvim only)
-let g:fzf_layout = { 'down': '~30%' }
+"   Other FZF stuff found in keys file
+let g:fzf_layout = { 'down': '~100%' }
+" let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.6 } }
+" let g:fzf_layout = { 'down': '~30%' }
 
 " Customize fzf colors to match your color scheme
 " TODO: Change this?
@@ -205,6 +250,18 @@ let g:neoformat_try_formatprg = 1
 let g:jsx_ext_required = 0
 
 "" Git Gutter -> Goto vimrc.after.vim
+
+
+"" Vim Signify (similar to gitgutter
+" https://github.com/mhinz/vim-signify/blob/master/doc/signify.txt
+let g:signify_sign_delete_first_line="-"
+let g:signify_sign_change="~"
+" let g:signify_sign_show_count = 1
+
+"Useful commands
+":SignifyDiff!
+":SignifyFold! "Fold anything not changed
+
 
 " Vim signature: Marks in the sidebar
 " TODO: Turn off for PS

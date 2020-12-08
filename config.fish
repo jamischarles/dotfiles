@@ -26,10 +26,19 @@
 # - git prompt? https://www.martinklepsch.org/posts/git-prompt-for-fish-shell.html
 # - vim mode? https://fedragon.github.io/vimode-fishshell-osx/
 
+
+
+# Ctags - exuberant... Because there's already one installed for universal ctags
+set -x PATH $PATH /usr/local/Cellar/ctags/5.8_1/bin/ctags
+
 # Needs to be done first for gDate... to be available below...
 set -x PATH $PATH /usr/local/opt/coreutils/libexec/gnubin
 # Add all the utils that are normally in the path. Need to set this up now, so all the other commands work...
 set -x PATH $PATH /usr/local/bin/
+# Needed for providers to call python3 properly in nevim in anacritty only... https://neovim.io/doc/user/provider.html
+set -x PATH $PATH /usr/bin/python3
+
+set -x BYOBU_PREFIX /usr/local
 
 
 # Gets nanoseconds for current timestamp. Could also use this for ms timestamp. (gdate '+%s.%3N')
@@ -99,6 +108,25 @@ fnm env --multi | source
 # alias npm="node /Users/jacharles/.nvm/versions/node/v8.4.0/lib/node_modules/npm/bin/npm-cli.js"
 # TODO: maybe hack the fast-nvm plugin so that we can use this fast method, and have that replaced by nvm later...
 
+# Brew version of ctags (exuberant) instead of universal ctags (which is installed by xcode)
+# brewDir=`brew --prefix`
+set brewDir (brew --prefix)
+alias ctags="$brewDir/bin/ctags"
+
+alias ls="lsd"
+alias lsl="lsd --long --date=relative --blocks permission,size,date,name"
+alias lsa="lsd --long --all --date=relative --blocks permission,size,date,name"
+# -a for --all including hidden
+# alias lsl="lsd --long --total-size --date=relative --blocks permission,size,date,name"
+
+
+# Fix local cert issues with npm
+# Didn't work...
+# https://github.paypal.com/gist/jeswitzer/67ae2a04a1c871878fa6ff6d6d135818
+# set -g NODE_EXTRA_CA_CERTS ~/certs/paypal-proxy-chain.pem
+# set -g NODE_EXTRA_CA_CERTS ~/certs/paypal-cloud.pem
+
+
 # Themes: https://github.com/jbucaran/awesome-fish
 # Theme, color, prompt GIT info
 set -g __fish_git_prompt_show_informative_status 1
@@ -124,6 +152,10 @@ set -g __fish_git_prompt_color_cleanstate green
 
 # Set nvim as default editor for crontab etc
 set -x EDITOR "nvim"
+
+
+# set the greeting
+set -x fish_greeting " Forward motion is the key."
 
 #################
 ### Abbreviations
@@ -195,6 +227,10 @@ if status --is-interactive
     abbr --add rbat "rg --files-with-matches | xargs bat" #bat files with matches
 
 
+  # special rust-based commands that I like
+  # z, fd, rg, bat, exa, (trying out): broot   (not much anymore) fzf
+
+
     # search hidden files (not node_modules or .git but other ones), including dotfiles and files hidden by .gitignore
     abbr --add rgh "rg --follow --no-ignore-vcs  --files-with-matches --hidden -g \"!.git\" -g \"!node_modules\""
     # abbr --add rgh "rg --follow --no-ignore-vcs --ignore-file node_modules --ignore-file .gitt" #bat files with matches
@@ -204,10 +240,17 @@ if status --is-interactive
     # Estimate JS Size after minify and gzip... from clipboard. TODO: add a before/after size...
     abbr --add jssize "pbpaste | terser -c -m | gzip -c9n | wc -c | awk '{\$1=\$1/1000; print \$1,\"KB\";}'"
 
+
+    # Wipe topos
+    abbr --add topos "rm node_modules/topos/toposcache.json"
+
     # history?
     # history --merge # will merge history from other sessions
     # history | fzf # goodness. TODO: bind this to ctrl-r?
     #
+
+    # Rust hacking
+    abbr --add cr "cargo run"
 end
 
 
@@ -219,15 +262,10 @@ end
 ######################
 # PLUGINS
 ######################
-# https://github.com/fisherman/fisherman
-# fisher ls|rm
-# FIXME: I manually put in and edited the nvm one... just use a gist?!?
-# fast-nvm-fish - use my fork of it anyway
-# z (folder jumping) - https://github.com/fisherman/z
-#z-> fasd |brew install fasd|
+# Package manager
+# https://github.com/jorgebucaran/fisher
+# - fisher add z
 
-# https://github.com/fishgretel/fasd
-alias z='fasd_cd -d'
 
 ######
 # PATH
@@ -242,6 +280,13 @@ set -x PATH $PATH $HOME/go $HOME/go/bin $HOME/.cargo/bin
 
 # path for genymotion android simulator
 set -x PATH $PATH /Applications/Genymotion.app/Contents/MacOS/tools/
+
+# For rbenv (ruby version manager)
+set -x PATH $PATH ~/.rbenv/shims
+set -x PATH $PATH ~/.rbenv/bin
+
+# theme for BAT... useful for vim preview etc...
+set -x BAT_THEME 'Monokai Extended'
 
 # for z didntwor k
 # sh /usr/local/etc/profile.d/z.sh
@@ -283,4 +328,16 @@ function setItermProfile
 	# echo -e "\033]50;SetProfile=$1\a"
 end
 
+# set up starship prompt
+# starship init fish | source
 
+# Iterm2 shell integration
+# https://iterm2.com/documentation-shell-integration.html
+# source ~/.iterm2_shell_integration.fish
+
+
+starship init fish | source
+
+
+# List of things I have brew installed...
+# - https://github.com/yqrashawn/GokuRakuJoudo - easy karabiner config

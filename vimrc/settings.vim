@@ -24,6 +24,7 @@ if !has('nvim')
 endif
 
 set clipboard=unnamed    " yank will go to the system clipboard. Allows copy paste to outside
+" https://advancedweb.hu/working-with-the-system-clipboard-in-vim/#:~:text=Set%20the%20%2B%20register%20as%20the,from%20it%20with%20%22%2Bp%20.
 
 filetype on                  " required for Vundle. FIXME: Still needed?
 set foldtext=CustomFoldText() " Nicer foldtext
@@ -75,9 +76,54 @@ let $NVIM_TUI_ENABLE_CURSOR_SHAPE=1
 " let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 " set termguicolors
 " let g:solarized_termcolors = 16
-colorscheme solarized
+" colorscheme solarized
 " set background=light"
-set background=dark"
+" set background=dark"
+
+
+" does termguicolors cause the refresh issue?... One person suggests it's
+" utf-8 that causes it...?
+" How about tmux vs non-tmux?
+" set termguicolors
+"
+"
+"MUST set this BEFORE you set the colorscheme
+" if exists('+termguicolors')
+"   " Q: What does this DO?!??!
+"   let &t_8f="\<Esc>[38;2;%lu;%lu;%lum"
+"   let &t_8b="\<Esc>[48;2;%lu;%lu;%lum"
+"   set termguicolors
+" endif
+
+" Force truecolor
+" Do we care about truecolor?
+let &t_8f="\<Esc>[38;2;%lu;%lu;%lum"
+let &t_8b="\<Esc>[48;2;%lu;%lu;%lum"
+
+set termguicolors
+"
+let g:tokyonight_style = 'night' " available: night, storm (too low contrast for me)
+let g:tokyonight_enable_italic = 0
+colorscheme tokyonight
+
+
+if $TERM == "alacritty"
+  hi Comment cterm=italic ctermfg=14 gui=italic guifg=#444B6A
+  " hi Comment cterm=italic ctermfg=14 gui=italic guifg=#444B6A
+  " iterm
+  " #484D63
+  "
+  " Alacritty
+  " #434B6D
+endif
+
+" Q: Can I override the bg color?
+" https://vi.stackexchange.com/questions/18212/prevent-colorscheme-from-changing-background-color
+"highlight Normal ctermbg=NONE guibg=#22222c
+"highlight Normal ctermbg=NONE guibg=NONE (matches the terminal BG color...)
+
+" highlight Normal ctermbg=NONE guibg=#191D1D (monokai tasty)
+
 
 " highlight jsObject keys as 'Label' https://github.com/pangloss/vim-javascript/issues/138
 " hi def link jsObjectKey Label " Type is nice. Use :hi to see all the
@@ -102,3 +148,7 @@ command! Dark set background=dark"
 " let g:html_font = 'Menlo'
 
 
+
+"" Languages and binary support (needed so alacritty can find python)
+" let g:python3_host_prog = '/usr/local/bin/python3'
+" let g:loaded_python3_provider = 1

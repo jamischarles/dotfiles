@@ -1,0 +1,100 @@
+env:
+  # COLORFGBG: 15;0
+  # TERM: alacritty #uses .terminfo that we generated
+  # COLORTERM: truecolor
+  # COLORTERM: xterm-256color
+  # Works very similar to alacritty term (uses .terminfo) but preserves the color highlight plugin
+  TERM: xterm-256color
+  # BYOBU_TERM: xterm-256color
+  # BYOBU_TERM: xterm-256color
+
+  LANG: en_US.UTF-8
+
+window:
+# Spread additional padding evenly around the terminal content.
+  dynamic_padding: true
+
+  # Startup Mode (changes require restart)
+  startup_mode: Fullscreen
+  # dimensions:
+  #   columns: 0
+  #   lines: 0
+  # padding:
+  #   x: 0
+  #   y: 0
+
+  # Spread additional padding evenly around the terminal content.
+  dynamic_padding: true
+  decorations: full
+  startup_mode: Windowed
+
+scrolling:
+  history: 10000
+  multiplier: 3
+
+# Shell
+# You can set this to a path to your favorite shell, e.g. /bin/fish
+shell: /usr/local/bin//fish
+
+
+# If `true`, bold text is drawn using the bright color variants.
+draw_bold_text_with_bright_colors: true
+
+# Font configuration (changes require restart)
+# https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/FiraCode (patched fonts)
+font:
+  # The size to use.
+  size: 15
+  # The normal (roman) font face to use.
+  normal:
+    # family: Fira Code
+    # family: FiraCode Nerd Font # support non-ascii stuff
+    family: FiraCode Nerd Font Mono # support non-ascii stuff (has folder icons)
+    # family: FuraMono Nerd Font Mono # support non-ascii stuff (has folder icons)
+    # family: Hack Nerd Font Mono # support non-ascii stuff (has folder icons)
+    # Style can be specified to pick a specific face.
+    style: Medium
+
+  # The bold font face
+  bold:
+    family: FiraCode Nerd Font Mono
+    # Style can be specified to pick a specific face.
+    style: SemiBold
+
+  # The italic font face
+  italic:
+    family: FiraCode Nerd Font Mono
+    # family: Hack Nerd Font Mono
+    # Style can be specified to pick a specific face.
+    style: Medium
+    #
+    #
+# Colors (Dracula)
+colors:
+  # Default colors
+  primary:
+    # background: '#282a36'
+    background: '#1b1c25' # changed bg color
+    foreground: '#f8f8f2'
+
+  # Normal colors
+  normal:
+    black:   '#282c34'
+    red:     '#e06c75'
+    green:   '#98c379'
+    yellow:  '#e5c07b'
+    blue:    '#61afef'
+    magenta: '#c678dd'
+    cyan:    '#8be9fd'
+    white:   '#dcdfe4'
+
+  # Bright colors
+  bright:
+    black:   '#282c34'
+    red:     '#e06c75'
+    green:   '#98c379'
+    yellow:  '#e5c07b'
+    blue:    '#61afef'
+    magenta: '#c678dd'
+    cyan:    '#8be9fd'
+    white:   '#dcdfe4'
