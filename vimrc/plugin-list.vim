@@ -346,6 +346,10 @@ Plug 'tpope/vim-obsession'                          " Resurrect vim. Obsession.
 Plug 'christoomey/vim-tmux-navigator'              " Tmux / Vim window integration
 Plug 'tmux-plugins/vim-tmux'                       " Tmux conf syntax highlighting
 
+" Fade inactive panes (useful for tmux)
+Plug 'TaDaa/vimade'
+Plug 'tmux-plugins/vim-tmux-focus-events'
+
 Plug 'chrisbra/NrrwRgn' " Open code in new window
 
 " Q: This still needed?

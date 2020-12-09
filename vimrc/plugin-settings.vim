@@ -269,3 +269,8 @@ let g:SignatureForceRemoveGlobal=1"
 
 " Vim Markdown fenced language support. TODO: just make that default?
 let g:vim_markdown_fenced_languages = ['javascript=js']
+
+
+" Enable window fading when tmux has other pane focus
+let g:vimade={}
+let g:vimade.enablefocusfading=1

@@ -19,6 +19,8 @@ HERE=$(pwd)
  #echo 'Creating symlinks from ~/ to ~/.dotfiles/*.sym files';
 
 # get all *.sym files in the current folder and symlink them to the home folder MINUS the .sym extension
+# needed because we can't link to a hidden file
+echo 'Converting *.sym files to hidden files in ~/ folder'
 for FILE in *.sym; do
     echo 'Deleting and creating symlink: ' $(echo "$HOME/.$FILE" | sed 's/.sym$//');
     rm  $(echo "$HOME/.$FILE" | sed 's/.sym$//');
