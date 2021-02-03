@@ -31,6 +31,41 @@
 # - vim mode? https://fedragon.github.io/vimode-fishshell-osx/
 
 
+#######################################
+# PATHS - should be set here
+#######################################
+# https://fishshell.com/docs/current/tutorial.html?highlight=path#path
+
+# -x exports it... https://fishshell.com/docs/current/tutorial.html?highlight=path#exports-shell-variables
+
+# Ctags - exuberant... Because there's already one installed for universal ctags
+set -x PATH $PATH /usr/local/Cellar/ctags/5.8_1/bin/ctags
+
+# Needs to be done first for gDate... to be available below...
+set -x PATH $PATH /usr/local/opt/coreutils/libexec/gnubin
+# Add all the utils that are normally in the path. Need to set this up now, so all the other commands work...
+set -x PATH $PATH /usr/local/bin/
+# Needed for providers to call python3 properly in nevim in anacritty only... https://neovim.io/doc/user/provider.html
+set -x PATH $PATH /usr/bin/python3
+
+set -x BYOBU_PREFIX /usr/local
+
+
+# For gdate...
+set -x PATH $PATH /usr/local/opt/coreutils/libexec/gnubin
+
+# manually set the path for golang and rust
+set -x PATH $PATH $HOME/go $HOME/go/bin $HOME/.cargo/bin
+
+# path for genymotion android simulator
+set -x PATH $PATH /Applications/Genymotion.app/Contents/MacOS/tools/
+
+# For rbenv (ruby version manager)
+set -x PATH $PATH ~/.rbenv/shims
+set -x PATH $PATH ~/.rbenv/bin
+
+# theme for BAT... useful for vim preview etc...
+set -x BAT_THEME 'Monokai Extended'
 
 
 
@@ -42,6 +77,18 @@ end
 # Timing metrics for how long this setup takes...
 set -g START_TIME (getTime)
 
+
+
+#################################################
+## ALIASES -----------------------------------------------
+#################################################
+
+
+alias ctags="$brewDir/bin/ctags"
+
+alias ls="lsd"
+alias lsl="lsd --long --date=relative --blocks permission,size,date,name"
+alias lsa="lsd --long --all --date=relative --blocks permission,size,date,name"
 
 
 # ###############################################
@@ -195,11 +242,26 @@ end
 ######################################################
 # see ~/.dotfiles/config.setup.fish for ocasional config changes
 
+# running all these commands every time changes startup time from .03s to .16s (4x slowdown)
+# source ~/.dotfiles/config.setup.fish
 
-# adds 0.03s (30ms?)
+# adds 0.03s (30ms?) (from 0.00s)
 starship init fish | source
 
-echo "Startup time: "(getTimeSinceStart) # more accurate to have it after GIT. FIXME: Put this in function
+# echo "Startup time: "(getTimeSinceStart) # more accurate to have it after GIT. FIXME: Put this in function
+
+
+
+
+
+### FNM setup (fish version of nvm)
+# Use fnm instead of NVM (faster for fish) https://github.com/Schniz/fnm
+# Set up fnm
+fnm env --multi | source
+
+
+# historic time
+# 0.03s - 12/09
 
 # List of things I have brew installed...
 # - https://github.com/yqrashawn/GokuRakuJoudo - easy karabiner config

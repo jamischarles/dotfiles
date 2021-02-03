@@ -91,6 +91,11 @@ Plug 'tomtom/tlib_vim'
 
 Plug 'ervandew/supertab'                           " Sweet tab completion
 Plug 'zerowidth/vim-copy-as-rtf'                   " Copy to rtf (and paste code to Keynote)
+" Plug 'svermeulen/vim-yoink' " Fix copy paste
+" Plug 'svermeulen/vim-cutlass'
+" Plug 'bfredl/nvim-miniyank'
+
+
 Plug 'bronson/vim-trailing-whitespace'             " Trail whitespace finder
 Plug 'godlygeek/tabular'                           " easy aligning. :Tab /                                                                       = http://vimcasts.org/episodes/aligning-text-with-tabular-vim/
 Plug 'tpope/vim-sleuth'                            " Better indentation. Give it a try... Sigh.
@@ -195,7 +200,7 @@ Plug 'ghifarit53/tokyonight-vim' "NICE. try it out more similar to night owl
 Plug 'sainnhe/sonokai' "NICE. Maybe change bg color though...?
 Plug 'arcticicestudio/nord-vim' "Nice, but needs darker bg
 Plug 'kaicataldo/material.vim', { 'branch': 'main' } "so-so
-Plug 'sonph/onehalf' " not working?
+Plug 'sonph/onehalf' " not working? 'one'
 
 " set termguicolors
 " let g:tokyonight_style = 'night' " available: night, storm (too low contrast for me)
@@ -207,8 +212,9 @@ Plug 'sonph/onehalf' " not working?
 
 "
 "THEME WINNER
-"Light - Gruvbox (give one a chance...)
-"Dark ->
+"Light - one // Gruvbox (give one a chance...)
+"Dark -> tokyonight
+
 "night owl (LEADER try for a while...)
 "vim-monookai-tasty (try both)
 "Dracula

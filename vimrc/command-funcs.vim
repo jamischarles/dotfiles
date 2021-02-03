@@ -17,7 +17,8 @@ command! WindowVInc :vertical resize +20
 command! WindowVDec :vertical resize -20
 
 " Vertical and horizontal split
-command! Vsplit :vsp
+command! VSplit :vsp
+command! SplitV :vsp
 command! Split :sp
 
 
@@ -40,6 +41,15 @@ command! -range=% PrettyJSONRange :<line1>,<line2>%!python -m json.tool
 " XML pretty print
 command! PrettyXML %!xmllint --format %
 
+
+" JSON commands
+" % whole file. ! run cmd line. . is a filter for jq
+command! JSONPretty %!jq .
+command! -range=% JSONPrettyRange :<line1>,<line2>%!jq .
+" consider just using node for this?
+command! -range=% JSONParseRange :<line1>,<line2>%!jq '. | fromjson'
+command! -range=% JSONStringifyRange :<line1>,<line2>%!jq '. | tostring'
+
 function! Dontopeninnerdtree(e)
   " if NERDTree has focus, go to next window
   if exists("b:NERDTree")
@@ -57,7 +67,12 @@ endfunction
 " https://vi.stackexchange.com/questions/104/how-can-i-see-the-full-path-of-the-current-file
 command! Cwd :exe "echo @%"
 " feedkeys() - https://stackoverflow.com/questions/890802/how-do-i-disable-the-press-enter-or-type-command-to-continue-prompt-in-vim
-command! CurrentPath :exe "echo @%; call feedkeys(" ")"
+"https://stackoverflow.com/questions/4525261/getting-relative-paths-in-vim
+command! CurrentPath :exe "echo fnamemodify(expand('%'), ':~:.')"
+" adding <CR> after :p  hides the current path on bufEnter, but avoids the annoying
+" "PRESS ENTER" to ensure we've seen the message. Worth it for now...
+" TODO: try to measure length and shorten the length instead...
+" :help shortmess <- this I think does the trick!
 command! CurrentFullPath :exe "echo expand('%:p')"
 
 
@@ -170,7 +185,7 @@ augroup allFiles
 
 	" Doesn't work properly...
 	" autocmd BufEnter * CurrentFullPath
-	autocmd BufEnter * CurrentFullPath
+	autocmd BufEnter * CurrentPath
 	" autocmd BufEnter * CurrentFullPath
 	" autocmd BufCreate * silent! execute "CurrentFullPath" "All use cases
 	" work excep opening a file from Cmd+t
@@ -410,7 +425,13 @@ endfunction
 " Find highlight color group of current cursor
 " https://stackoverflow.com/questions/9464844/how-to-get-group-name-of-highlighting-under-cursor-in-vim
 " https://vi.stackexchange.com/questions/18454/how-to-know-which-highlighting-group-is-used-for-the-background-of-a-word
-command FindColorGroup  echo synIDattr(synID(line("."), col("."), 1), "name")
+command! FindColorGroup  echo synIDattr(synID(line("."), col("."), 1), "name")
 
 " Ensure that Term can close easily after it's done (with enter) https://vi.stackexchange.com/questions/15535/neovim-how-to-close-the-terminal-buffer-by-just-pressing-enter
 autocmd TermOpen * startinsert
+
+
+
+" Map a bunch of Toggle* things here that I want easy access to...
+command! ToggleFade :VimadeToggle
+

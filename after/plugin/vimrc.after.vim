@@ -93,8 +93,55 @@ nnoremap U W|xnoremap U W|onoremap U W|
 " check .vimrc.after
 " w/o having the previously replaced content show up now...
 "https://superuser.com/questions/321547/how-do-i-replace-paste-yanked-text-in-vim-without-yanking-the-deleted-lines
-" vnoremap v :<C-U>let @p = @+<CR>gvp:let @+ = @p<CR>
-" vnoremap V :<C-U>let @p = @+<CR>gvp:let @+ = @p<CR>
+vnoremap v :<C-U>let @p = @+<CR>gvp:let @+ = @p<CR>
+vnoremap V :<C-U>let @P = @+<CR>gvp:let @+ = @P<CR>
+" vnoremap V <Plug>unimpairedBlankDown<CR> :<C-U>let @p = @+<CR>gvp:let @+ = @p<CR>
+"
+" nmap v <plug>(YoinkPaste_p)
+
+" GENIUS https://stackoverflow.com/questions/3154556/paste-from-clipboard-in-vim-script
+" V -> PASTE after current line (wheter single or multi line yank)
+nnoremap V :put +<cr>
+
+" command! SmartPaste :call SmartPaste()
+"
+" " call SmartPaste()
+" function! SmartPaste()
+" 	" call the paste buffer
+" 	echo @p
+" 	echo @"
+" 	echo stridx(@", "\n")
+" 	" if " buffer contains newline
+" 	if (stridx(@", "\n") > -1)
+" 		" execute 'o p'
+" 		gvp
+" 		normal! "+p
+" 		" https://stackoverflow.com/questions/3154556/paste-from-clipboard-in-vim-script
+" 	elseif
+"
+" 	endif
+" 	" echo stridx(@", ^J)
+" 	" echo stridx(@", \n)
+"   " if NERDTree has focus, go to next window
+"   " if exists("b:NERDTree")
+"      " echo "Can't navigate on NERDTree"
+"   "   " Go to next window
+"   "   execute 'wincmd w'
+"   " endif
+"   "
+"   " " Open selected file
+"   " execute 'e ' a:e
+"
+" endfunction
+
+" map cc C
+
+"
+"
+" How I expect paste to work:
+" - V should paste on next line (if normal yank)
+" - v should paste inline (if normal yank)
+" - v should paste on next line (if C yank - whole line yank)
 
 " For visual block mode remap the append and insert commands to act as I
 " expect

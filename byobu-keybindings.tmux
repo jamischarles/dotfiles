@@ -25,7 +25,32 @@ bind % split-window
 
 bind n new-window
 
-bind C-k clear-history
+# bing Ctrl+k without prefix key...
+bind-key -n C-k clear-history
+
+bind-key -n C-h resize-pane -L
+bind-key -n C-i resize-pane -R
+
+# resize up/down... This conflicts with vim, though I almost never use pg up/down  in vim...
+bind-key -n C-n resize-pane -D
+bind-key -n C-e resize-pane -U
+
+
+
+# no idea why this is needed... Somehow Ctrl+i is the same at tab in all terminals, and remapping ctrl+i interferes with tab...
+unbind-key -n tab
+
+#############################3
+## Troubleshoot key bindings!!!
+#############################3
+# Ctrl ?
+# :list-keys
+
+
+# These didn't work here, so I put them in karabiner instead...
+# F3, F4
+# bind-key -n M-h select-pane -t :.-
+# bind-key -n M-i select-pane -t :.+
 
 # bind N rename-window
 # FIXME: Q why is this ALWAYS firing? is it because of karabiner? disable for now...
@@ -43,9 +68,9 @@ bind C-k clear-history
 # https://unix.stackexchange.com/questions/57641/reload-of-tmux-config-not-unbinding-keys-bind-key-is-cumulative
 # have to be careful with this ^ because it removed ALL bindings and didn't return them...
 ## Helpful docs
-# default bindings for byobu https://gist.github.com/wincus/e9596e828fc513ded86c5
-# unbind-key -n C-a5
-# get 5
+# default bindings for byobu https://gist.github.com/wincus/e9596e828fc513ded86c
+# unbind-key -n C-a
+# get
 
 
 
@@ -80,5 +105,5 @@ bind C-k clear-history
 
 # Reading
 # https://lukaszwrobel.pl/blog/tmux-tutorial-split-terminal-windows-easily/5
-# default bindings for byobu https://gist.github.com/wincus/e9596e828fc513ded86c5
+# default bindings for byobu https://gist.github.com/wincus/e9596e828fc513ded86c
 # https://unix.stackexchange.com/questions/57641/reload-of-tmux-config-not-unbinding-keys-bind-key-is-cumulative

@@ -98,3 +98,24 @@ colors:
     magenta: '#c678dd'
     cyan:    '#8be9fd'
     white:   '#dcdfe4'
+
+
+# keybindings. If you unbind something it kills that key completely...
+# be careful with that
+  # - { key: I,   mods: Control, action: None } #unbind ctrl-i (by default bound as tab). Apparently this is a common default?!?
+
+# this right here is a good alt to karabiner/goku rebindings
+#https://www.eso.org/~ndelmott/ascii.html Q: Tab == ctrl+I ?!?!?!?!?
+
+# key_bindings:
+  # - { key: I,        mods: Control, chars:  "\x09"                       }
+  # - { key: Tab,       chars:  "\x09"                       }
+  # - { key: I,   mods: Control, action: None } #unbind ctrl-i (by default bound as tab). Apparently this is a common default?!?
+  # Google ascii hex  to find these values (iterm works same way for sending keys to terminal)
+  # Rebind ctr+i as ctrl+i (i guess default is <tab>?!?
+  # Hex ascii code for ctrl+i is 09
+  # - { key: I,        mods: Control, chars:  "\x09"                       }
+  # - { key: Tab, action: None } #unbind tab. weird conflicts happening which ctrl-I and tab...
+  #
+# Reading: https://github.com/alacritty/alacritty/issues/62
+#https://www.rapidtables.com/code/text/ascii-table.html

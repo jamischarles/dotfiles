@@ -3,7 +3,7 @@
 "
 "" BASE SETTINGS
 let mapleader = "\<Space>" "Remap leader to <space>.  make cursor speed REALLY fast http://stackoverflow.com/questions/23078078/speed-up-vim-cursor-moving-through-j-k
-set shortmess+=A 		" Ignore 'swapfile exists' warnings
+set shortmess+=AT 		" Ignore 'swapfile exists' warnings. Avoid "press enter" on too long messages
 set vb                   " enable visual bell (disable audio bell)
 set tabstop=4 softtabstop=0 noexpandtab shiftwidth=4 " http://stackoverflow.com/questions/1878974/redefine-tab-as-4-spaces
 set autoindent                  " Automatic indention

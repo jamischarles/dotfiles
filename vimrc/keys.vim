@@ -23,6 +23,9 @@ nnoremap <leader>h :split ~/.vim/vimrc/help-shortcuts.md<cr>
 
 " Non Leader: commands
 nnoremap <silent> <tab> :call GotoNextBuffer()<CR>
+" one way to solve enter problem with shortened screen (slower though)
+" nnoremap <silent> <tab> :call GotoNextBuffer()<CR> :redraw<CR>
+" Dobule  enter is a clumsy but effecitve fix for now...
 nnoremap <silent> <S-tab> :call GotoPriorBuffer()<CR>
 
 " REMAP CAPS to BACKTICK key ` for normal mode, ESC for other modes
@@ -111,7 +114,7 @@ nmap ]h <Plug>(signify-prev-hunk)
 nmap <silent> <leader>fc <ESC>/\v^[<=>]{7}( .*\|$)<CR>| " find merge conflict markers - from janus
 
 
-" TMUX: Restart Server
+" TMUX: Restart Server FIXME: can we have this spring us out of scrollmode?
 nnoremap <leader>R :silent !tmux send-keys -t 1 C-c C-c hr space - Enter Up Up C-m<CR>| " TMUX: Redo last comand
 " nnoremap <leader>R :silent !tmux send-keys -t 1 C-c C-c "history \| sed -r 's/[0-9]*  //' \| grep '^node' -i \| tail -1 \| sh" C-m <CR>
 
@@ -177,39 +180,54 @@ vnoremap <silent> N 22<C-E>
 " WINDOW RE-SIZING. FIXME: Add zoom window back?
 " nnoremap <silent> <C-_> :WindowVInc<CR>
 " <c-_> is how you do ctrl -
-nnoremap <c-_> :WindowVInc<CR>
+" nnoremap <c-_> :WindowVInc<CR>
+nnoremap <silent> - :WindowVInc<CR>
 nnoremap <silent> _ :WindowVDec<CR>
 " nnoremap <silent> <leader>- :WindowMax<CR>
 nnoremap <silent> <leader>_ :WindowMin<CR>
+nnoremap <silent> <leader>- :WindowMin<CR>
 nnoremap <silent> <leader>= :WindowEq<CR>
 
 " Fuzzy Finder: FZF
 " FIXME: use rg or fd instead (FASTER)
 " \   'source': 'ag -g \"\" --hidden --ignore .git --ignore node_modules',
 " \   'source': 'fd --type file --hidden --exclude .git',
+"
+" \   'options': winwidth(0) > 140 ? '' : '--multi --exact --tiebreak=begin,length,index --preview="~/.vim/plugged/fzf.vim/bin/preview.sh {}" --preview-window right:60%',
 nnoremap <silent> <Leader>t :call fzf#run({
-\   'source': 'rg --files --hidden',
-\   'options': '--multi --exact --tiebreak=begin,length,index --preview="~/.vim/plugged/fzf.vim/bin/preview.sh {}" --preview-window right:60% ',
+\   'source': 'rg --files --hidden --glob="!.git/*"',
+\   'options': '--multi --exact --tiebreak=begin,length,index ' . ShowPreviewIfWideWindow(),
 \   'window': { 'width': 1, 'height': 1 },
 \   'sink': function('Dontopeninnerdtree')
 \ })<CR>
 
 " include node_modules
 nnoremap <silent> <Leader>T :call fzf#run({
-\   'options': '--exact --tiebreak=end,length --preview="~/.vim/plugged/fzf.vim/bin/preview.sh {}" --preview-window right:60%',
+\   'options': '--exact --tiebreak=end,length ' . ShowPreviewIfWideWindow(),
 \   'window': { 'width': 1, 'height': 1 },
 \   'sink': function('Dontopeninnerdtree')
 \ })<CR>
 
 "  https://github.com/junegunn/fzf/issues/274 https://unix.stackexchange.com/questions/64736/combine-output-from-two-commands-in-bash
 nnoremap <silent> <Leader>e :call fzf#run({
- \'source': 'find ~/.vim/vimrc/* -type f; find ~/.vimrc; find ~/.dotfiles/_codesnippets/snippets/javascript.snippets; find ~/.config/fish/config.fish; find ~/.vim/after/plugin/* -type f; find ~/.config/karabiner.edn; find ~/.config/starship.toml; find ~/.dotfiles/.byobu/* -type f; find ~/.dotfiles/makesymlinks.sh; find ~/.config/alacritty.yml; find ~/.byobu/.tmux.conf;',
-\   'options': '--multi --exact --tiebreak=end,length --preview="~/.vim/plugged/fzf.vim/bin/preview.sh {}" --preview-window right:60% ',
+ \'source': 'find ~/.vim/vimrc/* -type f; find ~/.vimrc; find ~/.dotfiles/_codesnippets/snippets/javascript.snippets; find ~/.config/fish/config.fish; find ~/.vim/after/plugin/* -type f; find ~/.config/karabiner.edn; find ~/.config/starship.toml; find ~/.dotfiles/makesymlinks.sh; find ~/.config/alacritty.yml; find ~/.byobu/.tmux.conf; find ~/.byobu/color.tmux; find ~/.byobu/keybindings.tmux',
+\   'options': '--multi --exact --tiebreak=end,length ' . ShowPreviewIfWideWindow(),
 \   'down': '~90%',
 \   'sink': function('Dontopeninnerdtree')
 \ })<CR>
 
-nnoremap <silent> <Leader>m :FzfHistory<CR>| " Use the MRU cache
+
+function! ShowPreviewIfWideWindow()
+	" if window is wider than 140 chars, then add the preview options to fzf
+	if winwidth(0) > 140
+		return '--preview="~/.vim/plugged/fzf.vim/bin/preview.sh {}" --preview-window right:60%'
+	else
+		return ''
+	endif
+endfunction
+
+" | " Use the MRU cache
+nnoremap <silent> <Leader>m :FzfHistory<CR>
 nnoremap <silent> <Leader>g :FzfGitFiles?<CR>
 nnoremap <silent> <Leader>B :FzfBTags<CR>
 nnoremap <silent> <Leader>C :FzfTags<CR>
@@ -218,6 +236,8 @@ nnoremap <silent> <Leader>b :FzfBuffers<CR>
 " scratch paper
 nnoremap <silent> <Leader>s :e ~/.dotfiles/scratchpaper.md<CR>
 
+" Yank sugar (highlight etc) https://github.com/neoclide/coc-yank
+nnoremap <silent> <space>y  :<C-u>CocList -A --normal yank<cr>
 
 "" MACROS ###################################################################
 " 1) Record (q + letter) 2) :reg to find it 3) Replace <80> with Ctrl+v Esc (in insert mode)

@@ -1,4 +1,4 @@
-#!/usr/local/bin//fish
+#!/usr/local/bin/fish
 
 # TODO: look into unsetting all these before I run them. If I see perf issues do that!!!
 
@@ -10,35 +10,6 @@
 
 
 # Set up PATHS -------------------------------------------
-
-# Ctags - exuberant... Because there's already one installed for universal ctags
-set -x PATH $PATH /usr/local/Cellar/ctags/5.8_1/bin/ctags
-
-# Needs to be done first for gDate... to be available below...
-set -x PATH $PATH /usr/local/opt/coreutils/libexec/gnubin
-# Add all the utils that are normally in the path. Need to set this up now, so all the other commands work...
-set -x PATH $PATH /usr/local/bin/
-# Needed for providers to call python3 properly in nevim in anacritty only... https://neovim.io/doc/user/provider.html
-set -x PATH $PATH /usr/bin/python3
-
-set -x BYOBU_PREFIX /usr/local
-
-
-# For gdate...
-set -x PATH $PATH /usr/local/opt/coreutils/libexec/gnubin
-
-# manually set the path for golang and rust
-set -x PATH $PATH $HOME/go $HOME/go/bin $HOME/.cargo/bin
-
-# path for genymotion android simulator
-set -x PATH $PATH /Applications/Genymotion.app/Contents/MacOS/tools/
-
-# For rbenv (ruby version manager)
-set -x PATH $PATH ~/.rbenv/shims
-set -x PATH $PATH ~/.rbenv/bin
-
-# theme for BAT... useful for vim preview etc...
-set -x BAT_THEME 'Monokai Extended'
 
 
 # Abbreviations --------------------------------------------
@@ -71,6 +42,7 @@ if status --is-interactive
     abbr --add gb  'git branch -v'
     abbr --add gd  'git diff --color | delta --diff-so-fancy | less --tabs=1,5 -R'
     abbr --add gdc 'git diff --cached --color | delta --diff-so-fancy | less --tabs=1,5 -R'
+    abbr --add gdn  'git diff --color ":!package-lock.json" | delta --diff-so-fancy | less --tabs=1,5 -R'
     abbr --add gch 'git checkout'
     abbr --add gc 'git commit -v'
     abbr --add grm 'git remote -v'
@@ -141,15 +113,6 @@ if status --is-interactive
 end
 
 
-## ALIASES -----------------------------------------------
-
-
-alias ctags="$brewDir/bin/ctags"
-
-alias ls="lsd"
-alias lsl="lsd --long --date=relative --blocks permission,size,date,name"
-alias lsa="lsd --long --all --date=relative --blocks permission,size,date,name"
-
 ## ENV VARIABLES ------------------------------------------
 
 
@@ -192,11 +155,4 @@ set -x fish_greeting " Forward motion is the key."
 # brewDir=`brew --prefix`
 # FIXME: Can I remove this?
 set brewDir (brew --prefix)
-
-
-
-### FNM setup (fish version of nvm)
-# Use fnm instead of NVM (faster for fish) https://github.com/Schniz/fnm
-# Set up fnm
-fnm env --multi | source
 

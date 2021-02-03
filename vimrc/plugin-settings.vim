@@ -134,7 +134,9 @@ let NERDTreeQuitOnOpen=1 " Close Nerdtree after opening file
 let g:fzf_command_prefix = 'Fzf'
 
 " Always enable preview window on the right with 60% width
-let g:fzf_preview_window = 'right:60%'
+" let g:fzf_preview_window = 'right:60%'
+" Disable preview for anything that's not custom and defined in key file...
+let g:fzf_preview_window = []
 
 
 " This is the default extra key bindings
