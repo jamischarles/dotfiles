@@ -101,6 +101,27 @@ inoremap <silent><expr> <TAB>
       \ <SID>check_back_space() ? "\<TAB>" :
       \ coc#refresh()
 
+"
+"https://github.com/neoclide/coc.nvim/wiki/Completion-with-sources#use-cr-to-confirm-completion
+"Confirm selection with enter
+" :help complete_ctrl-y (explanation to this madness is here...)
+" inoremap <expr> <cr> pumvisible() ? <SID>acceptSelectionAndExitInsertMode() : "\<C-g>u\<CR>"
+inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+" inoremap <expr> <cr> pumvisible() ? "\<C-y>\<C-[>" : "\<C-g>u\<CR>"
+" inoremap <expr> <cr> pumvisible() ? "\<C-y>Hello" : "\<C-g>u\<CR>"
+" inoremap <expr> <cr> pumvisible() ? "\<C-y>\<C-r>\=:hello" : "\<C-g>u\<CR>"
+" inoremap <cr>  acceptSelectionAndExitInsertMode()
+" inoremap <expr> <cr> <SID>acceptSelectionAndExitInsertMode()
+" inoremap <expr> <cr> pumvisible() ? "\<C-g>:normal" : "\<C-g>u\<CR>"
+"
+
+" Autocomplete on the command bar
+" PYTHON :(. TODO: try to use
+"https://github.com/hrsh7th/nvim-cmp instead. Or then use this and install
+"stupid python
+" https://github.com/gelguy/wilder.nvim
+" call wilder#setup({'modes': [':', '/', '?']})
+
 
 " COC and ENTER
 " Make <CR> auto-select the first completion item and notify coc.nvim to
@@ -110,13 +131,35 @@ inoremap <silent><expr> <TAB>
                               " \: '\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>'
                               "
 " After confirm via enter, leave the insert mode...
-inoremap <silent><expr> <cr> pumvisible() ? "\<C-r>=coc#_select_confirm()\<CR>\<ESC>"
+" inoremap <silent><expr> <cr> pumvisible() ? "\<C-r>=coc#_select_confirm()\<CR>\<ESC>"
                               \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
 
 
 " https://github.com/neoclide/coc.nvim/issues/1445
 " Map gd to function definition using COC
 nmap <silent> gd <Plug>(coc-definition)
+
+
+function! s:acceptSelectionAndExitInsertMode()
+
+  if pumvisible()
+    \<C-y>
+  else
+    echo "exit"
+    :exe "echo 'hi my friend'"
+    return "hello my friend\<C-]>"
+    " return "\<C-]>"
+
+  endif
+
+  " return "\<C-y>\<C-O>"
+  return ":normal"
+  " return "hello"
+  " return call feedkeys("\<C-y>")
+  " execute "normal \<C-y>"
+endfunction
+  " :normal
+
 
 function! s:check_back_space() abort
   let col = col('.') - 1
@@ -136,7 +179,7 @@ let g:fzf_command_prefix = 'Fzf'
 " Always enable preview window on the right with 60% width
 " let g:fzf_preview_window = 'right:60%'
 " Disable preview for anything that's not custom and defined in key file...
-let g:fzf_preview_window = []
+" let g:fzf_preview_window = []
 
 
 " This is the default extra key bindings
@@ -149,8 +192,12 @@ let g:fzf_action = {
 " - down / up / left / right
 " - window (nvim only)
 "   Other FZF stuff found in keys file
-let g:fzf_layout = { 'down': '~100%' }
-" let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.6 } }
+" let g:fzf_layout = { 'down': '~100%' }
+
+
+" let g:fzf_layout = { 'down': '~100%' }
+let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.8 } }
+
 " let g:fzf_layout = { 'down': '~30%' }
 
 " Customize fzf colors to match your color scheme
@@ -199,21 +246,22 @@ endif
 
 "" StatusLine / Airline
 " Show tabs & buffers at the top
-let g:airline#extensions#tabline#enabled = 1
-let g:airline_powerline_fonts = 1     " use nice arrow symbols etc
+" let g:airline#extensions#tabline#enabled = 1
+" let g:airline_powerline_fonts = 1     " use nice arrow symbols etc
 
 " Disable "mixed indent" warnings for airline status bar (false positives)
-let g:airline#extensions#whitespace#enabled = 0
+" let g:airline#extensions#whitespace#enabled = 0
 
 "" Linter / Neomake
 " FIXME: Turn this back on
 " let g:neomake_javascript_enabled_makers = ['eslint']
 " If eslint exec exists, use that.
 " let eslint_path = '/Users/jacharles/dev/p2pnodeweb/node_modules/.bin/eslint'
-let eslint_path = './node_modules/.bin/eslint'
-if filereadable(eslint_path)
-  let g:neomake_javascript_eslint_exe = eslint_path
-endif
+
+" let eslint_path = './node_modules/.bin/eslint'
+" if filereadable(eslint_path)
+"   let g:neomake_javascript_eslint_exe = eslint_path
+" endif
 
 " let g:neomake_javascript_eslint_args = ['--no-ignore', '-c', '/Users/jacharles/dev/p2pnodeweb/.eslintes6rc', '-f', 'compact']
 
@@ -237,14 +285,21 @@ let g:neomake_error_sign = {
 " let g:neomake_logfile='/tmp/error.log'
 
 
-" Prettier - NeoFormat
+" Prettier - NeoFormat STOPPED USING IT. Using Formatter instead
 let g:neoformat_try_formatprg = 1
-" let g:neoformat_javascript_prettier = {
-"   \ 'exe': '/Users/jacharles/.nvm/versions/node/v8.11.0/bin/prettier',
-"   \ }
-" let g:neoformat_only_msg_on_error = 1
-" let g:neoformat_enabled_javascript= ['prettier']
-"
+" DISABLE by commenting these out
+   " \ 'exe': '/Users/jacharles/.nvm/versions/node/v8.11.0/bin/prettier',
+   " \ 'exe': '/Users/jacharles/.fnm/node-versions/v14.15.3/installation/lib/node_modules/prettier/bin-prettier.js',
+ let g:neoformat_javascript_prettier = {
+   \ 'exe': 'node ~/.fnm/aliases/default/lib/node_modules/prettier/bin-prettier.js',
+   \ }
+ let g:neoformat_only_msg_on_error = 1
+ let g:neoformat_enabled_javascript= ['prettier']
+ let g:prettier#config#single_quote = 'true'
+ let g:prettier#config#trailing_comma = 'all'
+
+ " Debugging
+let g:neoformat_verbose = 1
 
 
 "" Syntax Highlighting
@@ -269,10 +324,16 @@ let g:signify_sign_change="~"
 " TODO: Turn off for PS
 let g:SignatureForceRemoveGlobal=1"
 
+"" MARKDOWN settings
 " Vim Markdown fenced language support. TODO: just make that default?
 let g:vim_markdown_fenced_languages = ['javascript=js']
 
+let g:vim_markdown_strikethrough = 1
+let g:vim_markdown_new_list_item_indent = 0
 
 " Enable window fading when tmux has other pane focus
 let g:vimade={}
-let g:vimade.enablefocusfading=1
+let g:vimade.enablefocusfading=0 " disabled for now... we can turn it on again later...
+
+" TMUX Navigation
+let g:tmux_navigator_no_mappings = 1

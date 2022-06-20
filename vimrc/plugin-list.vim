@@ -37,7 +37,8 @@ Plug 'alok/vim-gitignore' " Syntax highlighting for .gitignore (should come from
 
 Plug 'AndrewRadev/linediff.vim'
 " Plug 'airblade/vim-gitgutter'                      " Git gutter
-Plug 'mhinz/vim-signify' " Another git gutter? Trying it out...
+" TODO: replace with lua version https://github.com/lewis6991/gitsigns.nvim
+" Plug 'mhinz/vim-signify' " Another git gutter? Trying it out...
 " Plug 'jreybert/vimagit'   " vim magit. Magic git stuff?
 
 " Undo / History / Swap
@@ -63,6 +64,7 @@ Plug 'chengzeyi/fzf-preview.vim' " Preview for search etc
 " Plug 'kien/ctrlp.vim'                              " Fuzzy file finder
 " Plug 'mileszs/ack.vim'                             " Ack in Vim. TODO: Consider trying ag instead of ack in here
 " Plug 'rking/ag.vim'                                " Try AG instead of ACK
+Plug 'itchyny/vim-qfedit' " Edit quicklist directly?
 
 Plug 'tomtom/tcomment_vim'
 " Plugin 'scrooloose/nerdcommenter'                  " Awesome commenting
@@ -70,7 +72,7 @@ Plug 'tomtom/tcomment_vim'
 " Plugin 'scrooloose/syntastic'                        " Syntax checker
 " Turned off unimpaired because of y delay conflict it caused.
 Plug 'jamischarles/vim-unimpaired' " Fork to remove y keybinding conflict
-" Plug 'tpope/vim-unimpaired'                        " Buffer switching
+" Plug 'tpope/vim-unimpaired'                        " Bracked pairing?
 Plug 'duff/vim-bufonly'                            " Close all buffers but current
 " Plugin 'mihaifm/bufstop'                             " MOST Amazing MRU Buffer switcher
 
@@ -82,7 +84,9 @@ Plug 'SirVer/ultisnips'                            " Snippet engine
 
 
 " CoC for snippets and intellisense and all that
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
+" Plug 'neoclide/coc.nvim', {'branch': 'release'}
+
+Plug 'ap/vim-css-color' " color viz on hex colors
 
 
 " Vim Snippets (local)
@@ -108,6 +112,8 @@ Plug 'tpope/vim-surround'                          " easy surround with quote et
 Plug 'tyru/open-browser.vim'                       " Open in test
 
 Plug 'Raimondi/delimitMate'                        " quote, bracket, etc autocompletion
+" TODO: Use https://github.com/hrsh7th/nvim-cmp instead
+" Plug 'gelguy/wilder.nvim'                          " Autocomplete in command bar
 
 "Plug 'rizzatti/dash.vim'
 Plug 't9md/vim-textmanip'                          " Move selected text around easily
@@ -119,7 +125,9 @@ Plug 'moll/vim-node'                               " node sugar like gf, gd?
 " Plug 'ElmCast/elm-vim'                             " Elm error sugar etc
 " Plug 'nikvdp/ejs-syntax'                           " EJS Highlighting
 Plug 'briancollins/vim-jst'
-Plug 'motus/pig.vim'                               "Pig script highlighting
+" Plug 'motus/pig.vim'                               "Pig script highlighting
+Plug 'evanleck/vim-svelte', {'branch': 'main'} "svelte
+" Plug 'martinda/Jenkinsfile-vim-syntax' "Jenkinsfile (groovy)
 
 " Plug 'Quramy/vim-js-pretty-template'    "html in es6 template strings
 Plug 'jonsmithers/experimental-lit-html-vim' "html in es6 template strings
@@ -130,6 +138,7 @@ Plug 'haya14busa/incsearch.vim'                    " Show all results as you're 
 Plug 'haya14busa/incsearch-index.vim' 			   " Shows the current search count? Q: Integrate this with the other one?
 Plug 'numkil/ag.nvim'                              "Ag search
 " Plug 'dyng/ctrlsf.vim' " Seperate window for project-wide search. WHY WON'T YOU WORK?
+" Plug 'brooth/far.vim' " Project wide search & replace. Never worked :(
 Plug 'eugen0329/vim-esearch'
 
 "Golang
@@ -140,7 +149,7 @@ Plug 'jodosha/vim-godebug' " Debugger for go
 Plug 'elixir-editors/vim-elixir'
 
 " THEMES
-Plug 'vim-airline/vim-airline' | Plug 'vim-airline/vim-airline-themes'
+" Plug 'vim-airline/vim-airline' | Plug 'vim-airline/vim-airline-themes'
 " Status bar (bottom)
 " Themes for statusbar
 Plug 'altercation/vim-colors-solarized'            " Color scheme
@@ -149,16 +158,68 @@ Plug 'altercation/vim-colors-solarized'            " Color scheme
 " Plug 'tomasr/molokai'                              " Color scheme based on monokai
 Plug 'sickill/vim-monokai'
 Plug 'ErichDonGubler/vim-sublime-monokai' "sublime-monokai Q: Can we have monokai with same bg color...
-Plug 'dracula/vim', { 'as': 'dracula' }
 Plug 'patstockwell/vim-monokai-tasty' "colorscheme vim-monokai-tasty
-Plug 'haishanh/night-owl.vim' " Sara drasner theme
 " Consider monokai with same bg I use in solarized terminal (see that with
 " bat)
+"
+" TODO: Write lua plugin to easier (one button) cycle through light/dark and
+" favorites (frecency?)
+" Should make one that cycles through until you stop. Like a radio station
+" seeker
+" A: COLORTUNER is exactly that!!!. And SAVES IT FOR EACH THEME!!!
+"
+" THEMES to TRY
+" TRY MORE ^
+Plug 'jacoborus/tender.vim' "++ Dark during day.
+Plug 'haishanh/night-owl.vim' "++ Dark during day. Sara drasner theme
+
+" Best Light AND Dark themes
+"
+let ayucolor="light"
+" let ayucolor="mirage"
+" let ayucolor="dark"  "default
+Plug 'ayu-theme/ayu-vim'  "+++ (light and dark, and mirage are nice)
+Plug 'EdenEast/nightfox.nvim' "++ Dark during the day. Has 10 themes inside. Very configurable.
+"DuskFox is like tokyonight Duskfox, Dawnfox++, Nightfox++, Nordfox, Dayfox++ (nightshift)
+"
+" ## GREAT themes at NIGHT
+" -Iceberg light ++
+" -Dayfox (Light)
+" -Snow
+" -Nebula Light(yellow strings, and purple)
+" - Edge (light)
+
+" ## GREAT DAY THEMES (enough contrast)
+" - Iceberg light +++ (gorgeous lsp colors, and gitsigns colors)
+" - nebula Light ++
+" -  pencil +++
+
+" -Dayfox (Light)
+"
+" - everforest + (beige bg)
+
+" - papercolor - (graby bg a bit dark) (too dark for night mode)
+" - hatsunemiku - (love muted var)
+" - kalisi -
+"
 
 " # Best light themes
-Plug 'morhetz/gruvbox' "8/10 for dark (nice for both) esp high contrast mode. 9/10 for light. TODO: try a bold font
-Plug 'rakr/vim-one' " TODO: give light a chance... maybe increase bg contrast 5/10 (nice for light & dark)
-" ^ Gruvbox is light theme WINNER
+
+Plug 'NLKNguyen/papercolor-theme' "++ (nice in normal screen. ok at night mode)
+Plug 'reedes/vim-colors-pencil' "++
+Plug 'freeo/vim-kalisi' "++ (blue comments NICE)
+Plug 'sainnhe/everforest' "++ Nice during day. So so at nightshift
+Plug 'cocopon/iceberg.vim' "++ (Blue + purple)
+Plug '4513ECHO/vim-colors-hatsunemiku' "++ Light theme is GREAT during day esp. Love how var is muted
+Plug 'haystackandroid/snow' "++ Nice during day
+Plug 'stillwwater/vim-nebula' "++ NICE in light AND Dark (nightshift decent)
+Plug 'sainnhe/edge' "++ (esp nice during the day)
+
+Plug 'owickstrom/vim-colors-paramount' "+ minimal highlighting. Mostly strings
+Plug 'rmehri01/onenord.nvim', { 'branch': 'main' } "+
+Plug 'rakr/vim-colors-rakr' "+
+Plug 'rakr/vim-one' "+
+
 " TODO: Try material light
 "https://github.com/kaicataldo/material.vim
 "
@@ -197,6 +258,8 @@ Plug 'https://github.com/zefei/vim-colortuner'
 "
 " # nice dark themes (trying out...) (best to least)
 Plug 'ghifarit53/tokyonight-vim' "NICE. try it out more similar to night owl
+" Plug 'tiagovla/tokyodark.nvim' "didn't work?!?
+
 Plug 'sainnhe/sonokai' "NICE. Maybe change bg color though...?
 Plug 'arcticicestudio/nord-vim' "Nice, but needs darker bg
 Plug 'kaicataldo/material.vim', { 'branch': 'main' } "so-so
@@ -299,8 +362,10 @@ Plug 'majutsushi/tagbar'                           " Navbar with tags
 Plug 'Galooshi/vim-import-js' " Another js import... (requires  npm install -g import-js)
 " Plug 'ternjs/tern_for_vim', { 'do': 'npm install' } " js ctags? Requires npm install after
 
+
+
 " SYNTAX
-Plug 'pangloss/vim-javascript'                     " JS indentation & syntax sugar
+" Plug 'pangloss/vim-javascript'                     " JS indentation & syntax sugar
 Plug 'groenewege/vim-less'                         " Less language bundle
 Plug 'rust-lang/rust.vim'                          " Rust syntax highlighting
 Plug 'hashivim/vim-vagrant'                        "Vagrant Syntax
@@ -311,6 +376,8 @@ Plug 'rodjek/vim-puppet'                           "Puppet syntax
 
 " Plug 'yuezk/vim-js'
 Plug 'maxmellon/vim-jsx-pretty'
+
+" Plug 'Yggdroot/indentLine'                         " Indent line!
 
 
 " TypeScript
@@ -335,8 +402,9 @@ Plug 'jparise/vim-graphql'
 Plug 'benekastah/neomake'                          " Async make (for syntax checking etc)
 
 "Prettier
-Plug 'sbdchd/neoformat'
-Plug 'prettier/vim-prettier' " trying this again :|. Last time was SOO slow
+" Plug 'sbdchd/neoformat'
+" Plug 'prettier/vim-prettier' " trying this again :|. Last time was SOO slow
+Plug 'mhartington/formatter.nvim'
 
 " Plug 'farmergreg/vim-lastplace' " TOO Slow? try to steal the good stuff?                   Open file at the last place you edited.
 
@@ -353,8 +421,8 @@ Plug 'christoomey/vim-tmux-navigator'              " Tmux / Vim window integrati
 Plug 'tmux-plugins/vim-tmux'                       " Tmux conf syntax highlighting
 
 " Fade inactive panes (useful for tmux)
-Plug 'TaDaa/vimade'
-Plug 'tmux-plugins/vim-tmux-focus-events'
+" Plug 'TaDaa/vimade' "Vimade-disable
+" Plug 'tmux-plugins/vim-tmux-focus-events'
 
 Plug 'chrisbra/NrrwRgn' " Open code in new window
 

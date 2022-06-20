@@ -179,6 +179,7 @@
 
 
         {:des "Caps_lock to delete_or_backspace" :rules [ [:##caps_lock :delete_or_backspace] ]}
+        ;; {:des "Caps_lock to delete_or_backspace for fancy keyobard" :rules [ [:##non_usps_lock :delete_or_backspace] ]}
 
         {:des "< | Rewind/Forward Screenflow scrubber 1 second" :rules [ [:!Scomma :!Sleft_arrow :screenflow],
                                                                              [:!Speriod :!Sright_arrow :screenflow] ]}

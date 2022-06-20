@@ -164,6 +164,7 @@ vnoremap S ^I
 "
 
 
+
 " Map bottom of screen to B
 nnoremap B L|xnoremap B L|onoremap B L
 
@@ -229,6 +230,16 @@ if ! exists("is_ps")
 	" hi Normal guifg=#a9b1d6 guibg=#1a1b26
 	" hi Normal guifg=#a9b1d6 guibg=red
 
+	" Add strikethrough for markdown ~~text~~
+	" htmlStrike is for the tildes. mkdStrike is for the inner content
+	" highlight MyStrikethrough  gui=strikethrough ctermfg=18 guifg=#262839
+	highlight mkdStrike gui=strikethrough ctermfg=18 guifg=#262839
+	highlight htmlStrike gui=strikethrough ctermfg=18 guifg=#262839
+	" highlight Conceal         guifg=#262839
+	" This will manually apply it in each focused window...
+	" call matchadd('MyStrikethrough', '\~\~\zs.\+\ze\~\~')
+	" call matchadd('Conceal',  '\~\~\ze.\+\~\~', 10, -1, {'conceal':''})
+	" call matchadd('Conceal',  '\~\~.\+\zs\~\~\ze', 10, -1, {'conceal':''})
 
 	" Changes the bg color of autocomplete box...  https://github.com/dracula/vim/issues/14
 	" hi Pmenu ctermfg=NONE ctermbg=236 cterm=NONE guifg=NONE guibg=#64666d gui=NONE

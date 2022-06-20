@@ -5,6 +5,9 @@
 
 ## most config is here
 # ~/.dotfiles/config.setup.fish
+# FIXME: use this for abbr?
+# TODO: perf profiling?
+# https://superuser.com/questions/1049368/add-abbreviations-in-fish-config
 
 # TODO:
 # add folds here? Using modeline? Use ## for 1, and # for 2
@@ -31,6 +34,17 @@
 # - vim mode? https://fedragon.github.io/vimode-fishshell-osx/
 
 
+
+#################################3
+# Amazing tools I use (
+# original tool -> replacement I use now
+# NVM -> Volta
+# z -> zoxide
+# grep -> ripgrep
+# zsh(terminal prompt config) -> starship
+##################################
+
+
 #######################################
 # PATHS - should be set here
 #######################################
@@ -47,6 +61,9 @@ set -x PATH $PATH /usr/local/opt/coreutils/libexec/gnubin
 set -x PATH $PATH /usr/local/bin/
 # Needed for providers to call python3 properly in nevim in anacritty only... https://neovim.io/doc/user/provider.html
 set -x PATH $PATH /usr/bin/python3
+
+# PYTHON env var
+set -x PYTHON /usr/bin/python3
 
 set -x BYOBU_PREFIX /usr/local
 
@@ -67,7 +84,7 @@ set -x PATH $PATH ~/.rbenv/bin
 # theme for BAT... useful for vim preview etc...
 set -x BAT_THEME 'Monokai Extended'
 
-
+set -x NODE_EXTRA_CA_CERTS '/usr/local/etc/openssl/certs/paypal_proxy_cacerts.pem'
 
 # Gets nanoseconds for current timestamp. Could also use this for ms timestamp. (gdate '+%s.%3N')
 function getTime
@@ -89,6 +106,8 @@ alias ctags="$brewDir/bin/ctags"
 alias ls="lsd"
 alias lsl="lsd --long --date=relative --blocks permission,size,date,name"
 alias lsa="lsd --long --all --date=relative --blocks permission,size,date,name"
+
+alias PYTHON="/usr/bin/python3"
 
 
 # ###############################################
@@ -182,6 +201,7 @@ end
 #################
 # nvm use 8 # relies on https://github.com/brigand/fast-nvm-fish
 
+
 # Use fnm instead of NVM (faster for fish) https://github.com/Schniz/fnm
 # Set up fnm
 # fnm env --multi | source
@@ -245,7 +265,14 @@ end
 # running all these commands every time changes startup time from .03s to .16s (4x slowdown)
 # source ~/.dotfiles/config.setup.fish
 
+
+# Z command. HACKY workaround for the "abbr to reomve doesn't exist.
+abbr --add z 'ls'
+abbr --add zi 'ls'
+zoxide init fish | source
+
 # adds 0.03s (30ms?) (from 0.00s)
+# special terminal parts
 starship init fish | source
 
 # echo "Startup time: "(getTimeSinceStart) # more accurate to have it after GIT. FIXME: Put this in function
@@ -254,10 +281,9 @@ starship init fish | source
 
 
 
-### FNM setup (fish version of nvm)
 # Use fnm instead of NVM (faster for fish) https://github.com/Schniz/fnm
 # Set up fnm
-fnm env --multi | source
+# fnm env --multi | source
 
 
 # historic time
@@ -265,3 +291,5 @@ fnm env --multi | source
 
 # List of things I have brew installed...
 # - https://github.com/yqrashawn/GokuRakuJoudo - easy karabiner config
+set -gx VOLTA_HOME "$HOME/.volta"
+set -gx PATH "$VOLTA_HOME/bin" $PATH

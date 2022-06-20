@@ -28,6 +28,15 @@ command! SaveSession :Obsession
 
 command! Mappings :map
 
+
+" Markdown preview with Glow
+command! PreviewMarkdown :term glow %
+command! PM :term glow %
+command! MDPreview :term glow %
+"Wrap line with ~~ ~~... TODO: map this so you can provide the char to wrap with...
+" TODO: Use surround?
+command! WrapLine :exe "normal ^s~~<ESC>$s~~<ESC>n"
+
 " Find / replace commands
 " -range=% means range is optional (you can use selection) - http://vimdoc.sourceforge.net/htmldoc/usr_40.html
 command! -range=% ReplaceSingleQuoteWithDouble :<line1>,<line2>s/'/"/gi
@@ -99,10 +108,10 @@ augroup markdown
 augroup END
 
 " Golang settings for Neoformat
-augroup fmtgo
-  autocmd!
-  autocmd BufWritePre *.go undojoin | Neoformat
-augroup END
+" augroup fmtgo
+"   autocmd!
+"   autocmd BufWritePre *.go undojoin | Neoformat
+" augroup END
 
 " augroup fmtReasonMl
 "   autocmd!
@@ -113,7 +122,7 @@ augroup json
 	autocmd!
 	autocmd BufRead,BufNewFile .*rc setfiletype json
 	autocmd BufRead,BufNewFile .json setfiletype json
-	autocmd BufWritePre *.json PrettierAsync
+	autocmd BufWritePre *.json FormatWrite
 augroup END
 
 
@@ -151,7 +160,8 @@ augroup javascript " just a name
   "                                            \ --single-quote\
   "                                            \ --trailing-comma\ es5
   " autocmd BufWritePre *.js Neoformat
-  autocmd BufWritePre *.js PrettierAsync
+  autocmd BufWritePre *.js FormatWrite
+  autocmd BufWritePre *.vue FormatWrite
   " autocmd BufWritePre *.js :normal gggqG
 
   " " Have them be open by default
@@ -169,7 +179,7 @@ augroup END
 augroup css
   autocmd!
   "Save with prettier
-  autocmd BufWritePre *.css undojoin | Neoformat
+  autocmd BufWritePre *.css undojoin | FormatWrite
 augroup END
 
 augroup allFiles
@@ -208,6 +218,12 @@ autocmd Filetype gitcommit setlocal spell textwidth=72
 command! -bang -nargs=* Rg
   \ call fzf#vim#grep(
   \   'rg  --max-count 1 --column --line-number --no-heading --color=always --smart-case -- '.shellescape(<q-args>), 1,
+  \   fzf#vim#with_preview(), <bang>0)
+
+
+command! -bang -nargs=* Rga
+  \ call fzf#vim#grep(
+  \   'rg  --max-count 1 --column --line-number --no-heading --color=always --no-ignore --ignore-case -- '.shellescape(<q-args>), 1,
   \   fzf#vim#with_preview(), <bang>0)
 
   " Limit to 1st result per file

@@ -93,16 +93,31 @@ endfunction
 
 """"" [END EXPERIMENTAL] """""""""""
 
+" WHYYYYYY do we have to put this here. It's stupid. Because of the lame tag
+" search stack stuff...
+nnoremap <C-T> :TroubleToggle<CR>
+
 "
 " TODO: Consider adding these to a vimscript LIST, and then using those to
 " popluate <leader>e, and sourcing them all
 " When you add one here, add it to fzf list in keys.vim
 " ORDER MATTERS -  Vim Load order for folders, autoload, plugins etc http://learnvimscriptthehardway.stevelosh.com/chapters/42.html
+"
+source $HOME/.vim/vimrc/plugin-list.lua " Using Packer (Lua) for my plugins now... TODO: start migrating over to this
+source $HOME/.vim/vimrc/keys.lua " New start for keys
+" THEN, create a new plugin-settings based on functionality... (when it gets
+" big enough to warrant a split)
+
+" Plugin config split by area / UI feature
+source $HOME/.vim/vimrc/autocomplete.lua " Autocomplete
+
 source $HOME/.vim/vimrc/plugin-list.vim " All the plugins
 source $HOME/.vim/vimrc/plugin-settings.vim " Plugin settings
 source $HOME/.vim/vimrc/settings.vim " General VIM / UI Settings
 source $HOME/.vim/vimrc/keys.vim " Key bindings for Vim and Vim Plugins
 source $HOME/.vim/vimrc/command-funcs.vim " (Auto-)Commands, Custom functions
+
+source $HOME/.vim/vimrc/init.lua " (Auto-)Commands, Custom functions
 " $HOME/.vim/vimrc/notes-todo.md " Notes and TODO
 
 " Mapped keys from colemak file...

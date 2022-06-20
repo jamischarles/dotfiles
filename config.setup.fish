@@ -42,6 +42,7 @@ if status --is-interactive
     abbr --add gb  'git branch -v'
     abbr --add gd  'git diff --color | delta --diff-so-fancy | less --tabs=1,5 -R'
     abbr --add gdc 'git diff --cached --color | delta --diff-so-fancy | less --tabs=1,5 -R'
+    abbr --add gdcn 'git diff --cached --color ":!package-lock.json" | delta --diff-so-fancy | less --tabs=1,5 -R'
     abbr --add gdn  'git diff --color ":!package-lock.json" | delta --diff-so-fancy | less --tabs=1,5 -R'
     abbr --add gch 'git checkout'
     abbr --add gc 'git commit -v'
@@ -81,6 +82,7 @@ if status --is-interactive
     # list of special utils I use: z, rg, fd, bat, fzf (not often anymore)
     # abbr --add rgf "rg --files . | grep"
     abbr --add rgf "fd "
+    abbr --add rga "rg --no-ignore -i" # Searches ALLL files. ignore all gitignore etc. And case insensitive.
     abbr --add rgfi "rg --files-with-matches"
     abbr --add fbat "fzf | xargs bat" # find and then bat the file
     abbr --add rbat "rg --files-with-matches | xargs bat" #bat files with matches
@@ -88,6 +90,7 @@ if status --is-interactive
 
   # special rust-based commands that I like
   # z, fd, rg, bat, exa,lsd, dust(du) (trying out): broot   (not much anymore) fzf
+  # zk zettelkasten https://github.com/mickael-menu/zk
 
 
     # search hidden files (not node_modules or .git but other ones), including dotfiles and files hidden by .gitignore

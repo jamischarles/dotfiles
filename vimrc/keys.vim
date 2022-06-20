@@ -2,10 +2,11 @@
 
 " LEADER: commands. | means new command. This is a hack, but works?
 nmap <leader>l :set list!<CR>| " Toggle hidden chars
-nmap <leader>q :call CloseCurrentBufferOrWindow()<CR>
+" nmap <leader>q :call CloseCurrentBufferOrWindow()<CR>
+" nmap <leader>o :only<CR>| " CLOSE all other windows.
+" nnoremap <leader><leader> <C-^>| " Goto last buffer
 nmap qq :close<CR>
 nmap <leader><tab> <C-w>w| " Go to next window
-nmap <leader>o :only<CR>| " CLOSE all other windows.
 nnoremap <leader>w :w<CR>
 
 nnoremap <leader>fr :%s/| " SEARCH/REPLACE
@@ -15,24 +16,23 @@ nnoremap <leader>sv :source ~/.vimrc<cr>| " Source vimrc - Or just :so % when in
 
 nnoremap <leader>; A;<esc>| " Append ; to eol
 nnoremap <leader>, A,<esc>| " Append , to eol
-nnoremap <leader><leader> <C-^>| " Goto last buffer
 nnoremap <leader>N :below 20sp term://node<cr>i| " Node scratch buffer
 
 " maybe do <l>? instead?
-nnoremap <leader>h :split ~/.vim/vimrc/help-shortcuts.md<cr>
+" nnoremap <leader>h :split ~/.vim/vimrc/help-shortcuts.md<cr>
 
 " Non Leader: commands
-nnoremap <silent> <tab> :call GotoNextBuffer()<CR>
+" nnoremap <silent> <tab> :call GotoNextBuffer()<CR>
 " one way to solve enter problem with shortened screen (slower though)
 " nnoremap <silent> <tab> :call GotoNextBuffer()<CR> :redraw<CR>
 " Dobule  enter is a clumsy but effecitve fix for now...
-nnoremap <silent> <S-tab> :call GotoPriorBuffer()<CR>
+" nnoremap <silent> <S-tab> :call GotoPriorBuffer()<CR>
 
 " REMAP CAPS to BACKTICK key ` for normal mode, ESC for other modes
-nnoremap <BS> `
-nnoremap <BS><BS> `'| " use `` for jump back
-inoremap <BS> <ESC>
-xnoremap <BS> <ESC>
+" nnoremap <BS> `
+" nnoremap <BS><BS> `'| " use `` for jump back
+" inoremap <BS> <ESC>
+" xnoremap <BS> <ESC>
 
 " Preserve backspace with SHIFT-BS (aka SHIFT-CAPSLOCK/DELETE)
 inoremap <S-BS> <c-r>=Backspace()<CR>
@@ -105,17 +105,17 @@ nnoremap <silent> <Plug>(anzu-mode) :<C-u>call anzu#mode#start(@/, "", "", "")<C
 
 "Vim signify (like gitgutter
 nmap <leader>s <Plug>(GitGutterStageHunk)
-nmap <leader>r :SignifyHunkUndo<CR>
-nmap <leader>p :SignifyHunkDiff<CR>
-nmap [h <Plug>(signify-next-hunk)
-nmap ]h <Plug>(signify-prev-hunk)
+" nmap <leader>r :SignifyHunkUndo<CR>
+" nmap <leader>p :SignifyHunkDiff<CR>
+" nmap [h <Plug>(signify-next-hunk)
+" nmap ]h <Plug>(signify-prev-hunk)
 
 
 nmap <silent> <leader>fc <ESC>/\v^[<=>]{7}( .*\|$)<CR>| " find merge conflict markers - from janus
 
 
 " TMUX: Restart Server FIXME: can we have this spring us out of scrollmode?
-nnoremap <leader>R :silent !tmux send-keys -t 1 C-c C-c hr space - Enter Up Up C-m<CR>| " TMUX: Redo last comand
+nnoremap <leader>R :silent !tmux send-keys -t 1 Enter C-c C-c hr space - Enter Up Up C-m<CR>| " TMUX: Redo last comand
 " nnoremap <leader>R :silent !tmux send-keys -t 1 C-c C-c "history \| sed -r 's/[0-9]*  //' \| grep '^node' -i \| tail -1 \| sh" C-m <CR>
 
 " Undo Tree: - Mundo -
@@ -136,6 +136,10 @@ xmap <C-e> <Plug>(textmanip-move-up)
 xmap <leader>d <Plug>(textmanip-duplicate-down)
 nmap <leader>d <Plug>(textmanip-duplicate-down)
 
+
+" Markdown Files:
+" Wrap line with ~~
+nnoremap wl~ :WrapLine<CR>
 
 " Smooth Scrolling: -
 " DISABLED for now...
@@ -204,7 +208,7 @@ nnoremap <silent> <Leader>t :call fzf#run({
 " include node_modules
 nnoremap <silent> <Leader>T :call fzf#run({
 \   'options': '--exact --tiebreak=end,length ' . ShowPreviewIfWideWindow(),
-\   'window': { 'width': 1, 'height': 1 },
+\   'window': { 'width': 0.98, 'height': 0.98 },
 \   'sink': function('Dontopeninnerdtree')
 \ })<CR>
 
@@ -212,7 +216,7 @@ nnoremap <silent> <Leader>T :call fzf#run({
 nnoremap <silent> <Leader>e :call fzf#run({
  \'source': 'find ~/.vim/vimrc/* -type f; find ~/.vimrc; find ~/.dotfiles/_codesnippets/snippets/javascript.snippets; find ~/.config/fish/config.fish; find ~/.vim/after/plugin/* -type f; find ~/.config/karabiner.edn; find ~/.config/starship.toml; find ~/.dotfiles/makesymlinks.sh; find ~/.config/alacritty.yml; find ~/.byobu/.tmux.conf; find ~/.byobu/color.tmux; find ~/.byobu/keybindings.tmux',
 \   'options': '--multi --exact --tiebreak=end,length ' . ShowPreviewIfWideWindow(),
-\   'down': '~90%',
+\   '_hide_window': 1,
 \   'sink': function('Dontopeninnerdtree')
 \ })<CR>
 
@@ -220,18 +224,53 @@ nnoremap <silent> <Leader>e :call fzf#run({
 function! ShowPreviewIfWideWindow()
 	" if window is wider than 140 chars, then add the preview options to fzf
 	if winwidth(0) > 140
-		return '--preview="~/.vim/plugged/fzf.vim/bin/preview.sh {}" --preview-window right:60%'
+		return '--preview="~/.vim/plugged/fzf.vim/bin/preview.sh {}" --preview-window up:60%'
 	else
 		return ''
 	endif
 endfunction
 
 " | " Use the MRU cache
-nnoremap <silent> <Leader>m :FzfHistory<CR>
-nnoremap <silent> <Leader>g :FzfGitFiles?<CR>
+" nnoremap <silent> <Leader>m :FzfHistory<CR>
+nnoremap <silent> <Leader>m :FzfLua oldfiles<CR>
+" nnoremap <silent> <Leader>g :FzfGitFiles?<CR>
+" TODO: can we make this optional too? yes. Just make a short variant and call
+" the fn the same way...
+" FIXME: Add one for FzfLua git_stash git stash BONUS
+" nnoremap <silent> <Leader>g :call fzf#vim#gitfiles('?', {'options': '--preview-window down:60%'})<CR>
+nnoremap <silent> <Leader>g :FzfLua git_status<CR>
+" nnoremap <silent> <Leader>g :lua require('fzf-lua').git_status({winopts = {height = 0.3}, git = {status={cmd = 'git status'}}, fzf_opts = {['--layout'] = 'reverse-list'} })<CR>
+" nnoremap <silent> <Leader>g :lua require('fzf-lua').git_status({git = {status = {cmd= 'ls'}}, fzf_opts = {['--layout'] = 'reverse-list'} })<CR>
+" nnoremap <silent> <Leader>g :lua require('fzf-lua').git_status({git = {status = {cmd= 'ls'}}, fzf_opts = {['--layout'] = 'reverse-list'} })<CR>
+
+" FzfLua lines (search all open buffers)
+
+" FIXME: Replace with LSP / FZF Lua things...
 nnoremap <silent> <Leader>B :FzfBTags<CR>
 nnoremap <silent> <Leader>C :FzfTags<CR>
-nnoremap <silent> <Leader>b :FzfBuffers<CR>
+" nnoremap <silent> <Leader>b :FzfBuffers<CR>
+" nnoremap <silent> <Leader>b :call fzf#vim#buffers({'options': '--preview-window up:60%'})<CR>
+" nnoremap <silent> <Leader>b :FzfLua buffers<CR>
+
+" https://github.com/junegunn/fzf.vim/pull/733#issuecomment-559720813
+function! s:list_buffers()
+  redir => list
+  silent ls
+  redir END
+  return split(list, "\n")
+endfunction
+
+function! s:delete_buffers(lines)
+  execute 'bwipeout' join(map(a:lines, {_, line -> split(line)[0]}))
+endfunction
+
+" Deletes all seleced buffers
+command! BD call fzf#run(fzf#wrap({
+  \ 'source': s:list_buffers(),
+  \ 'sink*': { lines -> s:delete_buffers(lines) },
+  \ 'options': '--multi --reverse --bind ctrl-a:select-all+accept'
+\ }))
+
 
 " scratch paper
 nnoremap <silent> <Leader>s :e ~/.dotfiles/scratchpaper.md<CR>
@@ -245,7 +284,7 @@ nnoremap <silent> <space>y  :<C-u>CocList -A --normal yank<cr>
 " function() -> () =>"
 let @f = 'dw%t =>'
 " require statement -> import
-let @i = '^dwsimport f=dwdwsfrom xf)xn^'
+let @i = '^dwsimport f=dwdwsfrom ixf)xn^'
 " react.createClass -> class syntax
 let @c = '^dwsclass kbf=xsextendskbfcfcdwsComponentkbir i%ixx'
 

@@ -43,11 +43,11 @@ then
     # tmux send-keys -t 'Work' 'zsh' C-m 'clear' C-m # Switch to bind script?
 
     # Create and setup pane for hugo config
-    tmux new-window -t $SESSION:1 -n 'Config'
-    tmux send-keys -t 'Config' 'nvim ~/.config/karabiner.edn ~/.byobu/keybindings.tmux ' C-m # Switch to bind script?
+    tmux new-window -t $SESSION:1 -n 'wdd230'
+    tmux send-keys -t 'wdd230' 'cd ~/dev_freelance/byui-teaching-wdd230; nvim . ' C-m # Switch to bind script?
 
-    tmux new-window -t $SESSION:2 -n 'Hacking'
-    tmux send-keys -t 'Hacking' 'cd ~/dev/playground/coding_visualizations; clear' C-m # Switch to bind script?
+    tmux new-window -t $SESSION:2 -n 'TIL'
+    tmux send-keys -t 'TIL' 'cd ~/dev_freelance/til; clear' C-m # Switch to bind script?
 
     # setup Writing window
     # tmux new-window -t $SESSION:2 -n 'Writing'

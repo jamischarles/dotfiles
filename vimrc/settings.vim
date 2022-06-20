@@ -73,8 +73,8 @@ let g:solarized_contrast = "high"
 let g:solarized_visibility = "low"
 
 let $NVIM_TUI_ENABLE_CURSOR_SHAPE=1
-" let $NVIM_TUI_ENABLE_TRUE_COLOR=1
-" set termguicolors
+let $NVIM_TUI_ENABLE_TRUE_COLOR=1
+set termguicolors
 " let g:solarized_termcolors = 16
 " colorscheme solarized
 " set background=light"

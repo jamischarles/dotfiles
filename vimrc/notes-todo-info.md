@@ -54,6 +54,13 @@ TODO:
    - why do all the same buffers keep opening?
 
 
+## Common use cases:
+Project wide find/replace: 1) Rg 2) select all results with tab and hit enter
+to send to quickfix 3) Run cfdo to run command on every result found in
+quickfix.
+`cfdo %s/import stubLogger from "..\/..\/..\/utils\/stubLogger"/import { stubLogger } from "..\/..\/..\/utils\/logging"/g | update`
+
+`:cn` opens next result in quickfix window
 
 How to see highlight for current char
 " If you don't know what the name of a particular hightlight is, you can use

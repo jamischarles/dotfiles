@@ -1,6 +1,6 @@
 [user]
 	name = Jamis Charles
-	email = jamis82@webutah.com
+	email = jamis82@gmail.com
 [mergetool]
 	keepBackup = true
 [color]
@@ -73,3 +73,10 @@
     diffFilter = delta --color-only
 [credential]
 	helper = osxkeychain
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+[init]
+	defaultBranch = main
