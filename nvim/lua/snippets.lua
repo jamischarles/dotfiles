@@ -1,97 +1,20 @@
-
-------------------------------
----- Settings for AUTOCOMPLETE features
-------------------------------
-
--- FIXME: Make this a module I can require in.
-local function map(mode, lhs, rhs, opts)
-    local options = { noremap = true }
-    if opts then
-        options = vim.tbl_extend("force", options, opts)
-    end
-    vim.api.nvim_set_keymap(mode, lhs, rhs, options)
-end
-
---
--- - Setup nvim-cmp.
-  local cmp = require'cmp'
-
-  cmp.setup({
-    snippet = {
-      -- REQUIRED - you must specify a snippet engine
-      expand = function(args)
-        -- vim.fn["vsnip#anonymous"](args.body) -- For `vsnip` users.
-        require('luasnip').lsp_expand(args.body) -- For `luasnip` users.
-        -- require('snippy').expand_snippet(args.body) -- For `snippy` users.
-        -- vim.fn["UltiSnips#Anon"](args.body) -- For `ultisnips` users.
-      end,
-    },
-    window = {
-      -- completion = cmp.config.window.bordered(),
-      -- documentation = cmp.config.window.bordered(),
-    },
-    mapping = cmp.mapping.preset.insert({
-      ['<C-b>'] = cmp.mapping.scroll_docs(-4),
-      ['<C-f>'] = cmp.mapping.scroll_docs(4),
-      ['<C-Space>'] = cmp.mapping.complete(),
-      -- ['<BS>'] = cmp.mapping.abort(),
-      ['<CR>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
-    }),
-    sources = cmp.config.sources({
-      { name = 'nvim_lsp' },
-      -- { name = 'vsnip' }, -- For vsnip users.
-      { name = 'luasnip' }, -- For luasnip users.
-      -- { name = 'ultisnips' }, -- For ultisnips users.
-      -- { name = 'snippy' }, -- For snippy users.
-    }, {
-      { name = 'buffer' },
-
-      { name = 'path' } -- enable path autosuggestions for all filetypes
-    })
-  })
-
-  -- Set configuration for specific filetype.
-  cmp.setup.filetype('gitcommit', {
-    sources = cmp.config.sources({
-      { name = 'cmp_git' }, -- You can specify the `cmp_git` source if you were installed it.
-    }, {
-      { name = 'buffer' },
-    })
-  })
-
-  -- Use buffer source for `/` (if you enabled `native_menu`, this won't work anymore).
-  cmp.setup.cmdline('/', {
-    mapping = cmp.mapping.preset.cmdline(),
-    sources = {
-      { name = 'buffer' }
-    }
-  })
-
-  -- Use cmdline & path source for ':' (if you enabled `native_menu`, this won't work anymore).
-  cmp.setup.cmdline(':', {
-    mapping = cmp.mapping.preset.cmdline(),
-    sources = cmp.config.sources({
-      { name = 'path' }
-    }, {
-      { name = 'cmdline' }
-    })
-  })
+---------------------
+-- SNIPPETS
+-- ----------------------
 
 
-  -- Todo: try this: https://github.com/lukas-reineke/cmp-rg
-  -- cmp.setup.cmdline(':Rg', {
-  --   mapping = cmp.mapping.preset.cmdline(),
-  --   sources = cmp.config.sources({
-  --     { name = 'path'},{ name = 'buffer' }
-  --   }, {
-  --     { name = 'ripgrep' }
-  --   })
-  -- })
+-- deps
+-- Snippet engine
+local use = require('packer').use
+use { 'L3MON4D3/LuaSnip' } -- snippet engine
+use "rafamadriz/friendly-snippets" -- snippet collection
 
 
 
-  -- SNIPPETS
-  require("luasnip.loaders.from_vscode").lazy_load()
+local map = require('utils').mapKey
+local ls = require("luasnip")
+
+require("luasnip.loaders.from_vscode").lazy_load()
 
 
   -- READING
@@ -100,15 +23,19 @@ end
   -- luasnip mappings
   --  press <Tab> to expand or jump in a snippet. These can also be mapped separately
 -- via <Plug>luasnip-expand-snippet and <Plug>luasnip-jump-next.
-map("i", "<Tab>", ":luasnip#expand_or_jumpable() ? '<Plug>luasnip-expand-or-jump' : '<Tab>'")
+-- map("i", "<Tab>", ":luasnip#expand_or_jumpable() ? '<Plug>luasnip-expand-or-jump' : '<Tab>'")
 -- imap <silent><expr> <Tab> luasnip#expand_or_jumpable() ? '<Plug>luasnip-expand-or-jump' : '<Tab>'
 
 --" -1 for jumping backwards.
 -- inoremap <silent> <S-Tab> <cmd>lua require'luasnip'.jump(-1)<Cr>
 
-map("s", "<Tab>", ":lua require('luasnip').jump(1)<CR>")
+-- map("s", "<Tab>", ":lua require('luasnip').jump(1)<CR>")
+--
+--
+--
+-- map("s", "<S-Tab>", ":lua require('luasnip').jump(-1)<CR>")
+
 -- snoremap <silent> <Tab> <cmd>lua require('luasnip').jump(1)<Cr>
-map("s", "<S-Tab>", ":lua require('luasnip').jump(-1)<CR>")
 -- snoremap <silent> <S-Tab> <cmd>lua require('luasnip').jump(-1)<Cr>
 
 -- For changing choices in choiceNodes (not strictly necessary for a basic setup).
@@ -132,7 +59,6 @@ local function copy(args)
 	return args[1]
 end
 
-local ls = require("luasnip")
 local s = ls.snippet
 local sn = ls.snippet_node
 local t = ls.text_node
@@ -229,3 +155,4 @@ ls.add_snippets("all", {
 
 -- in a ts file: search typescript-, then js-, then all-snippets.
 ls.filetype_extend("typescript", { "javascript" })
+ls.filetype_extend("typescriptreact", {"typescript", "javascript" })

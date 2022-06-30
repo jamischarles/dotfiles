@@ -4,7 +4,7 @@
 " set the runtime path to include Vundle and initialize
 " vim-snipmate looks in runtimepath for a folder named 'snippets' for code
 " snippets
-" set rtp+=~/.vim/bundle/Vundle.vim,~/.dotfiles/_codesnippets
+" set rtp+=~/.vim/bundle/Vo undle.vim,~/.dotfiles/_codesnippets
 set rtp+=~/.dotfiles/_codesnippets
 " set rtp+=~/.fzf " Is this the old version? "
 " set rtp+=~/.dotfiles/_codesnippets,/usr/local/Cellar/fzf/HEAD
@@ -33,9 +33,9 @@ Plug 'unblevable/quick-scope'
 Plug 'jamischarles/vim-fugitive'                          " Git commands in Vim. Consider https://github.com/carlhuda/janus/blob/master/janus/vim/tools/janus/after/plugin/fugitive.vim
 
 
-Plug 'alok/vim-gitignore' " Syntax highlighting for .gitignore (should come from fugitive?)
+" Plug 'alok/vim-gitignore' " Syntax highlighting for .gitignore (should come from fugitive?)
 
-Plug 'AndrewRadev/linediff.vim'
+" Plug 'AndrewRadev/linediff.vim'
 " Plug 'airblade/vim-gitgutter'                      " Git gutter
 " TODO: replace with lua version https://github.com/lewis6991/gitsigns.nvim
 " Plug 'mhinz/vim-signify' " Another git gutter? Trying it out...
@@ -77,7 +77,7 @@ Plug 'duff/vim-bufonly'                            " Close all buffers but curre
 " Plugin 'mihaifm/bufstop'                             " MOST Amazing MRU Buffer switcher
 
 " Snippets #############
-Plug 'SirVer/ultisnips'                            " Snippet engine
+" Plug 'SirVer/ultisnips'                            " Snippet engine
 " Plug 'Shougo/deoplete.nvim'
 " Plug 'Shougo/neosnippet.vim'
 " Plug 'Shougo/neosnippet-snippets'
@@ -191,10 +191,10 @@ Plug 'EdenEast/nightfox.nvim' "++ Dark during the day. Has 10 themes inside. Ver
 
 " ## GREAT DAY THEMES (enough contrast)
 " - Iceberg light +++ (gorgeous lsp colors, and gitsigns colors)
-" - nebula Light ++
+" - Dayfox (Light) ++
+" - nebula Light ++ (lacking good git colors)
 " -  pencil +++
 
-" -Dayfox (Light)
 "
 " - everforest + (beige bg)
 

@@ -8,16 +8,16 @@
 " off for PS work
 
 "
-if ! exists("is_ps")
-	" Lots of experimental UI fixes that shouldn't apply to PS theme
-	let g:gitgutter_sign_column_always = 1
-	set nonumber " try this out"
-	" make line
-	hi LineNr ctermfg=black ctermbg=8
-	set laststatus =0
-	set showtabline =0 " hide tabline. Try it out, or hook it to a command
-
-endif
+" if ! exists("is_ps")
+" 	" Lots of experimental UI fixes that shouldn't apply to PS theme
+" 	let g:gitgutter_sign_column_always = 1
+" 	set nonumber " try this out"
+" 	" make line
+" 	hi LineNr ctermfg=black ctermbg=8
+" 	set laststatus =0
+" 	set showtabline =0 " hide tabline. Try it out, or hook it to a command
+"
+" endif
 
 
 " EXP Function to show it on tab, then show it after switching buffers
@@ -42,16 +42,16 @@ function! ShowTabLine(...) " Optional args. https://vi.stackexchange.com/questio
 	set showtabline =2
 endfunction
 
-if ! exists("is_ps")
-	" by default, turn on tab hiding
-	" let g:tab_hiding_enabled=1
-	let g:tab_hiding_enabled=0
-
-	command! ShowTabLine let g:tab_hiding_enabled=0 | :call ShowTabLine()
-	command! HideTabLine let g:tab_hiding_enabled=1 | :call HideTabLine()
-
-	autocmd BufEnter * :call ShowTabLine()
-endif
+" if ! exists("is_ps")
+" 	" by default, turn on tab hiding
+" 	let g:tab_hiding_enabled=1
+" 	" let g:tab_hiding_enabled=0
+"
+" 	command! ShowTabLine let g:tab_hiding_enabled=0 | :call ShowTabLine()
+" 	command! HideTabLine let g:tab_hiding_enabled=1 | :call HideTabLine()
+"
+" 	autocmd BufEnter * :call ShowTabLine()
+" endif
 " set foldcolumn=1 " left side spacing
 " hi FoldColumn ctermbg=8
 

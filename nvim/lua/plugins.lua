@@ -14,16 +14,9 @@ return require('packer').startup(function(use)
 
   use 'wbthomason/packer.nvim' -- needs to be here so it doesn't always ask to remove itself during install
 
-  -- syntax sugar (matching closing brace)
-  use "windwp/nvim-autopairs"
 
-
-  -- File nav / finding
-  use { 'ibhagwan/fzf-lua',
-    -- optional for icon support
-    requires = { 'kyazdani42/nvim-web-devicons' }
-  }
-
+  -- FIXME: namespace my stuff
+  -- require('colorscheme').deps(use)
 
   use {
     'nvim-telescope/telescope.nvim', -- Like fzf but with Lua
@@ -47,7 +40,7 @@ return require('packer').startup(function(use)
 
 
   -- buffer management
-  use {'akinsho/bufferline.nvim', tag = "v2.*", requires = 'kyazdani42/nvim-web-devicons'}
+ --use {'akinsho/bufferline.nvim', tag = "v2.*", requires = 'kyazdani42/nvim-web-devicons'}
 
   -- statusline
   use {
@@ -57,30 +50,21 @@ return require('packer').startup(function(use)
 
 
 
-  -- Syntax highlighting
-  use {
-    'nvim-treesitter/nvim-treesitter',
-    run = ':TSUpdate'
-  }
+
+  -- Syntax Support for additional langs (common langs syntax comes from treesitter)
+  use 'evanleck/vim-svelte'
+  use 'HerringtonDarkholme/yats.vim'
+  --" or Plug 'leafgarland/typescript-vim'
+  use 'maxmellon/vim-jsx-pretty'
 
   -- Git / sign columns
-  use 'lewis6991/gitsigns.nvim'
   -- use {'lewis6991/gitsigns.nvim', branch = "diffthisfix"}
 
 
--- Snippet engine
-use { 'L3MON4D3/LuaSnip' }
-use "rafamadriz/friendly-snippets"
 
 -- Autocomplete
 -- FIXME: Should we move this part to a "autocomplete" file as well?
 -- use 'neovim/nvim-lspconfig'
-use 'hrsh7th/cmp-nvim-lsp'
-use 'hrsh7th/cmp-buffer'
-use 'hrsh7th/cmp-path'
-use 'hrsh7th/cmp-cmdline'
-use 'hrsh7th/nvim-cmp'
-use { 'saadparwaiz1/cmp_luasnip' }
 
 
   -- use { 'sindrets/diffview.nvim', requires = 'nvim-lua/plenary.nvim' } -- git diff viewer
@@ -88,35 +72,11 @@ use { 'saadparwaiz1/cmp_luasnip' }
   -- Indent guides
   use "lukas-reineke/indent-blankline.nvim"
 
-  -- Ctags-like plugin that shows all the fns for a file
-  use {
-    'stevearc/aerial.nvim',
-    config = function() require('aerial').setup() end
-  }
-  -- navigating around the symbols in a file
-  use "ziontee113/syntax-tree-surfer"
-
-
-
-  -- LSP config stuff
-  use 'nvim-lua/plenary.nvim' -- async lua lib writing easier async. needed for some of these deps
-  use 'neovim/nvim-lspconfig' -- Configurations for Nvim LSP
-  use 'jose-elias-alvarez/null-ls.nvim' --
-  use 'jose-elias-alvarez/nvim-lsp-ts-utils'
-
-  -- Terminal window on top of code window with easy toggle
-  use {"akinsho/toggleterm.nvim", tag = 'v1.*', config = function()
-    require("toggleterm").setup() end
-  }
 
   -- Window management
-  use {"caenrique/swap-buffers.nvim"}
+  -- use {"caenrique/swap-buffers.nvim"}
 
 
-  use {
-    "folke/trouble.nvim",
-    requires = "kyazdani42/nvim-web-devicons"
-  }
 
   -- Automatically set up your configuration after cloning packer.nvim
   -- Put this at the end after all plugins

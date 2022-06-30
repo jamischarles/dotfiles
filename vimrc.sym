@@ -110,6 +110,8 @@ source $HOME/.vim/vimrc/keys.lua " New start for keys
 
 " Plugin config split by area / UI feature
 source $HOME/.vim/vimrc/autocomplete.lua " Autocomplete
+source $HOME/.vim/vimrc/statusline.lua " Autocomplete
+source $HOME/.vim/vimrc/buffers.lua " Autocomplete
 
 source $HOME/.vim/vimrc/plugin-list.vim " All the plugins
 source $HOME/.vim/vimrc/plugin-settings.vim " Plugin settings

@@ -51,16 +51,16 @@ set undolevels=100 " This controls how far back you can undo"
 
 
 "" STATUSLINE (from Janus)  https://github.com/carlhuda/janus/blob/master/janus/vim/core/before/plugin/statusline.vim. FIXME: add to plugin file?
-if has("statusline") && !&cp
-  set laststatus=2  " always show the status bar
-  " Start the status line
-  set statusline+=%{ObsessionStatus()}
-  set statusline=%f\ %m\ %r
-  set statusline+=Line:%l/%L[%p%%]
-  set statusline+=Col:%v
-  set statusline+=Buf:#%n
-  set statusline+=[%b][0x%B]
-endif
+" if has("statusline") && !&cp
+"   set laststatus=2  " always show the status bar
+"   " Start the status line
+"   set statusline+=%{ObsessionStatus()}
+"   set statusline=%f\ %m\ %r
+"   set statusline+=Line:%l/%L[%p%%]
+"   set statusline+=Col:%v
+"   set statusline+=Buf:#%n
+"   set statusline+=[%b][0x%B]
+" endif
 
 
 

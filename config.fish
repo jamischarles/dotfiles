@@ -61,6 +61,8 @@ set -x PATH $PATH /usr/local/opt/coreutils/libexec/gnubin
 set -x PATH $PATH /usr/local/bin/
 # Needed for providers to call python3 properly in nevim in anacritty only... https://neovim.io/doc/user/provider.html
 set -x PATH $PATH /usr/bin/python3
+# Needed for some cargo build commands includes py2 in the path. means python2 execute can be called?
+set -x PATH $PATH /Users/jacharles/.pyenv/versions/pypy2.7-7.3.9/bin
 
 # PYTHON env var
 set -x PYTHON /usr/bin/python3

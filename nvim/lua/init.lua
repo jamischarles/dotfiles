@@ -41,28 +41,28 @@ end
 
 -- handle backspace in telescope vs other environments
 -- create a global command
-vim.api.nvim_create_user_command(
-    'HandleBackspace',
-    function()
-
-
-      -- if buffertype is NOT telescropPrompt, exit insert mode
-      if vim.bo.filetype ~= "TelescopePrompt" then
-        vim.cmd('stopinsert')
-      else
-        feedkeys("<C-H>", "i") -- in Vim, Ctrl+h is mapped to backspace
-      end
-    end,
-    { nargs = 0 }
-)
-
-
--- map backspace/del to esc and marks
-map("i", "<BS>", "<cmd>:HandleBackspace<CR>")
-map("x", "<BS>", "<ESC>")
--- map BS to marks in normal mode
-map("n", "<BS>", "`")
-map("n", "<BS><BS>", "`'")
+-- vim.api.nvim_create_user_command(
+--     'HandleBackspace',
+--     function()
+--
+--
+--       -- if buffertype is NOT telescropPrompt, exit insert mode
+--       if vim.bo.filetype ~= "TelescopePrompt" then
+--         vim.cmd('stopinsert')
+--       else
+--         feedkeys("<C-H>", "i") -- in Vim, Ctrl+h is mapped to backspace
+--       end
+--     end,
+--     { nargs = 0 }
+-- )
+--
+--
+-- -- map backspace/del to esc and marks
+-- map("i", "<BS>", "<cmd>:HandleBackspace<CR>")
+-- map("x", "<BS>", "<ESC>")
+-- -- map BS to marks in normal mode
+-- map("n", "<BS>", "`")
+-- map("n", "<BS><BS>", "`'")
 --
 --
 
@@ -151,110 +151,7 @@ require'telescope'.setup {
 
 require('telescope').load_extension('fzf')
 
------------------
--- FZF-LUA
--- ---------------
-local actions = require "fzf-lua.actions"
-local utils = require "fzf-lua.utils"
-local enterKey = utils.ansi_codes.yellow("<Return>")
-local delBuffer = utils.ansi_codes.yellow("<Ctrl-X>")
-require'fzf-lua'.setup {
-  keymap = {
-    ["<ctrl-a>"]    = "preview-page-down", -- navigate preview up/down
-    ["<c-a>"]    = "preview-page-down", -- navigate preview up/down
-    ["<C-e>"]      = "preview-page-up",
-    ["<F7>"]        = "toggle-preview",
-    -- Rotate preview clockwise/counter-clockwise
-    ["<F5>"]        = "toggle-preview-ccw",
-    ["<F6>"]        = "toggle-preview-cw",
-    ["<S-down>"]    = "preview-page-down",
-    ["<S-up>"]      = "preview-page-up",
-      ["<S-left>"]    = "preview-page-reset",
-  },
-  winopts = {
-    -- split         = "belowright new",-- open in a split instead?
-    -- "belowright new"  : split below
-    -- "aboveleft new"   : split above
-    -- "belowright vnew" : split right
-    -- "aboveleft vnew   : split left
-    -- Only valid when using a float window
-    -- (i.e. when 'split' is not defined, default)
-    height           = 0.98,            -- window height
-    width            = 0.95,            -- window width
-    row              = 0.50,            -- window row position (0=top, 1=bottom)
-    col              = 0.50,
-    fullscreen = false,
 
-    preview = {
-      scrollbar      = 'float',
-      layout = 'vertical',
-      vertical = 'up:80%'
-    }
-  },
-  git = {
-    status = {
-      cmd = "git status --porcelain" -- needed to not break the ansi formatting. Q: should this be default?
-    }
-  },
-  buffers = {
-    fzf_opts = {
-      ['--header'] = vim.fn.shellescape(('%s to close buffer, %s to open'):format(delBuffer, enterKey))    }
-  },
--- https://github.com/ibhagwan/fzf-lua/blob/d02d6f2f6bf951c461d52bdbe97784ce87243318/lua/fzf-lua/providers/git.lua#L43
-  -- ctrl-x deletes buffer. FIXME: Can we print that info?
-  -- actions we can do when inside those windows
-  actions = {
-  --   ["default"]     = actions.buf_edit,
-  --   ["ctrl-d"]     = actions.buf_del
-  -- }
-  --
-  buffers = {
-    -- providers that inherit these actions:
-    --   buffers, tabs, lines, blines
-    ["default"]     = actions.buf_edit,
-    ["ctrl-s"]      = actions.preview_page_down,
-    ["c-s"]      = actions.preview_page_down
-  }
-}
-}
-
-
-  local fzf_lua = require("fzf-lua")
-
-
-  -- https://github.com/ibhagwan/fzf-lua/issues/196
-  -- Allow delete action from the buffer window
-  local function fzf_buffersWithDelete(opts)
-    if not opts then opts = {} end
-    local action = require("fzf.actions").action(function(selected)
-      fzf_lua.actions.buf_del(selected)
-      fzf_lua.win.set_autoclose(false)
-      fzf_buffersWithDelete(opts)
-      fzf_lua.win.set_autoclose(true)
-    end, "{+}")
-    if not opts.curbuf then
-      -- make sure we keep current buffer at the header
-      opts.curbuf = vim.api.nvim_get_current_buf()
-    end
-    opts.actions = { ["ctrl-x"] = false }
-    opts.fzf_cli_args  = ("--bind=ctrl-x:execute-silent:%s"):format(action)
-    fzf_lua.buffers(opts)
-  end
-
-
-  -- vim.api.nvim_create_user_command('FzfBuffersWithDeleteAction', fzf_buffersWithDelete,  { nargs = 0 })
-
-  -- map("n", "<Leader>b", ":FzfBuffersWithDeleteAction<CR>")
-  map("n", "<Leader>b", ":FzfLua buffers<CR>")
--- nnoremap <silent> <Leader>b :FzfLua buffers<CR>
-
--- vim.api.nvim_buf_set_keymap(
---   0,
---   'i',
---   '<Bs>',
---   '<cmd>lua PromptBackspace()<CR>',
---   {noremap = true}
--- )
 
 
 -- " REMAP CAPS to BACKTICK key ` for normal mode, ESC for other modes
@@ -272,19 +169,6 @@ require'fzf-lua'.setup {
 
 -- :startinsert/:stopinsert/vim.cmd('startinsert')
 
--- Lua function
-local myluafun = function()
-    print("This buffer enters")
-  -- if vim.bo.filetype == "TelescopePrompt" then
-  -- i don't want it for the buffer? unless it is a stpecific buffer type...
-  vim.api.nvim_set_keymap("i", "<BS>", "<BS>")
-    print("This buffer enters")
-  -- else
-    print("This buffer enters NOT")
-  -- end
-
-
-end
 
 
   -- vim.api.nvim_create_autocmd({"BufEnter", "BufWinEnter"}, {
@@ -310,23 +194,7 @@ end
 
 ----------------------------
 -- GIT features
-require('gitsigns').setup {
-  sign_priority = 20,
-  diff_opts = {
-    algorithm = "minimal"
-    -- split = "botright"
-  }
-}
-map('n', '<leader>h', ':Gitsigns setqflist<CR>')
-map('n', '<leader>p', ':Gitsigns preview_hunk<CR>')
-map('n', '<leader>r', ':Gitsigns reset_hunk<CR>')
-map('n', '[h', ':Gitsigns next_hunk<CR>')
-map('n', ']h', ':Gitsigns prev_hunk<CR>')
 
-
--- diff and have current changes on the left and base on the right
-vim.api.nvim_create_user_command('Diff', ":Gitsigns diffthis ~ split=botright",  { nargs = 0 })
-vim.api.nvim_create_user_command('Blame', ":Gitsigns blame_line",  { nargs = 0 })
 
 -- local gs = require("gitsigns")
 -- vim.api.nvim_create_user_command(
@@ -342,7 +210,6 @@ vim.api.nvim_create_user_command('Blame', ":Gitsigns blame_line",  { nargs = 0 }
 
 -- vim.api.nvim_create_user_command('Diff', ":rightbelow Gitsigns diffthis",  { nargs = 0 })
 
-vim.api.nvim_create_user_command('FzfBuffersWithDeleteAction', fzf_buffersWithDelete,  { nargs = 0 })
 
 -- commands I want to use more
 -- gitsigns show (or can use ~1) (show last commit for the file... or can look a specific commit)

@@ -69,6 +69,11 @@ end
 time([[try_loadstring definition]], false)
 time([[Defining packer_plugins]], true)
 _G.packer_plugins = {
+  ["Comment.nvim"] = {
+    loaded = true,
+    path = "/Users/jacharles/.local/share/nvim/site/pack/packer/start/Comment.nvim",
+    url = "https://github.com/numToStr/Comment.nvim"
+  },
   LuaSnip = {
     loaded = true,
     path = "/Users/jacharles/.local/share/nvim/site/pack/packer/start/LuaSnip",
@@ -79,6 +84,11 @@ _G.packer_plugins = {
     loaded = true,
     path = "/Users/jacharles/.local/share/nvim/site/pack/packer/start/aerial.nvim",
     url = "https://github.com/stevearc/aerial.nvim"
+  },
+  ["auto-session"] = {
+    loaded = true,
+    path = "/Users/jacharles/.local/share/nvim/site/pack/packer/start/auto-session",
+    url = "https://github.com/rmagatti/auto-session"
   },
   ["bufferline.nvim"] = {
     loaded = true,
@@ -125,6 +135,11 @@ _G.packer_plugins = {
     path = "/Users/jacharles/.local/share/nvim/site/pack/packer/start/gitsigns.nvim",
     url = "https://github.com/lewis6991/gitsigns.nvim"
   },
+  ["iceberg.vim"] = {
+    loaded = true,
+    path = "/Users/jacharles/.local/share/nvim/site/pack/packer/start/iceberg.vim",
+    url = "https://github.com/cocopon/iceberg.vim"
+  },
   ["indent-blankline.nvim"] = {
     loaded = true,
     path = "/Users/jacharles/.local/share/nvim/site/pack/packer/start/indent-blankline.nvim",
@@ -134,6 +149,16 @@ _G.packer_plugins = {
     loaded = true,
     path = "/Users/jacharles/.local/share/nvim/site/pack/packer/start/lualine.nvim",
     url = "https://github.com/nvim-lualine/lualine.nvim"
+  },
+  ["nightfox.nvim"] = {
+    loaded = true,
+    path = "/Users/jacharles/.local/share/nvim/site/pack/packer/start/nightfox.nvim",
+    url = "https://github.com/EdenEast/nightfox.nvim"
+  },
+  ["nui.nvim"] = {
+    loaded = true,
+    path = "/Users/jacharles/.local/share/nvim/site/pack/packer/start/nui.nvim",
+    url = "https://github.com/MunifTanjim/nui.nvim"
   },
   ["null-ls.nvim"] = {
     loaded = true,
@@ -165,6 +190,11 @@ _G.packer_plugins = {
     path = "/Users/jacharles/.local/share/nvim/site/pack/packer/start/nvim-treesitter",
     url = "https://github.com/nvim-treesitter/nvim-treesitter"
   },
+  ["nvim-treesitter-context"] = {
+    loaded = true,
+    path = "/Users/jacharles/.local/share/nvim/site/pack/packer/start/nvim-treesitter-context",
+    url = "https://github.com/nvim-treesitter/nvim-treesitter-context"
+  },
   ["nvim-web-devicons"] = {
     loaded = true,
     path = "/Users/jacharles/.local/share/nvim/site/pack/packer/start/nvim-web-devicons",
@@ -180,15 +210,15 @@ _G.packer_plugins = {
     path = "/Users/jacharles/.local/share/nvim/site/pack/packer/start/plenary.nvim",
     url = "https://github.com/nvim-lua/plenary.nvim"
   },
+  snippets = {
+    loaded = true,
+    path = "/Users/jacharles/.local/share/nvim/site/pack/packer/start/snippets",
+    url = "https://github.com//Users/jacharles/.config/nvim/lua/snippets"
+  },
   ["sqlite.lua"] = {
     loaded = true,
     path = "/Users/jacharles/.local/share/nvim/site/pack/packer/start/sqlite.lua",
     url = "https://github.com/tami5/sqlite.lua"
-  },
-  ["swap-buffers.nvim"] = {
-    loaded = true,
-    path = "/Users/jacharles/.local/share/nvim/site/pack/packer/start/swap-buffers.nvim",
-    url = "https://github.com/caenrique/swap-buffers.nvim"
   },
   ["syntax-tree-surfer"] = {
     loaded = true,
@@ -211,20 +241,54 @@ _G.packer_plugins = {
     path = "/Users/jacharles/.local/share/nvim/site/pack/packer/start/telescope.nvim",
     url = "https://github.com/nvim-telescope/telescope.nvim"
   },
+  ["timer.nvim"] = {
+    loaded = true,
+    path = "/Users/jacharles/.local/share/nvim/site/pack/packer/start/timer.nvim",
+    url = "https://github.com/alex-popov-tech/timer.nvim"
+  },
   ["toggleterm.nvim"] = {
     config = { "\27LJ\2\n8\0\0\3\0\3\0\0066\0\0\0'\2\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\nsetup\15toggleterm\frequire\0" },
     loaded = true,
     path = "/Users/jacharles/.local/share/nvim/site/pack/packer/start/toggleterm.nvim",
     url = "https://github.com/akinsho/toggleterm.nvim"
   },
+  ["tokyonight-vim"] = {
+    loaded = true,
+    path = "/Users/jacharles/.local/share/nvim/site/pack/packer/start/tokyonight-vim",
+    url = "https://github.com/ghifarit53/tokyonight-vim"
+  },
   ["trouble.nvim"] = {
     loaded = true,
     path = "/Users/jacharles/.local/share/nvim/site/pack/packer/start/trouble.nvim",
     url = "https://github.com/folke/trouble.nvim"
+  },
+  ["vim-jsx-pretty"] = {
+    loaded = true,
+    path = "/Users/jacharles/.local/share/nvim/site/pack/packer/start/vim-jsx-pretty",
+    url = "https://github.com/maxmellon/vim-jsx-pretty"
+  },
+  ["vim-nebula"] = {
+    loaded = true,
+    path = "/Users/jacharles/.local/share/nvim/site/pack/packer/start/vim-nebula",
+    url = "https://github.com/stillwwater/vim-nebula"
+  },
+  ["vim-svelte"] = {
+    loaded = true,
+    path = "/Users/jacharles/.local/share/nvim/site/pack/packer/start/vim-svelte",
+    url = "https://github.com/evanleck/vim-svelte"
+  },
+  ["yats.vim"] = {
+    loaded = true,
+    path = "/Users/jacharles/.local/share/nvim/site/pack/packer/start/yats.vim",
+    url = "https://github.com/HerringtonDarkholme/yats.vim"
   }
 }
 
 time([[Defining packer_plugins]], false)
+-- Config for: aerial.nvim
+time([[Config for aerial.nvim]], true)
+try_loadstring("\27LJ\2\n4\0\0\3\0\3\0\0066\0\0\0'\2\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\nsetup\vaerial\frequire\0", "config", "aerial.nvim")
+time([[Config for aerial.nvim]], false)
 -- Config for: toggleterm.nvim
 time([[Config for toggleterm.nvim]], true)
 try_loadstring("\27LJ\2\n8\0\0\3\0\3\0\0066\0\0\0'\2\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\nsetup\15toggleterm\frequire\0", "config", "toggleterm.nvim")
@@ -233,10 +297,6 @@ time([[Config for toggleterm.nvim]], false)
 time([[Config for telescope-frecency.nvim]], true)
 try_loadstring("\27LJ\2\nM\0\0\3\0\4\0\a6\0\0\0'\2\1\0B\0\2\0029\0\2\0'\2\3\0B\0\2\1K\0\1\0\rfrecency\19load_extension\14telescope\frequire\0", "config", "telescope-frecency.nvim")
 time([[Config for telescope-frecency.nvim]], false)
--- Config for: aerial.nvim
-time([[Config for aerial.nvim]], true)
-try_loadstring("\27LJ\2\n4\0\0\3\0\3\0\0066\0\0\0'\2\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\nsetup\vaerial\frequire\0", "config", "aerial.nvim")
-time([[Config for aerial.nvim]], false)
 if should_profile then save_profiles() end
 
 end)
