@@ -10,13 +10,15 @@ local use = require('packer').use
 
 
 -- Cmp autocompletion
+use 'hrsh7th/nvim-cmp'
 use 'hrsh7th/cmp-nvim-lsp'
 use 'hrsh7th/cmp-buffer'
 use 'hrsh7th/cmp-path'
 use 'hrsh7th/cmp-cmdline'
-use 'hrsh7th/nvim-cmp'
+use 'hrsh7th/cmp-nvim-lua' -- nvim api completion
 use { 'saadparwaiz1/cmp_luasnip', requires = '~/.config/nvim/lua/snippets' }
 
+-- delay? https://github.com/hrsh7th/nvim-cmp/issues/715
 
 -- syntax sugar (matching closing brace)
 use "windwp/nvim-autopairs"
@@ -34,6 +36,7 @@ local luasnip = require 'luasnip'
 local cmp = require'cmp'
 
 -- cmp.event:on( 'confirm_done', cmp_autopairs.on_confirm_done())
+--
 
 cmp.setup({
 	snippet = {
@@ -46,8 +49,8 @@ cmp.setup({
 		end,
 	},
 	window = {
-		-- completion = cmp.config.window.bordered(),
-		-- documentation = cmp.config.window.bordered(),
+		completion = cmp.config.window.bordered(),
+		documentation = cmp.config.window.bordered(),
 	},
 	mapping = cmp.mapping.preset.insert({
 		['<C-b>'] = cmp.mapping.scroll_docs(-4),
@@ -126,14 +129,29 @@ cmp.setup.cmdline('/', {
 })
 
 -- Use cmdline & path source for ':' (if you enabled `native_menu`, this won't work anymore).
+-- https://www.reddit.com/r/neovim/comments/qa4wb6/how_do_i_limit_completion_options_with_nvimcmp/
+-- :h pumheight
+-- vim.ui.nvim_ui_pum_set
+vim.o.pumheight = 25 -- set height limit of autocompletion window
 cmp.setup.cmdline(':', {
 	mapping = cmp.mapping.preset.cmdline(),
 	sources = cmp.config.sources({
-		{ name = 'path' }
+		{ name = 'path', max_item_count = 7 },
+		{ name = 'nvim_lua' }
 	}, {
 		{ name = 'cmdline' }
 	})
 })
+
+
+-- cmp.setup.cmdline(':Rg', {
+-- 	mapping = cmp.mapping.preset.cmdline(),
+-- 	sources = cmp.config.sources({
+-- 		{ name = 'path', max_item_count = 7 }
+-- 	}, {
+-- 		{ name = 'cmdline' }
+-- 	})
+-- })
 
 
   -- Todo: try this: https://github.com/lukas-reineke/cmp-rg

@@ -4,6 +4,10 @@
 
 https://github.com/stevearc/dressing.nvim (Can I use this to print a message large in center?)
 
+## Functions - gives nice concise summary of all the builtin nvim functions...
+
+:h function-list
+
 ## DEBUGGING
 
 https://wincent.com/wiki/Lua_development_in_Neovim
@@ -11,10 +15,16 @@ https://wincent.com/wiki/Lua_development_in_Neovim
 
 `vim.pretty_print({})` -- will print a table etc much better than `print()` will which shows the mem location
 
-
 ## Path magic
+
 :h filename-modifiers
 `vim.fn.expand("%:t")`
+
+:h simplify
+
+:help expand()
+:help filename-modifiers
+:help file-functions
 
 ## Clearing screen
 
@@ -93,6 +103,10 @@ op mappings:
 2$ End of Nth next line
 https://neovim.io/doc/user/motion.html
 
+## Registers (copy/paste )
+
+-- https://vi.stackexchange.com/questions/122/performing-certain-operations-without-clearing-register
+
 ## User commands
 
 Vim-style command line
@@ -119,6 +133,8 @@ With named args (MUCH BETTER)
 `vim.api.nvim_set_keymap("o", 's"\'', ":SurroundAndReplace {find: \", replace: '}<CR>", {noremap = true})`
 
 ## Key Mappings
+
+Silence a mapping with `<cmd>` instead of `:` prefix
 
 :h index -- default mappings with meaning
 :h language-mapping (mapping command line stuff?)

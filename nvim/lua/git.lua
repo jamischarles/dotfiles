@@ -47,7 +47,6 @@ require('gitsigns').setup {
   vim.api.nvim_create_user_command('GWrite', ":Gitsigns stage_buffer",  { nargs = 0 })
 
 
-
 -- find conflict markers -- from Janus
 -- nmap <silent> <leader>fc <ESC>/\v^[<=>]{7}( .*\|$)<CR>| " find merge conflict markers - from janus
 -- nmap <silent> <leader>fc <ESC>/\v^[<=>]{7}( .*\|$)<CR>| " find merge conflict markers - from janus

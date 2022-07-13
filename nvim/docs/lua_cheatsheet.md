@@ -10,6 +10,10 @@ http://lua-users.org/wiki/StringTrim
 
 https://www.2n.pl/blog/how-to-write-neovim-plugins-in-lua
 
+## Lua -> Vimscript
+
+`h: lua-vimscript`
+
 ## Run shell command
 
 vim.fn.system('ls') --
@@ -20,6 +24,7 @@ vim.fn.systemlist('ls') -- command and return result as list
 if not condition -- like !condition in JS
 
 ## Spread array params
+
 `local nums = {1, 2}`
 
 ```lua

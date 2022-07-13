@@ -31,6 +31,18 @@ use({
 -- Telescope for frecency
 ------------------
 require("telescope").load_extension("frecency")
+require('telescope').setup({
+  defaults = {
+    layout_config = {
+      horizontal = {height = 0.95, width = 0.9 },
+      vertical = {height = 0.9, width = 0.9 }
+      -- other layout configuration here
+    },
+    -- other defaults configuration here
+  },
+  -- other configuration values here
+})
+
 
 -----------------
 -- FZF-LUA
@@ -51,7 +63,7 @@ require("fzf-lua").setup({
 		["<S-down>"] = "preview-page-down",
 		["<S-up>"] = "preview-page-up",
 		["<S-left>"] = "preview-page-reset",
-	},
+},
 	winopts = {
 		-- split         = "belowright new",-- open in a split instead?
 		-- "belowright new"  : split below
@@ -69,7 +81,7 @@ require("fzf-lua").setup({
 		preview = {
 			scrollbar = "float",
 			layout = "vertical",
-			vertical = "up:80%",
+			vertical = "up:75%",
 		},
 	},
 	-- provider setup
@@ -79,7 +91,7 @@ require("fzf-lua").setup({
 		-- set to 'false' to disable
 		prompt = "Files❯ ",
 		multiprocess = true, -- run command in a separate process
-		git_icons = false, -- show git icons?
+		git_icons = false, -- show git icons? -- TOO slow
 		file_icons = true, -- show file icons?
 		-- color_icons = true, -- colorize file|git icons
 		-- path_shorten   = 1,              -- 'true' or number, shorten path?
@@ -87,7 +99,7 @@ require("fzf-lua").setup({
 		-- otherwise auto-detect prioritizes `fd`:`rg`:`find`
 		-- default options are controlled by 'fd|rg|find|_opts'
 		-- NOTE: 'find -printf' requires GNU find
-		cmd = "fd --color=never --type f --hidden --follow --exclude .git --exclude locales",
+		cmd = "fd --color=never --type f --hidden --follow --exclude .git --exclude locales --exclude tests/functional",
 		-- find_opts = [[-type f -not -path '*/\.git/*' -printf '%P\n']],
 		-- rg_opts = "--color=never --files --hidden --follow -g '!.git'",
 		-- fd_opts = "--color=never --type f --hidden --follow --exclude .git",
@@ -170,44 +182,45 @@ end
 -------------------------
 -- track frecency of buffers I load in nvim. We'll use this to generate a frecency list for history
 -- ONLY do this for buffers that are writable (should avoid help windows etc, quickfix windows etc)
-vim.api.nvim_create_autocmd({ "BufEnter" }, { -- do we need both? BufWinEnter
-	-- update CLI command for manual frecency
-	-- command = ':silent !fre --add ' .. vim.fn.expand('%')  -- FIXME: Find lua api of this?
-	callback = function()
-		local curFilePath = vim.api.nvim_buf_get_name(0)
-		local isBufReadOnly = vim.api.nvim_buf_get_option(0, "readonly")
 
-		local gitProjectRoot = Trim(vim.fn.system("git rev-parse --show-toplevel"))
-
-		-- print("maybe adding: " .. curFilePath)
-
-		-- TODO: Filter for files in current project path(check with git?)
-		if not string.find(curFilePath, gitProjectRoot) then
-			return
-		end -- is currently in project path
-		if isBufReadOnly then
-			return
-		end -- is buffer writable (should weed out help files etc)
-
-		-- print("adding: " .. curFilePath)
-		vim.cmd(":silent !fre --add " .. curFilePath) -- add to fre
-	end,
-
-	-- PRUNTNG & QUALITY:
-	-- TODO: Add some methods for pruning & deleting or filtering on the dataset when it goes in (ignore help files etc)
-
-	-- command = ':silent !fre --add ' .. vim.fn.expand('%')  -- FIXME: Find lua api of this?
-	--
-	-- command = ':silent !fre --add ' .. vim.fn.expand('%')  -- FIXME: Find lua api of this?
-	-- callback = function()
-	--  local timeout_in_ms = 20
-	--  local pipe = io.popen('ls')
-	--  vim.defer_fn(function()
-	--   pipe:flush()
-	--   pipe:close()
-	--  end, timeout_in_ms)
-	-- end
-})
+-- vim.api.nvim_create_autocmd({ "BufEnter" }, { -- do we need both? BufWinEnter
+-- 	-- update CLI command for manual frecency
+-- 	-- command = ':silent !fre --add ' .. vim.fn.expand('%')  -- FIXME: Find lua api of this?
+-- 	callback = function()
+-- 		local curFilePath = vim.api.nvim_buf_get_name(0)
+-- 		local isBufReadOnly = vim.api.nvim_buf_get_option(0, "readonly")
+--
+-- 		local gitProjectRoot = Trim(vim.fn.system("git rev-parse --show-toplevel"))
+--
+-- 		-- print("maybe adding: " .. curFilePath)
+--
+-- 		-- TODO: Filter for files in current project path(check with git?)
+-- 		if not string.find(curFilePath, gitProjectRoot) then
+-- 			return
+-- 		end -- is currently in project path
+-- 		if isBufReadOnly then
+-- 			return
+-- 		end -- is buffer writable (should weed out help files etc)
+--
+-- 		-- print("adding: " .. curFilePath)
+-- 		vim.cmd(":silent !fre --add " .. curFilePath) -- add to fre
+-- 	end,
+--
+-- 	-- PRUNTNG & QUALITY:
+-- 	-- TODO: Add some methods for pruning & deleting or filtering on the dataset when it goes in (ignore help files etc)
+--
+-- 	-- command = ':silent !fre --add ' .. vim.fn.expand('%')  -- FIXME: Find lua api of this?
+-- 	--
+-- 	-- command = ':silent !fre --add ' .. vim.fn.expand('%')  -- FIXME: Find lua api of this?
+-- 	-- callback = function()
+-- 	--  local timeout_in_ms = 20
+-- 	--  local pipe = io.popen('ls')
+-- 	--  vim.defer_fn(function()
+-- 	--   pipe:flush()
+-- 	--   pipe:close()
+-- 	--  end, timeout_in_ms)
+-- 	-- end
+-- })
 
 -------------------------
 -- MAPPINGS
@@ -219,12 +232,16 @@ vim.api.nvim_create_autocmd({ "BufEnter" }, { -- do we need both? BufWinEnter
 map("n", "<Leader>t", ":FzfLua files<CR>")
 map("n", "<Leader>g", ":FzfLua git_status<CR>")
 map("n", "<Leader>b", ":FzfLua buffers<CR>") -- could we sort this by frecency? interesting!!!
--- map("n", "<Leader>m", ":FzfLua oldfiles<CR>") -- uses my custom frecency usin `fre` (see above)
-map(
-	"n",
-	"<Leader>m",
-	':lua require(\'fzf-lua\').files({cmd = "fre --sorted", actions = {["ctrl-x"] = {function(selected) vim.cmd(":!fre --delete ".. selected[1]) end, require"fzf-lua.actions".resume} }})<CR>'
-)
+map("n", "<Leader>m", ":Telescope frecency<CR>") -- uses my custom frecency usin `fre` (see above)
+
+-- retiring my own custom solution for now...
+-- map(
+-- 	"n",
+-- 	"<Leader>m",
+-- 	':lua require(\'fzf-lua\').files({cmd = "fre --sorted", actions = {["ctrl-x"] = {function(selected) vim.cmd(":!fre --delete ".. selected[1]) end, require"fzf-lua.actions".resume} }})<CR>'
+-- )
+
+
 -- FIXME: Can we cache this somehow to speed it up?
 -- https://github.com/junegunn/fzf/issues/1740 (caching commentary
 
@@ -241,7 +258,7 @@ map("n", "<Leader>e", ":FzfLua files cwd=~/.dotfiles/nvim<CR>") -- change folder
 vim.api.nvim_create_user_command("Rg", function(arguments)
 	require("fzf-lua").files({
 		actions = { ["default"] = actions.file_edit },
-		cmd = "rg  --max-count 1 --column --line-number --no-heading --color=always --smart-case --iglob !locales -- " .. arguments.args,
+		cmd = "rg  --fixed-strings --max-count 1 --column --line-number --no-heading --color=always --smart-case --iglob !locales -- " .. arguments.args,
 	}) --ignores locales/*
 
 	-- ['--header'] = vim.fn.shellescape(('%s to close buffer, %s to open'):format(delBuffer, enterKey))    }
@@ -256,13 +273,61 @@ end, {
 vim.api.nvim_create_user_command("Rga", function(arguments)
 	require("fzf-lua").files({
 		actions = { ["default"] = actions.file_edit },
-		cmd = "rg  --max-count 1 --column --line-number --no-heading --color=always --no-ignore --ignore-case -- "
+		cmd = "rg  --fixed-strings --max-count 1 --column --line-number --no-heading --color=always --no-ignore --ignore-case -- "
 			.. arguments.args,
 	})
 end, {
 	nargs = "*",
 	desc = "Say hi to someone",
 })
+
+-- search only git changed files
+vim.api.nvim_create_user_command("Rgg", function(arguments)
+	require("fzf-lua").files({
+		actions = { ["default"] = actions.file_edit },
+
+		cmd = "git status --porcelain | sed s/^...// | xargs rg  --fixed-strings --max-count 1 --column --line-number --no-heading --color=always --smart-case --iglob !locales -- " .. arguments.args,
+	})
+end, {
+	nargs = "*",
+	desc = "Say hi to someone",
+})
+
+
+local getOpenBufferList = function()
+	local bufferFileNames = {}
+	for _, bufNum in ipairs(vim.api.nvim_list_bufs()) do
+		-- map[b] = true
+		-- if vim.fn.buflisted(bufNum) then
+		local isListed = unpack(vim.fn.getbufinfo(bufNum))['listed'] -- weird way of getting open buffers
+		if isListed == 1 then
+			-- table.insert(bufferFileNames, vim.api.nvim_buf_get_name(bufNum))
+			table.insert(bufferFileNames, vim.api.nvim_buf_get_name(bufNum))
+		end
+	end
+	return bufferFileNames
+end
+
+-- print(vim.inspect(getOpenBufferList()))
+	-- print(vim.fn.shellescape(table.concat(getOpenBufferList(), '\n')))
+
+-- search only across open buffers
+vim.api.nvim_create_user_command("Rgb", function(arguments)
+	local openBufferNames = getOpenBufferList()
+	-- could just use fzf-lua lines (pretty cool!)
+	require("fzf-lua").files({
+		actions = { ["default"] = actions.file_edit },
+
+		-- cmd = vim.fn.shellescape(table.concat(openBufferNames, '\n')) .. " | xargs bat" -- kind of works
+		cmd = vim.fn.shellescape(table.concat(openBufferNames, '\n')) .. " | xargs rg  --fixed-strings --max-count 1 --column --line-number --no-heading --color=always --smart-case -- " .. arguments.args,
+	})
+end, {
+	nargs = "*",
+	desc = "Say hi to someone",
+})
+
+
+-- print(vim.inspect(bufList))
 
 -- Rg: -> fzfLua grep _project
 --https://github.com/ibhagwan/fzf-lua/issues/449

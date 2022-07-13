@@ -3,119 +3,202 @@
 -- ---------------------------
 local map = require("utils").mapKey
 local use = require('packer').use
-use {'akinsho/bufferline.nvim', tag = "v2.*", requires = 'kyazdani42/nvim-web-devicons'}
+-- use {'akinsho/bufferline.nvim', tag = "v2.*", requires = 'kyazdani42/nvim-web-devicons'}
 -- use 'rcarriga/nvim-notify'
-use 'MunifTanjim/nui.nvim' -- simple floating window/popup manager
-use 'alex-popov-tech/timer.nvim' -- set timer expiration on window
+-- use 'MunifTanjim/nui.nvim' -- simple floating window/popup manager
+-- use 'alex-popov-tech/timer.nvim' -- set timer expiration on window
+
+ use({
+    'noib3/nvim-cokeline',
+    requires = 'kyazdani42/nvim-web-devicons', -- If you want devicons
+  })
 --
 --
 vim.opt.termguicolors = true
--- require('bufferline').setup {}
-require('bufferline').setup {
-  options = {
-    mode = "buffers", -- set to "tabs" to only show tabpages instead
-    numbers = "buffer_id", -- | "buffer_id" | "both" | function({ ordinal, id, lower, raise }): string,
-      close_command = "bdelete! %d",       -- can be a string | function, see "Mouse actions"
-      right_mouse_command = "bdelete! %d", -- can be a string | function, see "Mouse actions"
-      left_mouse_command = "buffer %d",    -- can be a string | function, see "Mouse actions"
-      middle_mouse_command = nil,          -- can be a string | function, see "Mouse actions"
-      -- NOTE: this plugin is designed with this icon in mind,
-      -- and so changing this is NOT recommended, this is intended
-      -- as an escape hatch for people who cannot bear it for whatever reason
-      indicator_icon = '▎',
-      buffer_close_icon = '',
-      modified_icon = '●',
-      close_icon = '',
-      left_trunc_marker = '',
-      right_trunc_marker = '',
-      --- name_formatter can be used to change the buffer's label in the bufferline.
-      --- Please note some names can/will break the
-      --- bufferline so use this at your discretion knowing that it has
-      --- some limitations that will *NOT* be fixed.
-      name_formatter = function(buf)  -- buf contains a "name", "path" and "bufnr"
-        -- remove extension from markdown files for example
-        if buf.name:match('%.md') then
-          return vim.fn.fnamemodify(buf.name, ':t:r')
-        end
-      end,
-      max_name_length = 24,
-      max_prefix_length = 15, -- prefix used when a buffer is de-duplicated
-      tab_size = 18,
-      diagnostics = "nvim_lsp",
-      diagnostics_update_in_insert = true,
-      diagnostics_indicator = function(count, level, diagnostics_dict, context)
-        -- return "("..count.."):"..level..""
-        local icon = level:match("error") and " " or ""
-        return " " .. icon .. count
-        -- local icon = level:match("error") and " " or " "
-      end,
-      -- NOTE: this will be called a lot so don't do any heavy processing here
-      custom_filter = function(buf_number, buf_numbers)
-        -- filter out filetypes you don't want to see
-        if vim.bo[buf_number].filetype ~= "<i-dont-want-to-see-this>" then
-          return true
-        end
-        -- filter out by buffer name
-        if vim.fn.bufname(buf_number) ~= "<buffer-name-I-dont-want>" then
-          return true
-        end
-        -- filter out based on arbitrary rules
-        -- e.g. filter out vim wiki buffer from tabline in your work repo
-        if vim.fn.getcwd() == "<work-repo>" and vim.bo[buf_number].filetype ~= "wiki" then
-          return true
-        end
-        -- filter out by it's index number in list (don't show first buffer)
-        if buf_numbers[1] ~= buf_number then
-          return true
-        end
-      end,
-      -- offsets = {{filetype = "NvimTree", text = "File Explorer" | function , text_align = "left" | "center" | "right"}},
-      color_icons = true, -- whether or not to add the filetype icon highlights
-      show_buffer_icons = true, -- disable filetype icons for buffers
-      show_buffer_close_icons = false,
-      show_buffer_default_icon = true, -- whether or not an unrecognised filetype should show a default icon
-      show_close_icon = false,
-      show_tab_indicators = false,
-      persist_buffer_sort = true, -- whether or not custom sorted buffers should persist
-      -- can also be a table containing 2 custom separators
-      -- [focused and unfocused]. eg: { '|', '|' }
-      -- separator_style = "slant" | "thick" | "thin" | { 'any', 'any' },
-      -- enforce_regular_tabs = false | true,
-      always_show_bufferline = true,
-      custom_areas = {
-        -- Please note that this function will be called a lot and should be as inexpensive as possible so it does not block rendering the tabline.
-        right = function()
-          local result = {}
-          local seve = vim.diagnostic.severity
-          local error = #vim.diagnostic.get(0, {severity = seve.ERROR})
-          local warning = #vim.diagnostic.get(0, {severity = seve.WARN})
-          local info = #vim.diagnostic.get(0, {severity = seve.INFO})
-          local hint = #vim.diagnostic.get(0, {severity = seve.HINT})
 
-          if error ~= 0 then
-            table.insert(result, {text = "  " .. error, guifg = "#EC5241"})
-          end
 
-          if warning ~= 0 then
-            table.insert(result, {text = "  " .. warning, guifg = "#EFB839"})
-          end
+-- TRYING Cokeline
+local get_hex = require('cokeline/utils').get_hex
 
-          if hint ~= 0 then
-            table.insert(result, {text = "  " .. hint, guifg = "#A3BA5E"})
-          end
+local modified_active_fg_color = get_hex('BufferCurrentMod', 'fg')
+local modified_active_bg_color = get_hex('BufferCurrentMod', 'bg')
+local modified_inactive_fg_color = get_hex('BufferCurrentMod', 'fg')
+local modified_inactive_bg_color = get_hex('BufferCurrentMod', 'bg')
 
-          if info ~= 0 then
-            table.insert(result, {text = "  " .. info, guifg = "#7EA9A7"})
-          end
-          return result
+
+
+-- FIXME: use HL groups since those will be modified by the theme
+local colors = {
+	black = "#383a42",
+	yellow = "#f6c177"
+
+}
+
+require('cokeline').setup({
+	default_hl = {
+		fg = function(buffer)
+
+
+
+			return buffer.is_modified and buffer.is_focused and colors.black
+			or  buffer.is_focused
+			and get_hex('ColorColumn', 'bg')
+			or buffer.is_modified and  get_hex('ColorColumn', 'fg')
+			or get_hex('Normal', 'fg')
+		end,
+		bg = function(buffer)
+			-- return buffer.is_modified and buffer.is_focused  and get_hex('GitSignsChange', 'fg')
+			return buffer.is_modified and buffer.is_focused and colors.yellow
+			or buffer.is_modified and get_hex('GitSignsChange', 'fg')
+			-- or buffer.is_modified and get_hex('BufferInactiveMod', 'fg')
+
+			or
+			buffer.is_focused
+			and get_hex('Normal', 'fg')
+			or get_hex('ColorColumn', 'bg')
+		end,
+	},
+
+  components = {
+    -- {
+    --   text = ' ',
+    -- },
+    {
+      text = function(buffer) return ' ' .. buffer.devicon.icon end,
+      fg = function(buffer) return buffer.devicon.color end,
+    },
+    {
+      text = function(buffer) return buffer.unique_prefix end,
+      fg = get_hex('Comment', 'fg'),
+      style = 'italic',
+    },
+    {
+      text = function(buffer) return buffer.filename .. ' ' end,
+    },
+    -- {
+    --   text = '',
+    --   delete_buffer_on_left_click = true,
+    -- },
+	--
+    {
+		text = function(buffer )
+          return buffer.is_modified and " ●" or ''
         end,
-      }
-      -- sort_by = 'insert_after_current' |'insert_at_end' | 'id' | 'extension' | 'relative_directory' | 'directory' | 'tabs' | function(buffer_a, buffer_b)
-        -- add custom logic
-        -- return buffer_a.modified > buffer_b.modified
-      -- end
-    }
-  }
+    },
+    {
+      text = ' ',
+    },
+  },
+})
+
+
+
+-- require('bufferline').setup {}
+-- require('bufferline').setup {
+--   options = {
+--     mode = "buffers", -- set to "tabs" to only show tabpages instead
+--     numbers = "buffer_id", -- | "buffer_id" | "both" | function({ ordinal, id, lower, raise }): string,
+--       close_command = "bdelete! %d",       -- can be a string | function, see "Mouse actions"
+--       right_mouse_command = "bdelete! %d", -- can be a string | function, see "Mouse actions"
+--       left_mouse_command = "buffer %d",    -- can be a string | function, see "Mouse actions"
+--       middle_mouse_command = nil,          -- can be a string | function, see "Mouse actions"
+--       -- NOTE: this plugin is designed with this icon in mind,
+--       -- and so changing this is NOT recommended, this is intended
+--       -- as an escape hatch for people who cannot bear it for whatever reason
+--       indicator_icon = '▎',
+--       buffer_close_icon = '',
+--       modified_icon = '●',
+--       close_icon = '',
+--       left_trunc_marker = '',
+--       right_trunc_marker = '',
+--       --- name_formatter can be used to change the buffer's label in the bufferline.
+--       --- Please note some names can/will break the
+--       --- bufferline so use this at your discretion knowing that it has
+--       --- some limitations that will *NOT* be fixed.
+--       name_formatter = function(buf)  -- buf contains a "name", "path" and "bufnr"
+--         -- remove extension from markdown files for example
+--         if buf.name:match('%.md') then
+--           return vim.fn.fnamemodify(buf.name, ':t:r')
+--         end
+--       end,
+--       max_name_length = 24,
+--       max_prefix_length = 15, -- prefix used when a buffer is de-duplicated
+--       tab_size = 18,
+--       diagnostics = "nvim_lsp",
+--       diagnostics_update_in_insert = true,
+--       diagnostics_indicator = function(count, level, diagnostics_dict, context)
+--         -- return "("..count.."):"..level..""
+--         local icon = level:match("error") and " " or ""
+--         return " " .. icon .. count
+--         -- local icon = level:match("error") and " " or " "
+--       end,
+--       -- NOTE: this will be called a lot so don't do any heavy processing here
+--       custom_filter = function(buf_number, buf_numbers)
+--         -- filter out filetypes you don't want to see
+--         if vim.bo[buf_number].filetype ~= "<i-dont-want-to-see-this>" then
+--           return true
+--         end
+--         -- filter out by buffer name
+--         if vim.fn.bufname(buf_number) ~= "<buffer-name-I-dont-want>" then
+--           return true
+--         end
+--         -- filter out based on arbitrary rules
+--         -- e.g. filter out vim wiki buffer from tabline in your work repo
+--         if vim.fn.getcwd() == "<work-repo>" and vim.bo[buf_number].filetype ~= "wiki" then
+--           return true
+--         end
+--         -- filter out by it's index number in list (don't show first buffer)
+--         if buf_numbers[1] ~= buf_number then
+--           return true
+--         end
+--       end,
+--       -- offsets = {{filetype = "NvimTree", text = "File Explorer" | function , text_align = "left" | "center" | "right"}},
+--       color_icons = true, -- whether or not to add the filetype icon highlights
+--       show_buffer_icons = true, -- disable filetype icons for buffers
+--       show_buffer_close_icons = false,
+--       show_buffer_default_icon = true, -- whether or not an unrecognised filetype should show a default icon
+--       show_close_icon = false,
+--       show_tab_indicators = false,
+--       persist_buffer_sort = true, -- whether or not custom sorted buffers should persist
+--       -- can also be a table containing 2 custom separators
+--       -- [focused and unfocused]. eg: { '|', '|' }
+--       -- separator_style = "slant" | "thick" | "thin" | { 'any', 'any' },
+--       -- enforce_regular_tabs = false | true,
+--       always_show_bufferline = true,
+--       custom_areas = {
+--         -- Please note that this function will be called a lot and should be as inexpensive as possible so it does not block rendering the tabline.
+--         right = function()
+--           local result = {}
+--           local seve = vim.diagnostic.severity
+--           local error = #vim.diagnostic.get(0, {severity = seve.ERROR})
+--           local warning = #vim.diagnostic.get(0, {severity = seve.WARN})
+--           local info = #vim.diagnostic.get(0, {severity = seve.INFO})
+--           local hint = #vim.diagnostic.get(0, {severity = seve.HINT})
+--
+--           if error ~= 0 then
+--             table.insert(result, {text = "  " .. error, guifg = "#EC5241"})
+--           end
+--
+--           if warning ~= 0 then
+--             table.insert(result, {text = "  " .. warning, guifg = "#EFB839"})
+--           end
+--
+--           if hint ~= 0 then
+--             table.insert(result, {text = "  " .. hint, guifg = "#A3BA5E"})
+--           end
+--
+--           if info ~= 0 then
+--             table.insert(result, {text = "  " .. info, guifg = "#7EA9A7"})
+--           end
+--           return result
+--         end,
+--       }
+--       -- sort_by = 'insert_after_current' |'insert_at_end' | 'id' | 'extension' | 'relative_directory' | 'directory' | 'tabs' | function(buffer_a, buffer_b)
+--         -- add custom logic
+--         -- return buffer_a.modified > buffer_b.modified
+--       -- end
+--     }
+--   }
 
 
   ----------------------
@@ -182,8 +265,11 @@ require('bufferline').setup {
   -- })
   --
 
-map("n", "<tab>", ":BufferLineCycleNext<CR>")
-map("n", "<S-tab>", ":BufferLineCyclePrev<CR>")
+  -- map("n", "<tab>", ':lua require"cokeline/mappings".by_step("switch", 1)<CR>') --moves it around
+  map("n", "<tab>", '<cmd>lua  require"cokeline/mappings".by_step("focus", 1)<CR>') -- <cmd> makes it silent
+  map("n", "<S-tab>", '<cmd>lua require"cokeline/mappings".by_step("focus", -1)<CR>')
+-- map("n", "<tab>", ":BufferLineCycleNext<CR>")
+-- map("n", "<S-tab>", ":BufferLineCyclePrev<CR>")
 map("n", "<leader><leader>", ":edit #<CR>") -- go to last open buffer
 -- " nnoremap <leader><leader> <C-^>| " Goto last buffer
 -- map("n", "<leader>q", ":CloseCurrentBufferOrWindow<CR>")

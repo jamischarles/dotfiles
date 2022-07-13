@@ -27,8 +27,8 @@ local feedkeys = require("utils").sendFeedKeys
 -- ( i    )  Insert mode
 -- (  n   )  Normal mode
 -- (   o  )  Operator pending
--- (    v )  Visual+Select mode (this is what I use all the time. What is x for?!?!?
--- (     x)  Visual mode
+-- (    v )  (Visual+) Select mode is for selection + type over it. (autocomplete uses this, to highlight, and then typing allows you to proceed )
+-- (     x)  Visual mode (THIS is what i use for selection only) "Visual"
 
 --------------------------
 -- Debugging and lookup
@@ -55,29 +55,95 @@ map("nx", "e", "k")
 map("nv", "E", "22k")
 -- singleCharNav left/right
 map("nx", "h", "h")
-map("nx", "i", "l")
-
-unMap("o", "i") -- unmapping this preserves i as INNER motion in operator pending mode only
 -- map("o", "i", "i")
 --
 --
--- WORD nav (forward and back) ("o" mode mapping means these can be used in op pending mode AYAY)
-map("nxo", "l", "b")
-map("nxo", "L", "B")
-map("nxo", "u", "w")
-map("nxo", "U", "W")
-map("nxo", "y", "e")
-map("nxo", "Y", "E")
+-- WORD nav (forward and back) 
+map("nx", "l", "b")
+map("nx", "L", "B")
+map("nx", "u", "w")
+map("nx", "U", "W")
+map("nx", "y", "e")
+map("nx", "Y", "E")
+
+-- Operator pending mode
+map("o", "iu", "iw") -- add support for inner-word motion and around-word motion
+map("o", "iU", "iW")
+map("o", "au", "aw")
+map("o", "aU", "aW")
+
+map("o", "al", "ab") -- add support for around-block motion and inner-block motion
+map("o", "aL", "aB") -- b -> paren block, B-> braces block 
+map("o", "il", "ib")
+map("o", "iL", "iB")
+
+-- had to move this down to avoid conflicts with the operator pending mappings (caused the "wait-for-op" delay when I pressed i in normal mode (annoying))
+map("nx", "i", "l", {nowait = true} )
+
+unMap("o", "i") -- unmapping this preserves i as INNER motion in operator pending mode only
+
+-- Operators
+-- cib (change inner BLOCK) with parens
+-- ciB    { with braces
+-- ci(
+-- ca* (includes the outside)
 
 -- CAPS/BACKSPACE -> DELETE and ESCAPE and marks
 -- map BS to marks in normal mode
+
+
+-- FIXME: Should I just have all these call handlebackspace?
+-- unMap("n", "<BS>") -- unmap handleBackSpace for normal mode Q: does it unmap the most recent thing?
+-- map("n", "<BS>", "`") -- jump to last jump point (return)
 map("n", "<BS><BS>", "``") --FIXME: busted...?
+unMap("x", "<BS><BS>") -- ignore <BS><BS> in visual mode
 
-map("i", "<BS>", "<cmd>:HandleBackspace<CR>")
-map("x", "<BS>", "<ESC>", { nowait = true }) -- nowait forces immediate execution. No waiting for another key to be typed that could match another set.
+map("nix", "<BS>", "<cmd>:HandleBackspace<CR>") -- insert and  visual mode should exit to normal mode
+-- map("o", "<BS>", "`")
 
--- quick jump points
-map("n", "<BS>", "`") -- jump to last jump point (return)
+-- Q: how to handle OP pending?
+
+-- create a global command
+vim.api.nvim_create_user_command("HandleBackspace", function()
+-- https://www.reddit.com/r/neovim/comments/s2v0cz/how_to_get_the_current_mode/
+	local mode = vim.api.nvim_get_mode()["mode"]
+
+	print("mode:"..mode)
+
+	if mode == "n" then
+		-- FIXME: read the modifier keys
+		vim.api.nvim_feedkeys("'", "i", false) -- WHY DOES THIS WORK?!?!!? with the "i" modifier?
+	elseif mode == "v" then
+		-- vim.api.nvim_feedkeys("<ESC", "n", false)
+		local keys = vim.api.nvim_replace_termcodes("<ESC>", true, false, true)
+		vim.api.nvim_feedkeys(keys, "", true)
+
+		-- select line mode
+	elseif mode == "V" then
+		local keys = vim.api.nvim_replace_termcodes("<ESC>", true, false, true)
+		-- :h feedkeys for modifiers (2nd param)
+		vim.api.nvim_feedkeys(keys, "", true)
+		-- vim.api.nvim_feedkeys(":normal <ESC>", "n", false)
+		-- feedkeys("<ESC>", "v") -- in Vim, Ctrl+h is mapped to backspace
+		-- feedkeys("`", "n") -- in Vim, Ctrl+h is mapped to backspace
+		--
+	end
+
+	-- if buffertype is NOT telescropPrompt, exit insert mode
+	if vim.bo.filetype ~= "TelescopePrompt" then
+		vim.cmd("stopinsert")
+	else
+
+
+		-- feedkeys("<C-H>", "i") -- in Vim, Ctrl+h is mapped to backspace
+	end
+end, { nargs = 0 })
+
+
+
+-- move this after "n" so it applies this over the other one
+-- map("x", "<BS>", "<ESC>", { nowait = true }) -- nowait forces immediate execution. No waiting for another key to be typed that could match another set.
+-- unMap("n", "<BS>") --unmap above setting in normal mode so we can preserve the jump point stuff
 -- Order MATTERS. ^ This one needs to be after the x mapping for same key
 map("n", "gs", "gi") -- gi - go to last insertion point
 
@@ -168,16 +234,6 @@ map("nxv", "K", "N") -- search result reverse
 --
 --
 -- handle backspace in telescope vs other environments
--- create a global command
--- FIXME: move this somewhere else?
-vim.api.nvim_create_user_command("HandleBackspace", function()
-	-- if buffertype is NOT telescropPrompt, exit insert mode
-	if vim.bo.filetype ~= "TelescopePrompt" then
-		vim.cmd("stopinsert")
-	else
-		feedkeys("<C-H>", "i") -- in Vim, Ctrl+h is mapped to backspace
-	end
-end, { nargs = 0 })
 
 ---------------------------
 ---- EXPERIMENTAL
