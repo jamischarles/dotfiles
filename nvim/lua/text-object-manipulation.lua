@@ -2,6 +2,7 @@
 -- TEXT OBJECTS and Text manipulation!
 -------------------------------------
 
+
 -- READING 
 -- https://thevaluable.dev/vim-create-text-objects/
 -- https://www.davekuhlman.org/nvim-lua-info-notes.html <-------- TRY THIS
@@ -12,10 +13,24 @@
 -- https://github.com/nvim-treesitter/nvim-treesitter-textobjects
 -- https://github.com/RRethy/nvim-treesitter-textsubjects
 --
+local use = require("packer").use
 local map = require('utils').mapKey
 local unMap = require('utils').unmapKey
 local feedkeys = require('utils').sendFeedkeys
 
+
+use "andrewferrier/textobj-diagnostic.nvim"
+
+
+-- jump to next/prev lsp error
+require("textobj-diagnostic").setup({create_default_keymaps = false})
+map('n', '[t', "<cmd>lua require('textobj-diagnostic').next_diag()<CR><esc>")
+map('n', ']t', "<cmd>lua require('textobj-diagnostic').prev_diag()<CR><esc>")
+
+
+        -- config = function()
+        --     require("textobj-diagnostic").setup()
+        -- end,
 -- original keys are destination. (is this because of noremap?)
 -- " but use noremap (no re-map), so that the mapping uses the original meaning of any key on the right side of the mapping and not any new mapping that you might have given to that key." https://superuser.com/questions/526161/how-do-i-remap-vims-ctrlo
 -- So we should always use the ORIGINAL key as the destination...
@@ -28,7 +43,7 @@ map("n", "dw", "de", {nowait = true}) -- dw delete to end of word -- mainly in o
 
 -- https://vi.stackexchange.com/questions/122/performing-certain-operations-without-clearing-register
 map("n", "<leader>d", [["aY"aP]])  -- duplicate current line. Normal and selection. Don't mess with copy/paste register
-map("n", "dd", [["_dd<esc>]])  -- delete current line (keep the original mapping). normal mode only. in visual, single d should delete the whole selection. Don't yank to register (use '_', black hole register)
+map("n", "dd", [["xdd]])  -- delete current line (keep the original mapping). normal mode only. in visual, single d should delete the whole selection. Don't yank to register (use '_', black hole register)
 
 map("x", "d", [["_dd<esc>]], {nowait = true})  -- delete current line (keep the original mapping). normal mode only. in visual, single d should delete the whole selection. discard deleted line
 unMap("n", "d") -- restore d* to prior behavior for normal mode
@@ -38,7 +53,7 @@ unMap("n", "d") -- restore d* to prior behavior for normal mode
 -- map("n", "<leader><CR>", "o<ESC>``") -- insert blank line below and stay in normal mode
 
 map("n", "<leader><CR>", ":set paste<CR>m`o<Esc>``:set nopaste<CR>") -- insert blank line below and stay in normal mode
-map("o", [[s"']], [["m`fEsc>``:set nopaste<CR>]]) -- insert blank line below and stay in normal mode
+-- map("o", [[s"']], [["m`fEsc>``:set nopaste<CR>]]) -- insert blank line below and stay in normal mode
 -- explained: https://vim.fandom.com/wiki/Quickly_adding_and_deleting_empty_lines
 --
 --
@@ -279,6 +294,7 @@ vim.api.nvim_set_keymap("n", "csa", ":SurroundWithToken<CR>", {noremap = true}) 
 vim.api.nvim_set_keymap("n", "cs", ":ChangeSurroundingToken<CR>", {noremap = true}) -- TODO: Can we use this to have live op for last one?
 -- vim.api.nvim_set_keymap("n", "ca", ":SurroundingWithToken<CR>", {noremap = true}) -- TODO: Can we use this to have live op for last one?
 vim.api.nvim_set_keymap("n", "ds", ":DeleteSurroundingToken<CR>", {noremap = true}) -- TODO: Can we use this to have live op for last one?
+-- vim.api.nvim_set_keymap("n", "dd", [["_yy]], {noremap = true}) -- TODO: Can we use this to have live op for last one?
 -- vim.api.nvim_set_keymap("n", [[cs"']], [[:SurroundAndReplace " getcharstr()<CR>]], {noremap = true}) -- TODO: Can we use this to have live op for last one?
 -- vim.api.nvim_set_keymap("n", [[cs'"]], [[:SurroundAndReplace ' "<CR>]], {noremap = true}) -- TODO: Can we use this to have live op for last one?
 -- vim.api.nvim_set_keymap("n", [[cs`']], [[:SurroundAndReplace ` '<CR>]], {noremap = true}) -- TODO: Can we use this to have live op for last one?

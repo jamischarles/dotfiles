@@ -27,6 +27,30 @@ use({
 	requires = { "tami5/sqlite.lua" },
 })
 
+
+
+-- file explorer
+use {
+	'kyazdani42/nvim-tree.lua',
+	requires = {
+		'kyazdani42/nvim-web-devicons', -- optional, for file icons
+	},
+	tag = 'nightly' -- optional, updated every week. (see issue #1193)
+}
+
+require("nvim-tree").setup({
+	filters = { custom = { "^.git$" } },
+	view = {
+		adaptive_size = true,
+		mappings = {
+			list = {
+				{ key = "u", action = "dir_up" },
+			},
+		},
+	},
+
+})
+
 ---------------------
 -- Telescope for frecency
 ------------------
@@ -99,7 +123,9 @@ require("fzf-lua").setup({
 		-- otherwise auto-detect prioritizes `fd`:`rg`:`find`
 		-- default options are controlled by 'fd|rg|find|_opts'
 		-- NOTE: 'find -printf' requires GNU find
-		cmd = "fd --color=never --type f --hidden --follow --exclude .git --exclude locales --exclude tests/functional",
+		--https://github.com/sharkdp/fd/issues/789 SORT
+		-- sort by recently openened/modified? Files only. include hidden files, but remove locales and java tests and .git  
+		cmd = "fd --color=never --type f --hidden --follow --exclude .git --exclude locales --exclude tests/functional -X ls -tu", -- -tu vs -tc?
 		-- find_opts = [[-type f -not -path '*/\.git/*' -printf '%P\n']],
 		-- rg_opts = "--color=never --files --hidden --follow -g '!.git'",
 		-- fd_opts = "--color=never --type f --hidden --follow --exclude .git",
@@ -229,10 +255,24 @@ end
 -- vim.api.nvim_create_user_command('FzfBuffersWithDeleteAction', fzf_buffersWithDelete,  { nargs = 0 })
 
 -- map("n", "<Leader>b", ":FzfBuffersWithDeleteAction<CR>")
-map("n", "<Leader>t", ":FzfLua files<CR>")
+map("n", "<Leader>t", ":FzfLua files<CR>") -- see config above for this
+map("n", "<Leader>T", "<cmd>lua require('fzf-lua').files({cmd='fd --no-ignore'})<CR>") -- all files & folders
 map("n", "<Leader>g", ":FzfLua git_status<CR>")
 map("n", "<Leader>b", ":FzfLua buffers<CR>") -- could we sort this by frecency? interesting!!!
-map("n", "<Leader>m", ":Telescope frecency<CR>") -- uses my custom frecency usin `fre` (see above)
+-- map("n", "<Leader>m", ":Telescope frecency<CR>") -- uses my custom frecency usin `fre` (see above)
+map("n", "<Leader>m", ":FzfLua oldfiles<CR>") -- uses my custom frecency usin `fre` (see above)
+
+
+
+-- To add nvim treesitter like menu options: https://github.com/kyazdani42/nvim-tree.lua/pull/1162
+-- For now maybe we can just commands on it... g? for keys
+-- f filter
+-- . run command
+map("n", "<Leader>n", ":NvimTreeToggle<CR>")
+map("n", "<C-F>", ":NvimTreeFindFile<CR>") -- uses my custom frecency usin `fre` (see above)
+
+
+
 
 -- retiring my own custom solution for now...
 -- map(
@@ -249,7 +289,6 @@ map("n", "<Leader>m", ":Telescope frecency<CR>") -- uses my custom frecency usin
 --fre --sorted | fzf | xargs fre -D -- really we just need the command that ctr-d or ctrl-x would execute. fre --delete FILENAME
 -- can I map actions on these?
 
-map("n", "<Leader>e", ":FzfLua files cwd=~/.dotfiles/nvim<CR>") -- change folder for files() lookup
 
 -- Custom commands!!!
 map("n", "<Leader>e", ":FzfLua files cwd=~/.dotfiles/nvim<CR>") -- change folder for files() lookup
@@ -258,8 +297,9 @@ map("n", "<Leader>e", ":FzfLua files cwd=~/.dotfiles/nvim<CR>") -- change folder
 vim.api.nvim_create_user_command("Rg", function(arguments)
 	require("fzf-lua").files({
 		actions = { ["default"] = actions.file_edit },
-		cmd = "rg  --fixed-strings --max-count 1 --column --line-number --no-heading --color=always --smart-case --iglob !locales -- " .. arguments.args,
+		cmd = "rg  --fixed-strings --max-count 5 --column --line-number --no-heading --color=always --smart-case --iglob !locales -- " .. arguments.args,
 	}) --ignores locales/*
+		-- cmd = "rg  --fixed-strings --max-count 1 --column --line-number --no-heading --color=always --smart-case --iglob !locales -- " .. arguments.args,
 
 	-- ['--header'] = vim.fn.shellescape(('%s to close buffer, %s to open'):format(delBuffer, enterKey))    }
 	-- Old cmd-t function I used...

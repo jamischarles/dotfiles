@@ -163,9 +163,10 @@ map("x", "Z", ":<C-U>redo<CR>")
 -- cut/copy/paste --
 map("n", "x", "dl")
 map("n", "X", "dd")
--- map("x", "x", "d") -- if we
-map("x", "X", "d")
-map("v", "d", "d", { nowait = true })
+-- map("x", "x", "d") -- mapping isn't needed? Happens naturally?
+-- map("x", "X", "d")
+-- unMap('n', "X")
+map("x", "d", [["_d]], { nowait = true }) -- don't affect registers
 
 map("n", "C", "yy")
 map("x", "C", "yl")
@@ -214,7 +215,7 @@ map("n", "T", "A", { nowait = true })
 -- map("o", "s", nn
 
 -- mode + convenience
-map("n", "ww", "cc")
+map("n", "ww", [["_cc]]) -- clear the line, start at beginning in insert, and drop it into black hole register
 -- map("nx", "w", "c") -- I never use this..., though it's better than the default
 
 -- SEARCH Navigation

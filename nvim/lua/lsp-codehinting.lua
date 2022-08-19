@@ -27,11 +27,35 @@ use({
 	run = ":TSUpdate",
 })
 
--- gps context
-use {
-    "SmiteshP/nvim-navic",
-    requires = "neovim/nvim-lspconfig"
+
+use "jparise/vim-graphql" -- NOT lua :(
+
+require'nvim-treesitter.configs'.setup {
+	ensure_installed = { "lua", "graphql","rust", "svelte", "typescript", "tsx", "javascript", "css" }
 }
+
+
+-- highlight current line & goodies
+-- TODO: move to git? 
+-- use 'jamischarles/nvim-cursorline'
+-- require('nvim-cursorline').setup {
+--   cursorline = {
+--     enable = false,
+--     timeout = 500,
+--     number = false,
+--   },
+--   cursorword = {
+--     enable = true,
+--     min_length = 3,
+--     hl = { underline = true },
+--   }
+-- }
+
+-- gps context
+-- use {
+--     "SmiteshP/nvim-navic",
+--     requires = "neovim/nvim-lspconfig"
+-- }
 
 -- coloring hex colors
 use 'norcalli/nvim-colorizer.lua'
@@ -58,12 +82,22 @@ require'colorizer'.setup {
 use({ "nvim-treesitter/nvim-treesitter-context", requires = "nvim-treesitter/nvim-treesitter" })
 
 -- Ctags-like plugin that shows all the fns for a file
-use({
-	"stevearc/aerial.nvim",
-	config = function()
-		require("aerial").setup()
-	end,
+-- use({
+-- 	"stevearc/aerial.nvim",
+-- 	config = function()
+-- 		require("aerial").setup()
+-- 	end,
+-- })
+
+use 'simrat39/symbols-outline.nvim'
+require("symbols-outline").setup({
+	show_numbers = true,
+	symbol_blacklist = {
+		'Field',
+		'Property',
+	}
 })
+
 -- navigating around the symbols in a file
 use("ziontee113/syntax-tree-surfer")
 
@@ -133,21 +167,22 @@ local on_attach = function(client, bufnr)
 	-- SEE inti.lua for trouble mapping
 
 	-- code context info
-	require('nvim-navic').attach(client, bufnr)
+	-- require('nvim-navic').attach(client, bufnr)
 	--
 
 	-- attach aerial to LSP for ctags-like interface
-	require("aerial").on_attach(client, bufnr)
-	-- Toggle the aerial window with <leader>a
-	vim.api.nvim_buf_set_keymap(bufnr, "n", "<leader>a", "<cmd>AerialToggle!<CR>", {})
-	-- Jump forwards/backwards with '{' and '}'
-	vim.api.nvim_buf_set_keymap(bufnr, "n", "{", "<cmd>AerialPrev<CR>", {})
-	vim.api.nvim_buf_set_keymap(bufnr, "n", "}", "<cmd>AerialNext<CR>", {})
-	-- Jump up the tree with '[[' or ']]'
-	vim.api.nvim_buf_set_keymap(bufnr, "n", "[[", "<cmd>AerialPrevUp<CR>", {})
-	vim.api.nvim_buf_set_keymap(bufnr, "n", "]]", "<cmd>AerialNextUp<CR>", {})
+	-- require("aerial").on_attach(client, bufnr)
+	-- -- Toggle the aerial window with <leader>a
+	-- vim.api.nvim_buf_set_keymap(bufnr, "n", "<leader>a", "<cmd>AerialToggle!<CR>", {})
+	-- -- Jump forwards/backwards with '{' and '}'
+	-- vim.api.nvim_buf_set_keymap(bufnr, "n", "{", "<cmd>AerialPrev<CR>", {})
+	-- vim.api.nvim_buf_set_keymap(bufnr, "n", "}", "<cmd>AerialNext<CR>", {})
+	-- -- Jump up the tree with '[[' or ']]'
+	-- vim.api.nvim_buf_set_keymap(bufnr, "n", "[[", "<cmd>AerialPrevUp<CR>", {})
+	-- vim.api.nvim_buf_set_keymap(bufnr, "n", "]]", "<cmd>AerialNextUp<CR>", {})
 end
 
+-- npm install for these?
 lspconfig.tsserver.setup({
 	-- cb that runs whenever we open a file that tsserver supports
 	on_attach = function(client, bufnr)
@@ -156,9 +191,9 @@ lspconfig.tsserver.setup({
 		local ts_utils = require("nvim-lsp-ts-utils")
 		ts_utils.setup({})
 		ts_utils.setup_client(client)
-		buf_map(bufnr, "n", "gs", ":TSLspOrganize<CR>")
-		buf_map(bufnr, "n", "gi", ":TSLspRenameFile<CR>")
-		buf_map(bufnr, "n", "go", ":TSLspImportAll<CR>")
+		-- buf_map(bufnr, "n", "gs", ":TSLspOrganize<CR>")
+		-- buf_map(bufnr, "n", "gi", ":TSLspRenameFile<CR>")
+		-- buf_map(bufnr, "n", "go", ":TSLspImportAll<CR>")
 		on_attach(client, bufnr)
 	end,
 })
@@ -213,7 +248,7 @@ require("lspconfig").sumneko_lua.setup({
 -- })
 
 require'treesitter-context'.setup{
-    enable = true, -- Enable this plugin (Can be enabled/disabled later via commands)
+    enable = false, -- Enable this plugin (Can be enabled/disabled later via commands)
     max_lines = 0, -- How many lines the window should span. Values <= 0 mean no limit.
     trim_scope = 'outer', -- Which context lines to discard if `max_lines` is exceeded. Choices: 'inner', 'outer'
     patterns = { -- Match patterns for TS nodes. These get wrapped to match at word boundaries.

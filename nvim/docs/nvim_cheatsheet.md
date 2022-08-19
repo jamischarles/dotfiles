@@ -30,6 +30,10 @@ https://wincent.com/wiki/Lua_development_in_Neovim
 
 :mode
 
+## Marks that can MOVE (sticky)
+
+:h extmarks
+
 ## Modifying ranges programatically
 
 `:'<,'>luado return string.upper(line)`
@@ -106,6 +110,9 @@ https://neovim.io/doc/user/motion.html
 ## Registers (copy/paste )
 
 -- https://vi.stackexchange.com/questions/122/performing-certain-operations-without-clearing-register
+
+execute command from register
+`:@"` runs the command that was JUST copied
 
 ## User commands
 

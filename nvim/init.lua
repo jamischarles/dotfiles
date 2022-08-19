@@ -43,6 +43,7 @@ set title titlestring=
 ]])
 
 
+
 -- reset keymappings. At END? Is this the best place? (does position actually matter?)
 require('keymap-reset-colemak')
 require('keys')
@@ -61,6 +62,13 @@ require('colorscheme')
 -- require('plugins') -- run packerSync from fresh to ensure it's installed
 
 
+-- syntax sugar 
+-- require('cursorline').setup() -- highlight current line after a jump
+-- set highlight current line number only. PERFECT -- TODO: consider moving this to sign column bg instead...
+vim.cmd('set number') -- line numbers
+vim.cmd('set cursorline') -- FIXME: find more lua way to do this? Maybe with the vim global options part?
+vim.cmd('set cursorlineopt=number ') -- FIXME: find more lua way to do this? Maybe with the vim global options part?
+-- hi CursorLineNr guifg=#af00af guibg=color -- CursorLineNr   xxx cterm=bold gui=bold guifg=#ba793e
 
 -- modules by feature / UI functionality
 require('statusline')

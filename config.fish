@@ -106,6 +106,7 @@ set -g START_TIME (getTime)
 alias ctags="$brewDir/bin/ctags"
 
 alias ls="lsd"
+alias la="lsd --long --date=relative --blocks permission,size,date,name"
 alias lsl="lsd --long --date=relative --blocks permission,size,date,name"
 alias lsa="lsd --long --all --date=relative --blocks permission,size,date,name"
 

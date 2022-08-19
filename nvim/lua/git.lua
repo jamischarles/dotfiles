@@ -7,7 +7,8 @@ local use = require('packer').use
 use 'lewis6991/gitsigns.nvim'
 
 require('gitsigns').setup {
-    sign_priority = 20,
+    sign_priority = 1,
+	numhl= true,
     diff_opts = {
       algorithm = "minimal"
       -- split = "botright"

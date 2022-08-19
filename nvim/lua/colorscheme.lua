@@ -23,7 +23,8 @@ vim.api.nvim_create_user_command('Dark', ':lua vim.opt.background="dark"', {narg
 
 
 -- vim.cmd('colorscheme iceberg') -- no lua equivalent of this :colorscheme command
-vim.cmd('colorscheme dayfox') -- no lua equivalent of this :colorscheme command
+-- vim.cmd('colorscheme dayfox') -- no lua equivalent of this :colorscheme command
+vim.cmd('colorscheme duskfox') -- no lua equivalent of this :colorscheme command
 
 -- LIKE
 -- dawnfox

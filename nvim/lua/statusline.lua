@@ -104,7 +104,13 @@ local function filename()
 	-- :h filename-modifiers
 	--require("nvim-web-devicons").get_icon_by_filetype(filetype, opts)
 	local fname = vim.fn.expand("%:~:.") -- file name to root
-	fname = vim.fn.expand('%:~:h') -- folder name
+	-- fname = vim.fn.expand('%:~:h') -- folder name
+	-- fname = vim.fn.expand('%:.:h') -- folder name relative to cwd (where we openend vim from) 
+	-- fname = vim.fn.expand('%:~:h:s?dev??') -- folder name relative to cwd (where we openend vim from) 
+
+	-- get folder path, but remove ~/dev and ~/dev_freelance from path
+	fname = vim.fn.expand('%:p:h:s?/Users/jacharles/dev_freelance/??:s?/Users/jacharles/dev/??') -- folder name relative to cwd (where we openend vim from) 
+	-- TODO: use :S for shell command to get project root...
 
 	return fname
 
@@ -144,11 +150,11 @@ end
 function filenameComponent:update_status()
 	local data = filenameComponent.super.update_status(self)
 
+	-- copied from https://github.com/nvim-lualine/lualine.nvim/blob/master/lua/lualine/components/filetype.lua#L34
+	local f_name, f_extension = vim.fn.expand('%:t'), vim.fn.expand('%:e')
+	f_extension = f_extension ~= '' and f_extension or vim.bo.filetype
+	local icon, icon_highlight_group = require("nvim-web-devicons").get_icon(f_name, f_extension)
 
-  local icon, _ = require("nvim-web-devicons").get_icon_color(vim.bo.filetype)
-  if icon then
-	  data =  icon .. " " .. data
-  end
   -- local icon, _ = require("nvim-web-devicons").get_icon_color(vim.bo.filetype)
 	-- print("data")
 	-- print(data)
@@ -158,8 +164,13 @@ function filenameComponent:update_status()
 
 	-- highlight the whole component (colors the text basically)
 	if vim.bo.modified then
-	data = highlight.component_format_highlight( self.status_colors.modified ) .. data
-end
+		data = highlight.component_format_highlight( self.status_colors.modified ) .. data
+	end
+
+
+	if icon then
+		data =  data .. " " .. icon
+	end
 		-- vim.bo.modified and self.status_colors.modified or self.status_colors.saved
 
   -- self.options.icon = {icon, align='right'}
@@ -266,7 +277,7 @@ require("lualine").setup({
 					return vim.bo.buftype == "quickfix"
 				end,
 			},
-			{ require('nvim-navic').get_location, cond = require('nvim-navic').is_available },
+			-- require('nvim-navic').get_location, cond = require('nvim-navic').is_available },
 		},
 		lualine_x = {},
 		lualine_y = { "filetype" },

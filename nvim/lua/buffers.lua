@@ -41,16 +41,18 @@ require('cokeline').setup({
 
 
 			return buffer.is_modified and buffer.is_focused and colors.black
+			 -- or buffer.is_modified and  get_hex('ColorColumn', ' bg')
+			  or buffer.is_modified and get_hex('BufferCurrentMod', 'fg')
 			or  buffer.is_focused
 			and get_hex('ColorColumn', 'bg')
-			or buffer.is_modified and  get_hex('ColorColumn', 'fg')
+
 			or get_hex('Normal', 'fg')
 		end,
 		bg = function(buffer)
 			-- return buffer.is_modified and buffer.is_focused  and get_hex('GitSignsChange', 'fg')
 			return buffer.is_modified and buffer.is_focused and colors.yellow
-			or buffer.is_modified and get_hex('GitSignsChange', 'fg')
-			-- or buffer.is_modified and get_hex('BufferInactiveMod', 'fg')
+			-- or buffer.is_modified and get_hex('GitSignsChange', 'fg')
+			 -- or buffer.is_modified and get_hex('BufferInactiveMod', 'fg')
 
 			or
 			buffer.is_focused
@@ -286,8 +288,8 @@ map("n", "<leader><leader>", ":e#<CR>") -- switch to last opened buffer
 -----------------------------------
 -- Docs: https://github.com/MunifTanjim/nui.nvim/tree/main/lua/nui/popup
 
-local Popup = require("nui.popup")
-local event = require("nui.utils.autocmd").event
+--local Popup = require("nui.popup")
+--local event = require("nui.utils.autocmd").event
 
 
 -- mount/open the component
