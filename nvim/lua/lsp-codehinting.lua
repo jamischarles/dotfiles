@@ -302,6 +302,7 @@ require'treesitter-context'.setup{
 
 -- Ctrl-L to show definition etc under cursor
 map("n", "<C-l>", ":LspHover<CR>")
+map("n", "<C- >", ":LspHover<CR>") -- ctrl+space YES
 map("n", "<Leader>l", ":LspDiagLine<CR>")
 
 -- maybe ctrl-} for moving to next lsp thing?
