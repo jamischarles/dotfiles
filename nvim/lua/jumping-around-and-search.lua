@@ -1,0 +1,4 @@
+------------------------------
+-- Jumping around and Search
+-----------------------------
+-- https://github.com/ggandor/lightspeed.nvim

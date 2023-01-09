@@ -1,0 +1,226 @@
+env:
+  # COLORFGBG: 15;0
+  # TERM: alacritty #uses .terminfo that we generated
+  # COLORTERM: truecolor
+  # COLORTERM: xterm-256color
+  # Works very similar to alacritty term (uses .terminfo) but preserves the color highlight plugin
+  # BYOBU_TERM: xterm-256color
+  # BYOBU_TERM: xterm-256color
+  #
+  # This causes the fewest issues
+  TERM: xterm-256color
+
+  # TERM: truecolor #uses .terminfo that we generated
+  # TERM: alacritty #uses .terminfo that we generated
+
+  LANG: en_US.UTF-8
+
+
+  # Cursor colors
+  #
+  # Colors which should be used to draw the terminal cursor.
+  #
+  # Allowed values are CellForeground and CellBackground, which reference the
+  # affected cell, or hexadecimal colors like #ff00ff.
+# colors:
+
+
+window:
+# Spread additional padding evenly around the terminal content.
+  dynamic_padding: true
+
+  # Startup Mode (changes require restart)
+  startup_mode: Fullscreen
+  # dimensions:
+  #   columns: 0
+  #   lines: 0
+  # padding:
+  #   x: 0
+  #   y: 0
+
+  # Spread additional padding evenly around the terminal content.
+  dynamic_padding: true
+  decorations: full
+  startup_mode: Windowed
+
+scrolling:
+  history: 10000
+  multiplier: 3
+
+# Shell
+# You can set this to a path to your favorite shell, e.g. /bin/fish
+shell: /opt/homebrew/bin/fish
+
+# If `true`, bold text is drawn using the bright color variants.
+draw_bold_text_with_bright_colors: true
+
+# Font configuration (changes require restart)
+# https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/FiraCode (patched fonts)
+font:
+  # The size to use.
+  size: 15
+  # The normal (roman) font face to use.
+  normal:
+    # family: Fira Code
+    # family: FiraCode Nerd Font # support non-ascii stuff
+    family: FiraCode Nerd Font Mono # support non-ascii stuff (has folder icons)
+    # family: FuraMono Nerd Font Mono # support non-ascii stuff (has folder icons)
+    # family: Hack Nerd Font Mono # support non-ascii stuff (has folder icons)
+    # Style can be specified to pick a specific face.
+    style: Medium
+
+  # The bold font face
+  bold:
+    family: FiraCode Nerd Font Mono
+    # Style can be specified to pick a specific face.
+    style: SemiBold
+
+  # The italic font face
+  italic:
+    family: FiraCode Nerd Font Mono
+    # family: Hack Nerd Font Mono
+    # Style can be specified to pick a specific face.
+    style: Medium
+    #
+    #
+# Colors (Dracula)
+custom_cursor_colors: true
+
+  # &anchor     *alias
+schemes: # I assume that schemes prop here doesn't even matter. it's mainly the config under the &(anchor)
+  # https://github.com/EdenEast/nightfox.nvim/blob/6677c99d89050fa940ffc320fe780fb52baa68ac/extra/duskfox/nightfox_alacritty.yml
+  # bright: &dawnfox # anchors *dawnfox alias to this config
+# Default colors
+    # primary:
+      # background: '0xfaf4ed'
+      # foreground: '0x575279'
+    # normal:
+    #   black:   '#282c34'
+    #   red:     '#e06c75'
+    #   green:   '#98c379'
+    #   yellow:  '#e5c07b'
+    #   blue:    '#61afef'
+    #   magenta: '#c678dd'
+    #   cyan:    '#8be9fd'
+    #   white:   '#dcdfe4'
+    #
+    #     # Bright colors
+    # bright:
+    #   black:   '#282c34'
+    #   red:     '#e06c75'
+    #   green:   '#98c379'
+    #   yellow:  '#e5c07b'
+    #   blue:    '#61afef'
+    #   magenta: '#c678dd'
+    #   cyan:    '#8be9fd'
+    #   white:   '#dcdfe4'
+
+  duskfox: &duskfox # anchors *duskfox alias to this config
+# Default colors
+    primary:
+      background: '0x232136'
+      foreground: '0xe0def4'
+      # Normal colors
+    normal:
+      black:   '0x393552'
+      red:     '0xeb6f92'
+      green:   '0xa3be8c'
+      yellow:  '0xf6c177'
+      blue:    '0x569fba'
+      magenta: '0xc4a7e7'
+      cyan:    '0x9ccfd8'
+      white:   '0xe0def4'
+        # Bright colors
+    bright:
+      black:   '0x47407d'
+      red:     '0xf083a2'
+      green:   '0xb1d196'
+      yellow:  '0xf9cb8c'
+      blue:    '0x65b1cd'
+      magenta: '0xccb1ed'
+      cyan:    '0xa6dae3'
+      white:   '0xe2e0f7'
+
+    indexed_colors:
+      - { index: 16, color: '0xea9a97' }
+      - { index: 17, color: '0xeb98c3' }
+
+  default: &default-theme
+    primary:
+      # background: '#282a36'
+      # background: '0xfaf4ed'
+      background: '#1b1c25' # changed bg color
+      # foreground: '#f8f8f2' # commenting this out, as this color messed up my cursor color on light themes (when no char is under cursor)
+      foreground: '0x575279' # this fixes the cursor being too bright on bright bg. Other alternative is to lock to the cursor color via cursor props so color doesn't change
+
+        # https://github.com/EdenEast/nightfox.nvim/blob/6677c99d89050fa940ffc320fe780fb52baa68ac/extra/dawnfox/nightfox_alacritty.yml#L7
+        # Directly using the colors in the theme for alacritty itself seems to help the cursors inversion issue...
+        # TODO: solution here is to probably match these colors based on the *fox alacritty files
+        # and use this method to switch easily
+        # https://www.youtube.com/watch?v=WsBAK618bww
+        # background: '0xfaf4ed'
+        # foreground: '0x575279'
+
+        # Normal colors
+    normal:
+      black:   '#282c34'
+      red:     '#e06c75'
+      green:   '#98c379'
+      yellow:  '#e5c07b'
+      blue:    '#61afef'
+      magenta: '#c678dd'
+      cyan:    '#8be9fd'
+      white:   '#dcdfe4'
+
+        # Bright colors
+    bright:
+      black:   '#282c34'
+      red:     '#e06c75'
+      green:   '#98c379'
+      yellow:  '#e5c07b'
+      blue:    '#61afef'
+      magenta: '#c678dd'
+      cyan:    '#8be9fd'
+      white:   '#dcdfe4'
+
+
+      # No need to refresh after editing.  
+  cursor:
+    # when cursor is on text?
+    # text: '0xfaf4ed'
+      # when cursor is NOT on text?
+    cursor: '0x575279'
+
+colors: *default-theme
+
+
+    # text: CellBackground
+    # cursor: CellForeground
+    # text:   '#002b36' # base03
+    # cursor: '#839496' # base0
+  #   text: CellForeground
+  #   cursor: CellForeground
+  # vi_mode_cursor:
+  #   text: CellBackground
+  #   cursor: CellForeground
+
+
+# keybindings. If you unbind something it kills that key completely...
+# be careful with that
+  # - { key: I,   mods: Control, action: None } #unbind ctrl-i (by default bound as tab). Apparently this is a common default?!?
+
+# this right here is a good alt to karabiner/goku rebindings
+#https://www.eso.org/~ndelmott/ascii.html Q: Tab == ctrl+I ?!?!?!?!?
+
+# key_bindings:
+  # - { key: I,        mods: Control, chars:  "\x09"                       }
+  # - { key: Tab,       chars:  "\x09"                       }
+  # - { key: I,   mods: Control, action: None } #unbind ctrl-i (by default bound as tab). Apparently this is a common default?!?
+  # Google ascii hex  to find these values (iterm works same way for sending keys to terminal)
+  # Rebind ctr+i as ctrl+i (i guess default is <tab>?!?
+  # Hex ascii code for ctrl+i is 09
+  # - { key: I,        mods: Control, chars:  "\x09"                       }
+  # - { key: Tab, action: None } #unbind tab. weird conflicts happening which ctrl-I and tab...
+  #
+# Reading: https://github.com/alacritty/alacritty/issues/62
+#https://www.rapidtables.com/code/text/ascii-table.html

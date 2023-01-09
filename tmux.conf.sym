@@ -1,0 +1,131 @@
+# Forces tmux to use the same colors as nvim. :)
+# set -g default-terminal "screen-256color"
+
+# Smart pane switching with awareness of vim splits
+# See: https://github.com/christoomey/vim-tmux-navigator
+is_vim='echo "#{pane_current_command}" | grep -iqE "(^|\/)g?(view|n?vim?x?)(diff)?$"'
+bind-key -n 'C-h' if-shell "$is_vim" "send-keys C-h" "select-pane -L"
+bind-key -n 'C-j' if-shell "$is_vim" "send-keys C-j" "select-pane -D"
+bind-key -n 'C-k' if-shell "$is_vim" "send-keys C-k" "select-pane -U"
+bind-key -n 'C-l' if-shell "$is_vim" "send-keys C-l" "select-pane -R"
+bind-key -n 'C-\' if-shell "$is_vim" "send-keys C-\\" "select-pane -l"
+
+# http://dan.carley.co/blog/2013/01/11/tmux-scrollback-with-iterm2/
+# allow scrollback in iterm. Don't need this anymore...
+# Turning this on breaks cursor behavior...
+# set -g terminal-overrides 'xterm*:smcup@:rmcup@'
+
+
+
+## PREFIX KEY (ctrl space?)
+unbind-key C-b
+set -g prefix C-space
+bind-key C-space send-prefix
+
+##
+# Scroll mode (copy mode)
+##
+# allow mouse scrolling
+# TODO: See if this works...
+#set -g terminal-overrides 'xterm*:smcup@:rmcup@' #in normal session
+set -g mouse on #in history copy mode
+# Start copy mode when scrolling up. auto scroll works by turning on copy mode when you scroll)
+bind -n WheelUpPane if-shell -F -t = "#{mouse_any_flag}" "send-keys -M" "if -Ft= '#{pane_in_mode}' 'send-keys -M' 'select-pane -t=; copy-mode -e; send-keys -M'"
+bind -n WheelDownPane select-pane -t= \; send-keys -M
+
+# setw -g mode-keys vi
+set-window-option -g mode-keys vi
+#set -g status-keys vi
+# bind-key -t vi-edit Up   history-up
+bind-key -T edit-mode-vi Up send-keys -X history-up
+bind-key -T edit-mode-vi Down send-keys -X history-down
+# bind-key -t vi-edit n   history-down
+# bind-key -t vi-edit e history-up
+
+
+# https://sanctum.geek.nz/arabesque/vi-mode-in-tmux/
+# :list-keys -t vi-copy     lists all the bindings
+# TODO: Brind the other vim movement stuff here...
+bind-key -T copy-mode-vi n send-keys -X cursor-down
+bind-key -T copy-mode-vi e send-keys -X cursor-up
+bind-key -T copy-mode-vi i send-keys -X cursor-right
+bind-key -T copy-mode-vi E send-keys -X halfpage-up
+bind-key -T copy-mode-vi N send-keys -X halfpage-down
+bind-key -T copy-mode-vi C-e send-keys -X page-up
+bind-key -T copy-mode-vi C-n send-keys -X page-down
+
+bind-key -T copy-mode-vi a send-keys -X begin-selection
+bind-key -T copy-mode-vi c send-keys -X copy-pipe "reattach-to-user-namespace pbcopy; tmux display 'Copied to clipboard!'"
+
+
+##
+# Window splits
+##
+# easy resize
+bind - resize-pane -D 5
+bind _ resize-pane -U 5
+
+# Easy bindings for split
+unbind %
+bind | split-window -h
+bind % split-window
+# bind - split-window -v
+
+# TMUX POWERLINE
+# ==============
+# pip install powerline-status
+# pip install powerline-gitstatus
+# https://powerline.readthedocs.io/en/latest/installation.html#repository-root
+
+# find the location:
+# $ pip show powerline-status
+
+# load in powerline (since we installed it via pip it's here)
+
+run-shell "powerline-daemon -q" # recommended. Not sure why...
+# FIXME: add this back in?
+# source "/Library/Python/2.7/site-packages/powerline/bindings/tmux/powerline.conf"
+
+
+set-option -g status on
+set-option -g status-interval 2
+# set-option -g status-utf8 on
+set-option -g status-justify "left"
+set-option -g status-left-length 60
+set-option -g status-right-length 90
+set-option -g status-left "#(~/Development/tmux/tmux-powerline/powerline.sh left)"
+set-option -g status-right "#(~/Development/tmux/tmux-powerline/powerline.sh right)"
+#PROMPT="$PROMPT"'$([ -n "$TMUX" ] && tmux setenv TMUXPWD_$(tmux display -p "#D" | tr -d %) "$PWD")'
+
+###
+# PLUGINS
+###
+
+#Installs new plugins from GitHub or any other git repository
+# prefix + I
+
+#Refreshes TMUX environment
+#prefix + U
+
+#updates plugin(s)
+#prefix + alt + u
+
+
+# List of plugins
+set -g @plugin 'tmux-plugins/tpm'
+set -g @plugin 'jbnicolai/tmux-fpp'
+set -g @plugin 'tmux-plugins/tmux-sensible'
+set -g @plugin 'tmux-plugins/tmux-copycat'
+set -g @plugin 'tmux-plugins/tmux-open' #open url etc that's highlighted
+set -g @plugin 'tmux-plugins/tmux-yank' # copy from tmux :}. Not sure it's needed anymore...
+
+# Other examples:
+# set -g @plugin 'github_username/plugin_name'
+# set -g @plugin 'git@github.com/user/plugin'
+# set -g @plugin 'git@bitbucket.com/user/plugin'
+
+# Initialize TMUX plugin manager (keep this line at the very bottom of tmux.conf)
+run '~/.tmux/plugins/tpm/tpm'
+
+# Set fish as default shell
+set-option -g default-shell /usr/local/bin//fish

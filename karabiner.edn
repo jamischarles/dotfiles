@@ -1,0 +1,305 @@
+;; https://github.com/yqrashawn/GokuRakuJoudo
+;; edn spec https://github.com/edn-format/edn
+;; easy config for karabiner
+;; commands:
+;; - goku will update karabiner.json once
+;; - gokuw will watch for changes in this file and update
+;; - `brew services start goku` will restart this at login
+
+;; ---------------------
+;; TROUBLESHOOTING
+;; ------------------
+;; - if things aren't working or updating, then delete the karabiner.json file and follow the instructions from there
+
+;; TODO: keep track of common use cases, esp if they are switched across apps, like git status or git diff...
+
+
+;; TODO LIST
+;; - try sequential commands with modes (via variables)... great way to enable vim mode in xcode etc...
+; - Look into long press for modes and other things...
+
+;; GOTCHAS:
+;; - FAILS :Sleft_arrow
+;; - WORKS :!Sleft_arrow (maybe for multiples you have to define whether optional or not)
+
+;; [:a :1 :chrome] -- [<from> <to> <conditions>]
+
+;; Note: For any key mapping, DO NOT use the current colemak key. Use the old key...
+
+
+;; (:require [karabiner-configurator.modifiers :as sut]
+            ;; )
+
+;; define application identifiers
+{
+
+ ;; This causes all caps bug?!?
+:profiles
+;;  {:goku {:default true
+;; TODO mark these so it's harder for o mde instead f typing it nrmally
+ {:Default {:default true
+         :alone   90 ; hold for .. ms to register single tap
+         :held    50 ; TODO: not sure what it's for
+         :delay   20 ; time after which the key press is delayed
+         :sim_delay     10  ; ?
+         :sim     10 }} ; keys need to be pressed within this threshold to be considered simultaneous
+;;  :applications {:chrome ["^com\\.google\\.Chrome$"]
+                ;; :screenflow["^net\\.telestream\\.screenflow9$"]}
+
+;;  :templates {:launch "osascript -e 'tell application \"Alfred 4\" to run trigger \"launch%s\" in workflow \"yqrashawn.workflow.launcher\" with argument \"%s\"'"}
+;;  :templates {:launch "echo testing: %s "}
+:templates {:alfred "osascript -e 'tell application \"Alfred 4\" to run trigger \"%s\" in workflow \"%s\" with argument \"%s\"'"
+             :km "osascript -e 'tell application \"Keyboard Maestro Engine\" to do script \"%s\"'"
+             :open "open \"%s\""
+             :launch "osascript -e 'tell application \"%s\" to activate'"
+             }
+
+:applications {;
+               :alacritty ["io.alacritty"]
+               :chrome ["com.google.Chrome"]
+               :screenflow ["net.telestream.screenflow9"]
+               :slack ["com.tinyspeck.slackmacgap"]
+               ;
+               }
+
+
+;; alias colemak keys so we can do this much easier...
+:froms  {
+         ;colemak froms (for easier mnemonics)
+         ; now I can use -f for f (e key) instead of e (since this file ignores
+         :-q {:key :q}
+         :-w {:key :w}
+         :-f {:key :e}
+         :-p {:key :r}
+         :-g {:key :t}
+         :-j {:key :y}
+         :-l {:key :u}
+         :-u {:key :i}
+         :-y {:key :o}
+         :-semicolon {:key :p}
+
+         :-a {:key :a}
+         :-r {:key :s}
+         :-s {:key :d}
+         :-t {:key :f}
+         :-d {:key :g}
+         :-h {:key :h}
+         :-n {:key :j}
+         :-e {:key :k}
+         :-i {:key :l}
+         :-o {:key :semicolon}
+
+         :-z {:key :z}
+         :-x {:key :x}
+         :-c {:key :c}
+         :-v {:key :v}
+         :-b {:key :b}
+         :-k {:key :n}
+         :-m {:key :m}
+
+         }
+
+;; alias to's in case we need the TO: to be several keys
+;; :tos {
+;;
+;;       }
+
+
+;;  :simlayers {:period-mode {:key :period}}
+;;  :simlayers {:open-mode {:key :o}}
+;;  :simlayers {:o-mode {:key :semicolon}} ;; TODO: map the FROM things to do it like he showed... TODO: use :modi commmand to make it more clear...
+
+;; targets o-key. For some reason :-o doesn't work here...
+;; :simlayers {:o-mode {:key :semicolon}} ;; TODO: map the FROM things to do it like he showed... TODO: use :modi commmand to make it more clear...
+;; :simlayers {:o-mode {:key :semicolon}} ;; TODO: map the FROM things to do it like he showed... TODO: use :modi commmand to make it more clear...
+:simlayers {:o-mode {:key :right_command}} ;; TODO: map the FROM things to do it like he showed... TODO: use :modi commmand to make it more clear...
+
+;;  :layers {
+        ; implement caps lock mode
+
+    ;; :o-mode{:key :semicolon :alone {:key :semicolon}}} ; o-ke
+ ;; TODO: strongly consider mapping all the colemak mappings here so we can map those instead of the original keys (annoying)
+
+;; global rules for all apps
+;; How do we get both?!?
+ :main [
+
+        ;; {:des "Colemak remappings so we can map anything in this file using the colemak results instead of the original key (confusing)"
+        ;;  :rules [
+        ;;          [:##e :f] [:##r :p] [:##t :g] [:##y :j] [:##u :l] [:##i :u] [:##o :y] [:##p :semicolon] ;[:Sp :colon]
+        ;;          [:##s :r] [:##d :s] [:##f :t] [:##g :d] [:##j :n] [:##k :e] [:##l  :i] [:##semicolon :o]
+        ;;          [:##n :k] ]
+        ;;  }
+
+        {:des "Change right_command+hjkl to arrow keys"
+             :rules [ ;; map to alt instead of right command
+                     ;; [:!O##h :left_arrow]
+                     ;; [:!O##i :left_arrow]
+                     ;; [:!O##l :right_arrow]
+                     ;; [{:key :l :modi {:mandatory [:option]} } :right_arrow]
+
+
+                     ;; For all of these the key that is the listed on the key (non-colemak) is the one used...
+
+
+
+                     ;; ORDER matters! Put the specific ones first. Generic ones later. Just like route matching rules
+                     ;; [{:key :j :modi {:mandatory [:option :shift] :optional [:any]} } :left_arrow]
+                     ;; [{:key :k :modi {:mandatory [:option :shift] :optional [:any]} } :right_arrow]
+
+                     ;; [] is a tuple I think... Where things come in pairs or list...
+                     ;; {} is {:key :value :key :value}
+                     ;; [FROM  TO]  [{FROM} TO }
+                     ;; Both of these are the same, but one is MUCH more readable...
+                     ;; [:!O##l :right_arrow]
+                     [{:key :l :modi {:mandatory [:option] :optional [:any]} } :right_arrow]
+                     [{:key :h :modi {:mandatory [:option] :optional [:any]} } :left_arrow]
+                     [{:key :j :modi {:mandatory [:option] :optional [:any]} } :down_arrow]
+                     [{:key :k :modi {:mandatory [:option] :optional [:any]} } :up_arrow]
+
+
+
+
+                     ;; [:l :right_arrow :modi {:mandatory [:left_command :right_shift]}]
+                     ;; add opt to use u/d for l/r
+                     ;; [:!SO##j :left_arrow]
+                     ;; [:!SO##k :right_arrow]
+                     ;; [:!O##j :down_arrow]
+                     ;; [:!O##k :up_arrow]]}
+                     ;; [:!Q##h :left_arrow]
+                     ;; [:!Q##l :right_arrow]
+                     ;; ;; add opt to use u/d for l/r
+                     ;; [:!QO##j :left_arrow]
+                     ;; [:!QO##k :right_arrow]
+                     ;; [:!Q##j :down_arrow]
+                     ;; [:!Q##k :up_arrow]]}
+                     ]}
+
+                     ;; this is a change WxZ
+
+
+        {:des "Caps_lock to delete_or_backspace" :rules [ [:##caps_lock :delete_or_backspace] ]}
+        ;; {:des "Caps_lock to delete_or_backspace for fancy keyobard" :rules [ [:##non_usps_lock :delete_or_backspace] ]}
+
+        {:des "< | Rewind/Forward Screenflow scrubber 1 second" :rules [ [:!Scomma :!Sleft_arrow :screenflow],
+                                                                             [:!Speriod :!Sright_arrow :screenflow] ]}
+
+        {:des "< | Rewind/Forward Screenflow scrubber 1 second" :rules [ [:!Scomma :!Sleft_arrow :screenflow],
+                                                                             [:!Speriod :!Sright_arrow :screenflow] ]}
+
+
+
+   ;; template to launch apps
+   ;; {:templates {:launch "osascript -e 'tell application \"Alfred 3\" to run trigger \"launch%s\" in workflow \"yqrashawn.workflow.launcher\" with argument \"%s\"'"}
+
+
+   ;; TODO try other key for this...
+   ;; maybe right command?
+   ;; TODO watch the video again...
+   ;; map oo or something to return to last...?
+{:des "okey (alfred)"
+         :rules [:o-mode
+                 ;; [:1 :!C1]
+                 ;; [:2 :!C2]
+                 ;; [:3 :!C3]
+                 ;; TODO: fix this to use the template
+                 [:-r ["open ~/Applications/Chrome\\ Apps.localized/Roam\\ Research.app/"]]
+                 [:a [:launch "Alacritty"]]
+                 [:c [:launch "Chrome"]]
+                 [:-s [:launch "Slack"]]
+                 ;; [:r [:open "~/Applications/Chrome\\ Apps.localized/Roam\\ Research.app/"]]
+                 [:5 :!C5]
+                 [:right_command {:key :tab :modi :command}] ;; swap back to the old app
+                 [:q [:alfred "search downloads" "recentdownloads.ddjfreedom"]]]}
+
+
+;; ----------------------------------
+;; APP SPECIFIC RULES
+;; ----------------------------------
+
+{:des "Alacritty rules for tmux"
+ :rules [:alacritty
+         ;; Move focus to window left/right in tmux
+         [{:key :h :modi {:mandatory [:left_command]}} :f3]
+         [{:key :l :modi {:mandatory [:left_command]}} :f4]
+
+         ;; alt up/down (for next/prev session)
+         [{:key :j :modi {:mandatory [:left_command]}} {:key :up_arrow :modi {:mandatory [:left_option]}}]
+         [{:key :k :modi {:mandatory [:left_command]}} {:key :down_arrow :modi {:mandatory [:left_option]}}]
+
+         ;; grow window right (ctrl+i is default matched to tab in all terms?!?)
+         ;; had  hard time remapping in alacritty config, so doing this here
+         [{:key :l :modi {:mandatory [:control]}} {:key :right_arrow :modi {:mandatory [:shift :option]}}]
+         [:tab :tab] ;; force tab to map to tab
+
+         ;; TODO: add shortcuts for new session / new window
+
+         ;; TODO: add support for cmd+1 to target window #1
+         ]
+ }
+
+
+
+;;
+
+        ;; {:des "open mode"
+        ;;      :rules [:open-mode
+        ;;              [:a [:launch "Alacritty"]]
+        ;;              [:c [:launch "Chrome"]]
+        ;;      ]}
+
+        ;; {:des "launcher mode"
+        ;;      :rules [[:j [:launch "Alacritty"] :launch-mode]
+        ;;              [:k [:launch "Emacs"] :launch-mode]
+        ;;              [:l [:launch "Chrome"] :launch-mode]
+        ;;              [:m [:launch "Mail"] :launch-mode]
+        ;;              [:v [:launch "WeChat"] :launch-mode]
+        ;;              [:q [:launch "KE"] :launch-mode]
+        ;;              [:f [:launch "Finder"] :launch-mode]
+        ;;              [:9 [:launch "PDFExpert"] :launch-mode]
+        ;;              [:comma [:launch "Safari"] :launch-mode]
+        ;;              [:period [:launch "Paw"] :launch-mode]
+        ;;              [:equal_sign [:launch "Textual"] :launch-mode]
+        ;;              [:8 [:launch "KEEvents"] :launch-mode]
+        ;;              [:b [:launch "BearyChat"] :launch-mode]
+        ;;              [:t [:launch "TG"] :launch-mode]]}
+   ;;
+
+
+ ]}
+
+
+;; Important lessons learned
+;; ORDER matters. specific should go before generic (like with route matching
+;; mappings are to the actual KEY, so :##e :f means that modifiers like shift work as usual and you don't need to map both the o and O. AWESOME.
+;; goku seems to NOT remove mappings if they've just been commented out... Maybe a diff issue? Can I just delete the json file and do it again?
+;; or maybe it's just change detection... add some more additive changes than just commenting something out...
+
+;; cheatsheet:
+;; ## prefix will mean "+ any key"
+;; Q - right command
+;; O - option
+
+
+;; !  | means mandatory
+    ;; #  | means optional
+    ;; C  | left_command
+    ;; T  | left_control
+    ;; O  | left_option
+    ;; S  | left_shift
+    ;; F  | fn
+    ;; Q  | right_command
+    ;; W  | right_control
+    ;; E  | right_option
+    ;; R  | right_shift
+    ;; !! | mandatory command + control + optional + shift (hyper)
+    ;; ## | optional any
+
+
+;; READING;
+;; https://github.com/johnlindquist/dotfiles/blob/master/karabiner/karabiner.edn
+;; Some great docs on things that are hard to find...
+;; https://github.com/yqrashawn/GokuRakuJoudo/blob/ce6fedb127815e8a0368bc1929c1c9269c6667c9/src/karabiner_configurator/froms.clj
+
+
+;; TODO install: https://github.com/venantius/vim-cljfmt

@@ -1,0 +1,522 @@
+# TODO:
+# - move from oh-my-zsh to zplug.
+# - get startup down to 1.5 or 1 sec
+
+function getTime {
+  python -c'import time; print repr(time.time())'
+}
+
+# Timing metrics for how long this setup takes...
+START_TIME=$(getTime)
+#
+#
+# Path to your oh-my-zsh configuration.
+ZSH=$HOME/.oh-my-zsh
+
+# Set name of the theme to load.
+# Look in ~/.oh-my-zsh/themes/
+# Optionally, if you set this to "random", it'll load a random theme each
+# time that oh-my-zsh is loaded.
+ZSH_THEME="jamis-doubleend"
+#ZSH_THEME="jamis" #agnostic
+
+# turn on vim mode in zsh with esc. Stop it with 'i'
+# bindkey -v  # Seems to break other expansion... use it on the fly...
+
+# Set to this to use case-sensitive completion
+# CASE_SENSITIVE="true"
+
+# Comment this out to disable bi-weekly auto-update checks
+# DISABLE_AUTO_UPDATE="true"
+
+# Uncomment to change how many often would you like to wait before auto-updates occur? (in days)
+# export UPDATE_ZSH_DAYS=13
+
+# Uncomment following line if you want to disable colors in ls
+# DISABLE_LS_COLORS="true"
+
+# Uncomment following line if you want to disable autosetting terminal title.
+# DISABLE_AUTO_TITLE="true"
+
+# Uncomment following line if you want red dots to be displayed while waiting for completion
+COMPLETION_WAITING_DOTS="true"
+
+# Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
+# Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
+# Example format: plugins=(rails git textmate ruby lighthouse)
+# plugins=(git sublime atom brew notify grunt globalias sfffe) # zsh-notify
+# plugins=(git sublime atom brew notify grunt globalias) # zsh-notify
+plugins=(git z fasd brew globalias) # zsh-notify
+
+# PLUGINS:  https://github.com/unixorn/awesome-zsh-plugins
+# Plugins I installed manually
+# - fasd
+# - https://github.com/marzocchi/zsh-notify
+#
+# Brew I installed manaully
+# https://github.com/zplug/zplug  # Plugin manager
+# https://github.com/julienXX/terminal-notifier
+
+#############################################
+# ZSH PLUGINS
+#############################################
+# http://daanhorn.nl/post/zplug/
+# $ zplug install    # installs plugins listed here, similar to vim#plug
+#
+# Too slow for now. Maybe reconsider this if I dump fish shell.
+
+# export ZPLUG_HOME=/usr/local/opt/zplug
+# source $ZPLUG_HOME/init.zsh
+#
+# zplug "marzocchi/zsh-notify"
+# # zplug "jedahan/ripz" # Q: Why does having 2 break it?!?
+#
+# # Install packages that have not been installed yet
+# if ! zplug check --verbose; then
+#     printf "Install? [y/N]: "
+#     if read -q; then
+#         echo; zplug install
+#     else
+#         echo
+#     fi
+# fi
+#
+# # Load all the plugins
+# zplug load --verbose
+
+
+#############################################
+
+# https://github.com/robbyrussell/oh-my-zsh/blob/master/plugins/sfffe/sfffe.plugin.zsh
+
+source $ZSH/oh-my-zsh.sh #runs oh-my-zsh and loads env vars into memory
+
+# from git plugin
+# gr - git remote
+
+# TODO: Prefer abbreviations to aliases. That way you learn it, and it hides the magic.
+
+# Example aliases
+alias zshconfig="vi ~/.zshrc" #open with sublime
+# alias ohmyzsh="mate ~/.oh-my-zsh"
+# down here to override the defaults
+alias fs="foreman start"
+
+alias mvim="gnvim" # Open Neovim.app via mvim
+alias vimr="/Applications/vimr"
+
+alias t="timer" # time-tracker-cli
+
+alias plz="sudo !!"
+
+#FIXME now working ...
+# alias diff=colordiff #nicer diff with color
+alias dif=/usr/local/bin/colordiff #nicer diff with color
+
+# Use vim keys in iterm on command line: https://coderwall.com/p/c9vs3q/vim-movement-in-iterm2
+# Preserve Insert Cursor shape in nvim using iterm
+# export NVIM_TUI_ENABLE_CURSOR_SHAPE=1
+
+
+## Print a horizontal rule
+# https://github.com/LuRsT/hr  GOLD ***
+#rule () {
+#	printf -v _hr "%*s" $(tput cols) && echo ${_hr// /${1--}}
+#}
+
+
+# All these are now in the abbreviations at the end of the file
+#alias gb="git branch -v"
+#alias gc="git commit -v"
+#alias gd="git diff"
+#alias gch="git checkout" # branch switching
+#alias gsgd="git stash && git stash drop"
+#alias gr="git remote -v" # overrides the git plugin shortcut
+#alias gl="git l" # overrides the git plugin shortcut
+#alias gll="git ll" # overrides the git plugin shortcut? Maybe. Not sure.
+
+# TODO: use this to make special icons for these commands, like the GIT ones... That could be really cool...
+
+# TODO: use this to make special icons for these commands, like the GIT ones... That could be really cool...
+alias gp="echo 'git pull --rebase upstream develop' ; git pull --rebase upstream develop;"
+# alias gpm="git push origin master"
+alias gs="git status -sb;" # growlImg 'Status' ' ' github.png"
+alias gd="git diff --color | diff-so-fancy | less --tabs=1,5 -R"
+
+#NUKE it all, rebase, and reinstall node modules
+alias nuke="gp ; echo 'rm -rf node_modules && npm i';  rm -rf node_modules && npm i; 'git pull; rm -rf node_module; npm install'   npm.png"
+
+# sudo last command (move these down lower if there's a conflict.)
+alias please='eval "sudo $(fc -ln -1)"'
+
+# atom sugar since atom isn't working (plugin gives us 'at')
+alias atom='at'
+
+# Neovim sugar
+alias nvps='nvim --cmd "let is_ps=1"'
+
+#overriding the 'gd' set by the git plugin... I could extract all this to be a plugin...
+# alias gd='growlnotify $(fc -ln -1)' #Can we extract the previous command from this?
+
+
+
+#mocks mode
+alias mock='NODE_ENV=test node .'
+
+# alias growl="echo -l root | terminal-notifier -sound default"
+
+#same as alias? take the 1st param $1 and pipe to another command. Terminal notifier in this case.
+#
+# NOTIFICATIONS on job completion
+#All 3 of these seem to work... I want these to be autoatmic though...
+#
+#
+# testing () { echo "$1" | awk -F"[;&]" 'print $1' | echo}
+testing () { echo "$@"}
+testing2 () { echo "$1" | !!:p && $(fc -ln -1) }
+
+
+# One liner doesn't seem to work beacuse the branch name (at the end) isn't available when it's needed at time of expansion...
+ # "branch=$(git rev-parse --abbrev-ref HEAD) && git checkout develop | git pull --rebase upstream develop;  git branch -d $branch " # go to develop and delete current branch.
+function deleteCurrentBranch {
+  # save current branch, then go to develop, pull down most recent, then delete the current branch (if merged).
+  branch=$(git rev-parse --abbrev-ref HEAD)
+  git checkout develop && git pull --rebase upstream develop
+  git branch -d $branch  # go to develop and delete current branch.
+}
+
+
+
+
+
+# Customize to your needs...
+
+# If an entry starts with a space, don't add it to history (for pluralsight, to ignore the clear) http://unix.stackexchange.com/questions/49214/how-to-remove-a-single-line-from-history
+# HISTCONTROL=ignorespace // bash
+# http://stackoverflow.com/questions/7243983/how-to-remove-an-entry-from-the-history-in-zsh
+#setopt HIST_IGNORE_SPACE # doesn't work well enough
+
+setopt histignorespace
+bindkey -s "^Z" '\C-a history 1 | grep --color=auto "\C-e"\C-m \C-m'
+
+# unsetopt EXTENDED_HISTORY
+
+# removes the param from the history. Tie it to the alias `cl`
+#histrm() { LC_ALL=C sed --in-place '/$1/d' $HISTFILE }
+
+
+### Added by Jamis for NVM stuff
+#NPM
+export PATH=/usr/local/share/npm/bin:$PATH.
+
+#brew
+export PATH=/usr/local/bin:$PATH
+
+
+# Golang
+export GOPATH=$HOME/go
+export PATH=$PATH:$GOPATH/bin
+
+# export NVM_DIR=~/.nvm #keep node installs when you upgrade NVM
+# source $(brew --prefix nvm)/nvm.sh
+
+# keep node installs. And export it so we can use nvm across tabs
+# TODO: Turn this on for NVM. THIS MAKES NVM work, but adds THREE SECONDS to startup time :|
+# export NVM_DIR="$HOME/.nvm"
+  # . "$(brew --prefix nvm)/nvm.sh"
+
+# GO PATH - https://gist.github.com/vsouza/77e6b20520d07652ed7d
+# Installed via brew...
+export GOPATH=/usr/local/Cellar/go/1.6.2/
+export GOROOT=/usr/local/opt/go/libexec
+export PATH=$PATH:$GOPATH/bin
+export PATH=$PATH:$GOROOT/bin
+
+# Executables I want in from my dotfiles
+# export PATH=~/.dotfiles/bin:$PATH
+# export PATH=~/bin:$PATH
+
+# zsh-notify plugin timeout. What's the threshold for activating the stuff...
+# FIXME: Not sure this is even working.
+export NOTIFY_COMMAND_COMPLETE_TIMEOUT=3
+
+# use nvim as my default editor. Global $EDITOR
+export EDITOR=/usr/local/bin/nvim
+
+
+#VENMO EXPORTS. These should be PRIVATE, so add them to a separate file that won't be in my .dotfiles on github
+# source ~/.zshrc_VENMO_PRIVATE
+# export PATH=$PATH:/sbin  # needed for vagrant cuz it uses nfsd (which it can't access normally because it's not on PATH
+
+# RVM for RUBY newest version... Only needed when I need to run latest version of Jekyll locally or other ruby stuff...
+# source /Users/jacharles/.rvm/scripts/rvm
+
+# COMMAND LINE SYNTAX HIGHLIGHTING
+# vimpager works great instead of less, but not sure about a pager in general
+#export PAGER=vimpager # good for less replacement
+#export ACK_PAGER=vimpager
+#http://unix.stackexchange.com/questions/19439/how-can-i-display-syntax-highlighting-on-a-file
+alias pcat="pygmentize -f terminal -O style=native -g" # good for cat replacement
+#alias pcat="pygmentize -f terminal256 -O style=native -g"
+
+# This is super buggy, so turn it off for now
+# export ACK_PAGER='pygmentize -f terminal256'
+
+alias c='pygmentize -O style=monokai -f console256 -g'
+#alias c='pygmentize -O style=monokai -f console256 -g'
+#alias c='pygmentize -O style=solarized -f console256 -g'
+
+#ack <searchterm> | c
+
+
+
+
+# FZF Git searching
+# fshow - git commit browser (enter for show, ctrl-d for diff, ` toggles sort)
+fshow() {
+  local out shas sha q k
+  while out=$(
+      git log --graph --color=always \
+          --format="%C(auto)%h%d %s %C(black)%C(bold)%cr" "$@" |
+      fzf --ansi --multi --no-sort --reverse --query="$q" \
+          --print-query --expect=ctrl-d --toggle-sort=\`); do
+    q=$(head -1 <<< "$out")
+    k=$(head -2 <<< "$out" | tail -1)
+    shas=$(sed '1,2d;s/^[^a-z0-9]*//;/^$/d' <<< "$out" | awk '{print $1}')
+    [ -z "$shas" ] && continue
+    if [ "$k" = ctrl-d ]; then
+      git diff --color=always $shas | less -R
+    else
+      for sha in $shas; do
+        git show --color=always $sha | less -R
+      done
+    fi
+  done
+}
+
+
+# supposed to clear and then remove that entry from history... does NOT WORK :|
+cl() {
+  clear;
+  printf "hello\nworld\n"
+  head -n 1 ~/.zsh_history  > ~/.zsh_history_temp ; mv ~/.zsh_history_temp  ~/.zsh_history # clear and REMOVE clear (last entry) from ~/.zsh_history. hacky but works.
+}
+
+alias fshow=fshow()
+
+#alias hello='echo hello'
+
+
+#clearLastHistoryEntry() {
+#  clear
+#  head -n 1 ~/.zsh_history  > ~/.zsh_history_temp ; mv ~/.zsh_history_temp  ~/.zsh_history # clear and REMOVE clear (last entry) from ~/.zsh_history. hacky but works.
+#}
+
+# alias cl='clear; head -n 1 ~/.zsh_history  > ~/.zsh_history_temp ; mv ~/.zsh_history_temp  ~/.zsh_history' # clear and REMOVE clear (last entry) from ~/.zsh_history. hacky but works.
+
+# function to change your iterm profile. Can be called from terminal now.
+set_iterm_profile() { echo -e "\033]50;SetProfile=$1\a" }
+
+### Add PATH for Sublime
+#export PATH="~/bin:$PATH"
+
+# ZSH abbreviations. Now you can use space to auto-expand. This is AWESOME!!!
+#  http://zshwiki.org/home/examples/zleiab
+setopt extendedglob
+
+typeset -Ag abbreviations
+abbreviations=(
+  "ez"    "nvim ~/.zshrc"
+  "sz"    "source ~/.zshrc"
+  "nps" 'nvim --cmd "let is_ps=1"'
+  "itermNvim" "set_iterm_profile Nvim"
+  "itermNormal" "set_iterm_profile Nvim"
+  "iterm0" "set_iterm_profile Nvim"
+  "itermNvimHigh" "set_iterm_profile Nvim_high_contrast"
+  "iterm1" "set_iterm_profile Jamis"
+  "iterm2" "set_iterm_profile Pluralsight"
+  "itermp" "set_iterm_profile Pluralsight"
+  "itermd" "set_iterm_profile Default"
+  "itermn2" "set_iterm_profile Nvim2"
+  "agg"    "ag -C 2 --pager less -QS" # -Q makes it a non-regex match. S makes it smart case
+  "ags"    "ag -C 2 --pager less -G '.(es6|js)' -QS" # -Q makes it a non-regex match. S makes it smart case
+  "agl"    "ag -C 2 -l -G '.(es6|js)' -QS _C_ | xargs nvim" # Show file names only and open those in neovim
+  "agp"    "ag -C 2 -G 'locales/US/en/' -QS" # Ignore non US locale folders...
+  # "ags"    "ag -A 2 -B 2 -G '.(es6|js)' -QS" # -Q makes it a non-regex match. S makes it smart case
+  "nuke"  "git pull --rebase upstream develop && rm -rf node_modules && npm i"
+  "gp"    "git push origin"
+  "gpf"   "git push -f origin"
+  "gpu"   "git pull --rebase upstream"
+  "grb"   "git rebase -i upstream/develop"
+  "gs"    "git status -s"
+  "gb"    "git branch -v"
+  # "gbd"    "git branch -d"
+  # This next command uses `command substitution`: http://zsh.sourceforge.net/Intro/intro_7.html
+  "gbd"    "deleteCurrentBranch" # go to develop and delete current branch.
+  "gbD"    "git branch -D"
+  "gc"    "git commit -v"
+  "gcm"    "git commit -m"
+  "gca"    "git commit -v --amend"
+  "fixconflict"     "git diff --name-only | uniq | xargs nvim" # Open all git changed files in nvim
+  "och"     "git diff --name-only | uniq | xargs nvim" # Open all git changed files in nvim
+  # "gd"    "git diff"
+  "gd"     "git diff --color | diff-so-fancy | less --tabs=1,5 -R"
+  "gdc"     "git diff --cached --color | diff-so-fancy | less --tabs=1,5 -R"
+  "gds"    "git diff --staged"
+  "gch"    "git checkout"
+  "grm"    "git remote -v"
+  "gr"    "git reset"
+  "gra"   "git rebase --abort"
+  "grc"   "git rebase --continue"
+  "grh"    "git reset --hard HEAD^"
+  "grs"    "git reset --soft HEAD^"
+  "gsgd"  "git stash && git stash drop"
+  "gl"    "git l" # l is aliased in ~/.gitconfig
+  "gll"   "git ll" #ll is aliased in ~/.gitconfig
+  "ac"    "ack -i -C 5 "  # this will use the .ackrc file. Use --noenv to ignore those presets (like to search node_modules)
+  "acn"   "ack --noignore-dir=node_modules -C 5 _C_ node_modules"  # this will use the .ackrc file. Use --noenv to ignore those presets (like to search node_modules)
+  'findfile'  "find . -name '_C_' "
+  'NO'    "NODE_ENV=test node ."
+  "Im"    "| more"
+  "Ig"    "| grep"
+  "Ip"    "| $PAGER"
+  # Tmux
+  "tmn"   "tmux new-session -s "
+  "tma"   "tmux attach -t "
+  "tml"   "tmux ls"
+  "fixfacetime"  "sudo killall VDCAssistant"
+)
+
+#1) Find the cursor, and move it using that
+#2) use the vi find char trick...
+# http://script.wikidot.com/shell:shell-script-for-while-loop-syntax
+
+
+
+magic-abbrev-expand() {
+    local MATCH
+    LBUFFER=${LBUFFER%%(#m)[_a-zA-Z0-9]#}
+    command=${abbreviations[$MATCH]}
+    LBUFFER+=${command:-$MATCH}
+    [[ "${command}" =~ "_C_" ]] && RBUFFER=${LBUFFER[(ws:_C_:)2]}
+    [[ "${command}" =~ "_C_" ]] && LBUFFER=${LBUFFER[(ws:_C_:)1]}
+    zle self-insert
+}
+
+no-magic-abbrev-expand() {
+  LBUFFER+=' '
+}
+
+zle -N magic-abbrev-expand
+zle -N no-magic-abbrev-expand
+bindkey " " magic-abbrev-expand
+bindkey "^x " no-magic-abbrev-expand
+bindkey -M isearch " " self-insert
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+
+
+## https://docs.npmjs.com/cli/completion
+###-begin-npm-completion-###
+#
+# npm command completion script
+#
+# Installation: npm completion >> ~/.bashrc  (or ~/.zshrc)
+# Or, maybe: npm completion > /usr/local/etc/bash_completion.d/npm
+#
+
+if type complete &>/dev/null; then
+  _npm_completion () {
+    echo "MINE"
+    local words cword
+    if type _get_comp_words_by_ref &>/dev/null; then
+      _get_comp_words_by_ref -n = -n @ -w words -i cword
+    else
+      cword="$COMP_CWORD"
+      words=("${COMP_WORDS[@]}")
+    fi
+
+    local si="$IFS"
+
+
+	# if your npm command includes `install`
+	if [[ ${words[@]} =~ 'install' ]]; then
+		local cur=${COMP_WORDS[COMP_CWORD]}
+
+		# supply autocomplete words from `~/.npm`, with $cur being value of current expansion like 'expre'
+		COMPREPLY=( $( compgen -W "$(ls ~/.npm )" -- $cur ) )
+    else
+        IFS=$'\n' COMPREPLY=($(COMP_CWORD="$cword" \
+          COMP_LINE="$COMP_LINE" \
+          COMP_POINT="$COMP_POINT" \
+          npm completion -- "${words[@]}" \
+          2>/dev/null)) || return $?
+	fi
+
+    IFS="$si"
+  }
+  complete -o default -F _npm_completion npm
+elif type compdef &>/dev/null; then
+  # this one gets loaded for me... is this the zsh one?
+  _npm_completion() {
+    local si=$IFS
+
+
+	# if your npm command includes `install`
+	if [[ ${words} =~ 'install' ]]; then
+		compadd -- $(COMP_CWORD=$((CURRENT-1)) \
+			COMP_LINE=$BUFFER \
+			COMP_POINT=0 \
+			ls ~/.npm
+		2>/dev/null)
+
+      else
+        compadd -- $(COMP_CWORD=$((CURRENT-1)) \
+          COMP_LINE=$BUFFER \
+          COMP_POINT=0 \
+          npm completion -- "${words[@]}" \
+          2>/dev/null)
+	fi
+
+    IFS=$si
+  }
+  compdef _npm_completion npm
+elif type compctl &>/dev/null; then
+
+  _npm_completion () {
+    local cword line point words si
+    read -Ac words
+    read -cn cword
+    let cword-=1
+    read -l line
+    read -ln point
+    si="$IFS"
+    IFS=$'\n' reply=($(COMP_CWORD="$cword" \
+                       COMP_LINE="$line" \
+                       COMP_POINT="$point" \
+                       npm completion -- "${words[@]}" \
+                       2>/dev/null)) || return $?
+    IFS="$si"
+  }
+  compctl -K _npm_completion npm
+fi
+###-end-npm-completion-###
+
+export PATH="$HOME/.yarn/bin:$PATH"
+
+export PATH="$HOME/.rvm/bin:$PATH" # Add RVM to PATH for scripting
+
+# Measure and print startup time
+END_TIME=$(getTime)
+# echo $START_TIME
+# echo $END_TIME
+STARTUP_TIME=$(echo "$END_TIME - $START_TIME" | bc)
+echo "zsh took ${STARTUP_TIME}s to start up."
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+source /Users/jacharles/.config/broot/launcher/bash/br
+
+# Configuration for node to trust the PayPal Proxy Certificates
+export NODE_EXTRA_CA_CERTS='/usr/local/etc/openssl/certs/paypal_proxy_cacerts.pem'
+export VOLTA_HOME="$HOME/.volta"
+export PATH="$VOLTA_HOME/bin:$PATH"

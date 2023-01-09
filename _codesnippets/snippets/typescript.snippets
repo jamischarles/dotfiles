@@ -1,0 +1,41 @@
+# TODO Allow cl varname -> console.log('varname', varname)
+# For now, CL allows mirroring, which is AWESOME
+snippet cl
+	console.log('$1', ${1:})
+snippet cll
+	console.log('${0}')
+snippet /**
+	/**
+	 * ${0:description}
+	 *
+	 */
+snippet RC
+	React.createClass({
+		render() {
+			return (
+				<div>
+					${0}
+				</div>
+			)
+		}
+	})
+snippet clas
+	class ${0} extends React.Component {
+		constructor() {
+			super();
+		}
+
+		render(){
+
+		}
+	}
+snippet if
+	if (${0}) {
+
+	}
+snippet ife
+	if (${0}) {
+
+	} else {
+
+	}
