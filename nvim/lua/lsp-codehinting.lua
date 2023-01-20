@@ -367,6 +367,7 @@ return {
 			ensure_installed = {
 				"json",
 				"lua",
+				"vim", -- needed for the lua files to highlight properly for some reason
 				"graphql",
 				"rust",
 				"svelte",
