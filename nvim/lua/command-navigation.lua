@@ -9,28 +9,9 @@
 --
 
 local map = require("utils").mapKey
-local use = require("packer").use
 
 -- lua filesystem lib 
 
-use({
-	"ibhagwan/fzf-lua",
-	-- optional for icon support
-	requires = { "kyazdani42/nvim-web-devicons" },
-})
-
-use({
-	"nvim-telescope/telescope.nvim",
-	requires = { { "nvim-lua/plenary.nvim" } },
-})
-
-use({
-	"nvim-telescope/telescope-frecency.nvim",
-	config = function()
-		require("telescope").load_extension("frecency")
-	end,
-	requires = { "tami5/sqlite.lua" },
-})
 
 -- automagic toggling from/to test file
 -- TODO: look into what gt does? I do want a faster way to do recall / jump between contexts... Tabs?
@@ -79,43 +60,22 @@ end
 map("n", "mt", "<cmd>lua JumpToTestFileAndBack('test')<CR>")
 
 
--- file explorer
--- try this https://github.com/stevearc/oil.nvim (buffer based file editing. INTERESTING)
-use({
-	"kyazdani42/nvim-tree.lua",
-	requires = {
-		"kyazdani42/nvim-web-devicons", -- optional, for file icons
-	},
-	tag = "nightly", -- optional, updated every week. (see issue #1193)
-})
-
-require("nvim-tree").setup({
-	filters = { custom = { "^.git$" } },
-	view = {
-		adaptive_size = true,
-		mappings = {
-			list = {
-				{ key = "u", action = "dir_up" },
-			},
-		},
-	},
-})
 
 ---------------------
 -- Telescope for frecency
 ------------------
-require("telescope").load_extension("frecency")
-require("telescope").setup({
-	defaults = {
-		layout_config = {
-			horizontal = { height = 0.95, width = 0.9 },
-			vertical = { height = 0.9, width = 0.9 },
-			-- other layout configuration here
-		},
-		-- other defaults configuration here
-	},
-	-- other configuration values here
-})
+-- require("telescope").load_extension("frecency")
+-- require("telescope").setup({
+-- 	defaults = {
+-- 		layout_config = {
+-- 			horizontal = { height = 0.95, width = 0.9 },
+-- 			vertical = { height = 0.9, width = 0.9 },
+-- 			-- other layout configuration here
+-- 		},
+-- 		-- other defaults configuration here
+-- 	},
+-- 	-- other configuration values here
+-- })
 
 -----------------------------------------------------------------
 -- NEEEEEEEEEEED a PRoject find symbols list generator (using TS)
@@ -125,146 +85,6 @@ require("telescope").setup({
 
 
 
------------------
--- FZF-LUA
--- ---------------
-local actions = require("fzf-lua.actions")
-local utils = require("fzf-lua.utils")
-local enterKey = utils.ansi_codes.yellow("<Return>")
-local delBuffer = utils.ansi_codes.yellow("<Ctrl-X>")
-require("fzf-lua").setup({
-	keymap = {
-		["<ctrl-a>"] = "preview-page-down", -- navigate preview up/down
-		["<c-a>"] = "preview-page-down", -- navigate preview up/down
-		["<C-e>"] = "preview-page-up",
-		["<F7>"] = "toggle-preview",
-		-- Rotate preview clockwise/counter-clockwise
-		["<F5>"] = "toggle-preview-ccw",
-		["<F6>"] = "toggle-preview-cw",
-		["<S-down>"] = "preview-page-down",
-		["<S-up>"] = "preview-page-up",
-		["<S-left>"] = "preview-page-reset",
-	},
-	winopts = {
-		-- split         = "belowright new",-- open in a split instead?
-		-- "belowright new"  : split below
-		-- "aboveleft new"   : split above
-		-- "belowright vnew" : split right
-		-- "aboveleft vnew   : split left
-		-- Only valid when using a float window
-		-- (i.e. when 'split' is not defined, default)
-		height = 0.98, -- window height
-		width = 0.95, -- window width
-		row = 0.50, -- window row position (0=top, 1=bottom)
-		col = 0.50,
-		fullscreen = true,
-
-		border = false,
-		preview = {
-			scrollbar = "float",
-			layout = "horizontal",
-			horizontal = "right:65%",
-		},
-		-- preview = {
-		-- 	scrollbar = "float",
-		-- 	layout = "vertical",
-		-- 	vertical = "up:75%",
-		-- },
-	},
-	-- provider setup
-	files = {
-		-- previewer      = "bat",          -- uncomment to override previewer
-		-- (name from 'previewers' table)
-		-- set to 'false' to disable
-		prompt = "Files❯ ",
-		multiprocess = true, -- run command in a separate process
-		git_icons = false, -- show git icons? -- TOO slow
-		file_icons = true, -- show file icons?
-		-- color_icons = true, -- colorize file|git icons
-		-- path_shorten   = 1,              -- 'true' or number, shorten path?
-		-- executed command priority is 'cmd' (if exists)
-		-- otherwise auto-detect prioritizes `fd`:`rg`:`find`
-		-- default options are controlled by 'fd|rg|find|_opts'
-		-- NOTE: 'find -printf' requires GNU find
-		--https://github.com/sharkdp/fd/issues/789 SORT
-		-- sort by recently openened/modified? Files only. include hidden files, but remove locales and java tests and .git
-		cmd = "fd --color=never --type f --hidden --follow --exclude .git --exclude locales --exclude dist --exclude tests/functional -X ls -tu", -- -tu vs -tc?
-		-- find_opts = [[-type f -not -path '*/\.git/*' -printf '%P\n']],
-		-- rg_opts = "--color=never --files --hidden --follow -g '!.git'",
-		-- fd_opts = "--color=never --type f --hidden --follow --exclude .git",
-		actions = {
-			-- inherits from 'actions.files', here we can override
-			-- or set bind to 'false' to disable a default action
-			["default"] = actions.file_edit,
-			-- custom actions are available too
-			["ctrl-y"] = function(selected)
-				print(selected[1])
-			end,
-		},
-	},
-	git = {
-		status = {
-			cmd = "git status --porcelain", -- needed to not break the ansi formatting. Q: should this be default?
-			actions = {
-				["ctrl-x"] = {
-					function(selected)
-						vim.cmd(":!git checkout " .. selected[1])
-					end,
-					require("fzf-lua.actions").resume,
-				},
-			},
-			["--header"] = vim.fn.shellescape(("%s to reset to head, %s to open"):format("ctrl-X", enterKey)),
-		},
-	},
-	buffers = {
-		fzf_opts = {
-			["--header"] = vim.fn.shellescape(("%s to close buffer, %s to open"):format(delBuffer, enterKey)),
-		},
-	},
-	-- https://github.com/ibhagwan/fzf-lua/blob/d02d6f2f6bf951c461d52bdbe97784ce87243318/lua/fzf-lua/providers/git.lua#L43
-	-- ctrl-x deletes buffer. FIXME: Can we print that info?
-	-- actions we can do when inside those windows
-	actions = {
-		--   ["default"]     = actions.buf_edit,
-		--   ["ctrl-d"]     = actions.buf_del
-		-- }
-		--
-		buffers = {
-			-- providers that inherit these actions:
-			--   buffers, tabs, lines, blines
-			["default"] = actions.buf_edit,
-			["ctrl-s"] = actions.preview_page_down,
-			["c-s"] = actions.preview_page_down,
-		},
-	},
-})
-
-local fzf_lua = require("fzf-lua")
-
--- https://github.com/ibhagwan/fzf-lua/issues/196
--- Allow delete action from the buffer window
-local function fzf_buffersWithDelete(opts)
-	if not opts then
-		opts = {}
-	end
-	local action = require("fzf.actions").action(function(selected)
-		fzf_lua.actions.buf_del(selected)
-		fzf_lua.win.set_autoclose(false)
-		fzf_buffersWithDelete(opts)
-		fzf_lua.win.set_autoclose(true)
-	end, "{+}")
-	if not opts.curbuf then
-		-- make sure we keep current buffer at the header
-		opts.curbuf = vim.api.nvim_get_current_buf()
-	end
-	opts.actions = { ["ctrl-x"] = false }
-	opts.fzf_cli_args = ("--bind=ctrl-x:execute-silent:%s"):format(action)
-	fzf_lua.buffers(opts)
-end
-
-function Trim(s)
-	return (string.gsub(s, "^%s*(.-)%s*$", "%1"))
-end
 
 -------------------------
 -- AutoCommands
@@ -464,4 +284,202 @@ end, {
 -- \ })<CR>
 --
 
+
+
+
+
+return {
+	name="command-navigation",
+	dependencies = {
+{
+	"ibhagwan/fzf-lua",
+	-- optional for icon support
+	dependencies = { "kyazdani42/nvim-web-devicons" },
+},{
+	"nvim-telescope/telescope.nvim",
+	dependencies = { { "nvim-lua/plenary.nvim" } }},
+
+-- {
+-- 	"nvim-telescope/telescope-frecency.nvim",
+-- 	config = function()
+-- 		require("telescope").load_extension("frecency")
+-- 	end,
+-- 	dependencies = { "tami5/sqlite.lua" },
+-- },
+
+{
+	"kyazdani42/nvim-tree.lua",
+	dependencies = {
+		"kyazdani42/nvim-web-devicons", -- optional, for file icons
+	},
+	-- tag = "nightly", -- optional, updated every week. (see issue #1193)
+}
+	},
+
+	-- fixme: is this a good pattern? Or should we group it in the deps list?
+	config = function()
+
+
+-- file explorer
+-- try this https://github.com/stevearc/oil.nvim (buffer based file editing. INTERESTING)
+-- consider just putting this in .opts for the nvim-tree dep above
+require("nvim-tree").setup({
+	filters = { custom = { "^.git$" } },
+	view = {
+		adaptive_size = true,
+		mappings = {
+			list = {
+				{ key = "u", action = "dir_up" },
+			},
+		},
+	},
+})
+
+
+
+-----------------
+-- FZF-LUA
+-- ---------------
+local actions = require("fzf-lua.actions")
+local utils = require("fzf-lua.utils")
+local enterKey = utils.ansi_codes.yellow("<Return>")
+local delBuffer = utils.ansi_codes.yellow("<Ctrl-X>")
+require("fzf-lua").setup({
+	keymap = {
+		["<ctrl-a>"] = "preview-page-down", -- navigate preview up/down
+		["<c-a>"] = "preview-page-down", -- navigate preview up/down
+		["<C-e>"] = "preview-page-up",
+		["<F7>"] = "toggle-preview",
+		-- Rotate preview clockwise/counter-clockwise
+		["<F5>"] = "toggle-preview-ccw",
+		["<F6>"] = "toggle-preview-cw",
+		["<S-down>"] = "preview-page-down",
+		["<S-up>"] = "preview-page-up",
+		["<S-left>"] = "preview-page-reset",
+	},
+	winopts = {
+		-- split         = "belowright new",-- open in a split instead?
+		-- "belowright new"  : split below
+		-- "aboveleft new"   : split above
+		-- "belowright vnew" : split right
+		-- "aboveleft vnew   : split left
+		-- Only valid when using a float window
+		-- (i.e. when 'split' is not defined, default)
+		height = 0.98, -- window height
+		width = 0.95, -- window width
+		row = 0.50, -- window row position (0=top, 1=bottom)
+		col = 0.50,
+		fullscreen = true,
+
+		border = false,
+		preview = {
+			scrollbar = "float",
+			layout = "horizontal",
+			horizontal = "right:65%",
+		},
+		-- preview = {
+		-- 	scrollbar = "float",
+		-- 	layout = "vertical",
+		-- 	vertical = "up:75%",
+		-- },
+	},
+	-- provider setup
+	files = {
+		-- previewer      = "bat",          -- uncomment to override previewer
+		-- (name from 'previewers' table)
+		-- set to 'false' to disable
+		prompt = "Files❯ ",
+		multiprocess = true, -- run command in a separate process
+		git_icons = false, -- show git icons? -- TOO slow
+		file_icons = true, -- show file icons?
+		-- color_icons = true, -- colorize file|git icons
+		-- path_shorten   = 1,              -- 'true' or number, shorten path?
+		-- executed command priority is 'cmd' (if exists)
+		-- otherwise auto-detect prioritizes `fd`:`rg`:`find`
+		-- default options are controlled by 'fd|rg|find|_opts'
+		-- NOTE: 'find -printf' requires GNU find
+		--https://github.com/sharkdp/fd/issues/789 SORT
+		-- sort by recently openened/modified? Files only. include hidden files, but remove locales and java tests and .git
+		cmd = "fd --color=never --type f --hidden --follow --exclude .git --exclude locales --exclude dist --exclude tests/functional -X ls -tu", -- -tu vs -tc?
+		-- find_opts = [[-type f -not -path '*/\.git/*' -printf '%P\n']],
+		-- rg_opts = "--color=never --files --hidden --follow -g '!.git'",
+		-- fd_opts = "--color=never --type f --hidden --follow --exclude .git",
+		actions = {
+			-- inherits from 'actions.files', here we can override
+			-- or set bind to 'false' to disable a default action
+			["default"] = actions.file_edit,
+			-- custom actions are available too
+			["ctrl-y"] = function(selected)
+				print(selected[1])
+			end,
+		},
+	},
+	git = {
+		status = {
+			cmd = "git status --porcelain", -- needed to not break the ansi formatting. Q: should this be default?
+			actions = {
+				["ctrl-x"] = {
+					function(selected)
+						vim.cmd(":!git checkout " .. selected[1])
+					end,
+					require("fzf-lua.actions").resume,
+				},
+			},
+			["--header"] = vim.fn.shellescape(("%s to reset to head, %s to open"):format("ctrl-X", enterKey)),
+		},
+	},
+	buffers = {
+		fzf_opts = {
+			["--header"] = vim.fn.shellescape(("%s to close buffer, %s to open"):format(delBuffer, enterKey)),
+		},
+	},
+	-- https://github.com/ibhagwan/fzf-lua/blob/d02d6f2f6bf951c461d52bdbe97784ce87243318/lua/fzf-lua/providers/git.lua#L43
+	-- ctrl-x deletes buffer. FIXME: Can we print that info?
+	-- actions we can do when inside those windows
+	actions = {
+		--   ["default"]     = actions.buf_edit,
+		--   ["ctrl-d"]     = actions.buf_del
+		-- }
+		--
+		buffers = {
+			-- providers that inherit these actions:
+			--   buffers, tabs, lines, blines
+			["default"] = actions.buf_edit,
+			["ctrl-s"] = actions.preview_page_down,
+			["c-s"] = actions.preview_page_down,
+		},
+	},
+})
+
+local fzf_lua = require("fzf-lua")
+
+-- https://github.com/ibhagwan/fzf-lua/issues/196
+-- Allow delete action from the buffer window
+local function fzf_buffersWithDelete(opts)
+	if not opts then
+		opts = {}
+	end
+	local action = require("fzf.actions").action(function(selected)
+		fzf_lua.actions.buf_del(selected)
+		fzf_lua.win.set_autoclose(false)
+		fzf_buffersWithDelete(opts)
+		fzf_lua.win.set_autoclose(true)
+	end, "{+}")
+	if not opts.curbuf then
+		-- make sure we keep current buffer at the header
+		opts.curbuf = vim.api.nvim_get_current_buf()
+	end
+	opts.actions = { ["ctrl-x"] = false }
+	opts.fzf_cli_args = ("--bind=ctrl-x:execute-silent:%s"):format(action)
+	fzf_lua.buffers(opts)
+end
+
+function Trim(s)
+	return (string.gsub(s, "^%s*(.-)%s*$", "%1"))
+end
+
+
+
+	end,
+}
 -- vim.api.nvim_buf_set_keymap(

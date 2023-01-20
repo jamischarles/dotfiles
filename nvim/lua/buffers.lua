@@ -2,29 +2,23 @@
 -- BUFFER managment
 -- ---------------------------
 local map = require("utils").mapKey
-local use = require('packer').use
 -- use {'akinsho/bufferline.nvim', tag = "v2.*", requires = 'kyazdani42/nvim-web-devicons'}
 -- use 'rcarriga/nvim-notify'
 -- use 'MunifTanjim/nui.nvim' -- simple floating window/popup manager
 -- use 'alex-popov-tech/timer.nvim' -- set timer expiration on window
 
- use({
-    'noib3/nvim-cokeline',
-    requires = 'kyazdani42/nvim-web-devicons', -- If you want devicons
-  })
 --
 --
 vim.opt.termguicolors = true
 
 
 -- TRYING Cokeline
-local get_hex = require('cokeline/utils').get_hex
 
-local modified_active_fg_color = get_hex('BufferCurrentMod', 'fg')
-local modified_active_bg_color = get_hex('BufferCurrentMod', 'bg')
-local modified_inactive_fg_color = get_hex('BufferCurrentMod', 'fg')
-local modified_inactive_bg_color = get_hex('BufferCurrentMod', 'bg')
-
+-- local modified_active_fg_color = get_hex('BufferCurrentMod', 'fg')
+-- local modified_active_bg_color = get_hex('BufferCurrentMod', 'bg')
+-- local modified_inactive_fg_color = get_hex('BufferCurrentMod', 'fg')
+-- local modified_inactive_bg_color = get_hex('BufferCurrentMod', 'bg')
+--
 
 
 -- FIXME: use HL groups since those will be modified by the theme
@@ -34,64 +28,7 @@ local colors = {
 
 }
 
-require('cokeline').setup({
-	default_hl = {
-		fg = function(buffer)
 
-
-
-			return buffer.is_modified and buffer.is_focused and colors.black
-			 -- or buffer.is_modified and  get_hex('ColorColumn', ' bg')
-			  or buffer.is_modified and get_hex('BufferCurrentMod', 'fg')
-			or  buffer.is_focused
-			and get_hex('ColorColumn', 'bg')
-
-			or get_hex('Normal', 'fg')
-		end,
-		bg = function(buffer)
-			-- return buffer.is_modified and buffer.is_focused  and get_hex('GitSignsChange', 'fg')
-			return buffer.is_modified and buffer.is_focused and colors.yellow
-			-- or buffer.is_modified and get_hex('GitSignsChange', 'fg')
-			 -- or buffer.is_modified and get_hex('BufferInactiveMod', 'fg')
-
-			or
-			buffer.is_focused
-			and get_hex('Normal', 'fg')
-			or get_hex('ColorColumn', 'bg')
-		end,
-	},
-
-  components = {
-    -- {
-    --   text = ' ',
-    -- },
-    {
-      text = function(buffer) return ' ' .. buffer.devicon.icon end,
-      fg = function(buffer) return buffer.devicon.color end,
-    },
-    {
-      text = function(buffer) return buffer.unique_prefix end,
-      fg = get_hex('Comment', 'fg'),
-      style = 'italic',
-    },
-    {
-      text = function(buffer) return buffer.filename .. ' ' end,
-    },
-    -- {
-    --   text = '',
-    --   delete_buffer_on_left_click = true,
-    -- },
-	--
-    {
-		text = function(buffer )
-          return buffer.is_modified and " ●" or ''
-        end,
-    },
-    {
-      text = ' ',
-    },
-  },
-})
 
 
 
@@ -414,3 +351,81 @@ map("n", "<leader><leader>", ":e#<CR>") -- switch to last opened buffer
 --     -- Change highlighting
 --     vim.api.nvim_win_set_option(win, 'winhl', 'Normal:ErrorFloat')
 -- end
+--
+
+
+
+--
+return {
+	name="buffers",
+	dependencies = {{
+		'noib3/nvim-cokeline',
+		dependencies = {'kyazdani42/nvim-web-devicons'}, -- If you want devicons
+		-- options passed to require(cokeline).setup(opts) -- automagically called
+		config = function()
+
+			local get_hex = require('cokeline/utils').get_hex
+			require('cokeline').setup({
+	default_hl = {
+		fg = function(buffer)
+
+
+
+			return buffer.is_modified and buffer.is_focused and colors.black
+			 -- or buffer.is_modified and  get_hex('ColorColumn', ' bg')
+			  or buffer.is_modified and get_hex('BufferCurrentMod', 'fg')
+			or  buffer.is_focused
+			and get_hex('ColorColumn', 'bg')
+
+			or get_hex('Normal', 'fg')
+		end,
+		bg = function(buffer)
+			-- return buffer.is_modified and buffer.is_focused  and get_hex('GitSignsChange', 'fg')
+			return buffer.is_modified and buffer.is_focused and colors.yellow
+			-- or buffer.is_modified and get_hex('GitSignsChange', 'fg')
+			 -- or buffer.is_modified and get_hex('BufferInactiveMod', 'fg')
+
+			or
+			buffer.is_focused
+			and get_hex('Normal', 'fg')
+			or get_hex('ColorColumn', 'bg')
+		end,
+	},
+
+  components = {
+    -- {
+    --   text = ' ',
+    -- },
+    {
+      text = function(buffer) return ' ' .. buffer.devicon.icon end,
+      fg = function(buffer) return buffer.devicon.color end,
+    },
+    {
+      text = function(buffer) return buffer.unique_prefix end,
+      fg = get_hex('Comment', 'fg'),
+      style = 'italic',
+    },
+    {
+      text = function(buffer) return buffer.filename .. ' ' end,
+    },
+    -- {
+    --   text = '',
+    --   delete_buffer_on_left_click = true,
+    -- },
+	--
+    {
+		text = function(buffer )
+          return buffer.is_modified and " ●" or ''
+        end,
+    },
+    {
+      text = ' ',
+    },
+  },
+})
+		end,
+	}}
+	
+	-- config=function()
+	-- end,
+}

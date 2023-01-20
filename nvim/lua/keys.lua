@@ -6,7 +6,6 @@
 --
 --
 local map = require("utils").mapKey
-local use = require('packer').use
 
 
 -- plugins needed for this file (maybe later move this out?)

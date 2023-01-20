@@ -1,12 +1,22 @@
 ----------------------------
 -- SESSION Management
 ------------------	
-local use = require('packer').use
-use 'rmagatti/auto-session'
 
+-- moved this down below
+-- require('auto-session').setup {
+-- 	log_level = 'info',
+-- 	auto_restore_enabled = false, -- don't restore by default
+-- 	auto_session_suppress_dirs = {'~/', '~/Projects'}
+-- }
 
-require('auto-session').setup {
+return {
+	name = "sessions",
+	dependencies = {
+{'rmagatti/auto-session', opts = {
 	log_level = 'info',
 	auto_restore_enabled = false, -- don't restore by default
 	auto_session_suppress_dirs = {'~/', '~/Projects'}
+
+}}
+	},
 }

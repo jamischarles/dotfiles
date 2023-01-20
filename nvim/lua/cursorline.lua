@@ -19,7 +19,7 @@ vim.fn.sign_define("MyCurrentLineHighlightSign", { numhl = "GitSignsChange" })
 
 			-- call sign_place(5, '', 'sign2', 'json.c')
 
-local CursorLine = {}
+-- local CursorLine = {}
 
 local function moveNumberHighlight()
 	local lineNr,_ = unpack(vim.api.nvim_win_get_cursor(0))
@@ -29,7 +29,24 @@ local function moveNumberHighlight()
 end
 
 -- init
-CursorLine.setup = function()
+-- CursorLine.setup = function()
+-- 	local myluafun = function()
+-- 		moveNumberHighlight()
+-- 	end
+--
+-- 	vim.api.nvim_create_autocmd({ "CursorMoved" }, {
+-- 		callback = myluafun,
+-- 	})
+-- end
+
+-- return CursorLine
+
+
+return {
+	name="cursorline",
+	dependencies = {
+	},
+	init = function()
 	local myluafun = function()
 		moveNumberHighlight()
 	end
@@ -37,9 +54,9 @@ CursorLine.setup = function()
 	vim.api.nvim_create_autocmd({ "CursorMoved" }, {
 		callback = myluafun,
 	})
-end
+	end,
+}
 
-return CursorLine
 
 ------********************** OLD VERSION. Worked really well. Didn't love the style
 

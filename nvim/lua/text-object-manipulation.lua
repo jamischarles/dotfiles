@@ -2,6 +2,7 @@
 -- TEXT OBJECTS and Text manipulation!
 -------------------------------------
 
+-- FIXME: Nest all this properly in the return obj
 
 -- READING 
 -- https://thevaluable.dev/vim-create-text-objects/
@@ -13,19 +14,13 @@
 -- https://github.com/nvim-treesitter/nvim-treesitter-textobjects
 -- https://github.com/RRethy/nvim-treesitter-textsubjects
 --
-local use = require("packer").use
 local map = require('utils').mapKey
 local unMap = require('utils').unmapKey
 local feedkeys = require('utils').sendFeedkeys
 
 
-use "andrewferrier/textobj-diagnostic.nvim"
 
 
--- jump to next/prev lsp error
-require("textobj-diagnostic").setup({create_default_keymaps = false})
-map('n', '[t', "<cmd>lua require('textobj-diagnostic').next_diag()<CR><esc>")
-map('n', ']t', "<cmd>lua require('textobj-diagnostic').prev_diag()<CR><esc>")
 
 
         -- config = function()
@@ -325,3 +320,20 @@ map("o", [[s"']], [["m`fEsc>``:set nopaste<CR>]])
 map('n', 's', 'i', {nowait=true})
 unMap('o', 's')
 unMap('v', 's') -- don't enter when were are in SELECT mode. we want autocompletion to be in insertion mode after completing a snippet 
+
+
+return {
+name = "text-object-manipulation",
+dependencies = {
+ "andrewferrier/textobj-diagnostic.nvim"
+
+},
+config= function()
+
+-- jump to next/prev lsp error
+require("textobj-diagnostic").setup({create_default_keymaps = false})
+map('n', '[t', "<cmd>lua require('textobj-diagnostic').next_diag()<CR><esc>")
+map('n', ']t', "<cmd>lua require('textobj-diagnostic').prev_diag()<CR><esc>")
+end
+}
+

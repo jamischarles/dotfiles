@@ -76,6 +76,9 @@ end
 # Homebrew path
 set -x PATH $PATH /opt/homebrew/bin
 
+# Homebrew default brewfile location
+set -x HOMEBREW_BUNDLE_FILE '~/.config/brewfile/Brewfile'
+
 # Ctags - exuberant... Because there's already one installed for universal ctags
 set -x PATH $PATH /usr/local/Cellar/ctags/5.8_1/bin/ctags
 
@@ -113,6 +116,8 @@ set -x BAT_THEME 'Monokai Extended'
 # Fixes local issuer cert issues
 set -x NODE_EXTRA_CA_CERTS '/usr/local/etc/openssl/certs/paypal_proxy_cacerts.pem'
 
+
+
 # Gets nanoseconds for current timestamp. Could also use this for ms timestamp. (gdate '+%s.%3N')
 function getTime
   echo (gdate '+%s%N') #https://github.com/fish-shell/fish-shell/issues/117
@@ -121,8 +126,6 @@ end
 # Timing metrics for how long this setup takes...
 set -g START_TIME (getTime)
 
-# Homebrew default brewfile location
-set -x HOMEBREW_BUNDLE_FILE '~/.config/brewfile/Brewfile'
 
 
 #################################################

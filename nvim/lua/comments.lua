@@ -3,17 +3,26 @@
 ----------------------
 local map = require('utils').mapKey
 local feedkeys = require('utils').sendFeedkeys
-local use = require('packer').use
-use 'numToStr/Comment.nvim'
 
-local cm = require('Comment')
-
-cm.setup()
+-- local cm = require('Comment')
+--
+-- cm.setup()
 
 
 --map('n', "<leader>/", "gcc") -- This odesn't work. WHYYYYYYYYYYYYYYYYYYYYYYYYYY
 vim.api.nvim_set_keymap("n", "<leader>/", "gccn^", {}) -- comment and move to next line
 vim.api.nvim_set_keymap("x", "<leader>/", "gc", {})
+
+return {
+	name = "comments",
+	dependencies = {
+		'numToStr/Comment.nvim'
+	}, -- automagically runs --setup()?  NO
+	config=function()
+		require('Comment').setup()
+	end
+
+}
 
 
 -- map('n', "<leader>/", feedkeys('gcc', 'n'))

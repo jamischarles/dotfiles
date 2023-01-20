@@ -2,24 +2,17 @@
 -- Git Features
 ----------------
 local map = require('utils').mapKey
-local use = require('packer').use
 
-use 'lewis6991/gitsigns.nvim'
 
-require('gitsigns').setup {
-    sign_priority = 10,
-	numhl= true,
-    diff_opts = {
-      algorithm = "minimal"
-      -- split = "botright"
-    }
-  }
+--- FIXME: where should keymaps go?
   map('n', '<leader>h', ':Gitsigns setqflist<CR>')
   map('n', '<leader>p', ':Gitsigns preview_hunk<CR>')
   map('n', "<leader>s", ":Gitsigns stage_hunk<CR>")
   map('n', '<leader>r', ':Gitsigns reset_hunk<CR>')
   map('n', '[h', ':Gitsigns next_hunk<CR>')
   map('n', ']h', ':Gitsigns prev_hunk<CR>')
+
+
 
 
   function ReplaceBufferWithGitHeadContentForFile()
@@ -64,3 +57,19 @@ vim.cmd("let b:match_words = '<<<<<<<:=======:>>>>>>>'")
 --- HELPFUL MAGIC -------------------
   --git rev-parse --show-toplevel  -- SHOW root folder of project (VERY VERY VERY USEFUL)
 
+return {
+	name="cursorline",
+	dependencies = {
+'lewis6991/gitsigns.nvim'
+	},
+	config=function()
+require('gitsigns').setup {
+    sign_priority = 10,
+	numhl= true,
+    diff_opts = {
+      algorithm = "minimal"
+      -- split = "botright"
+    }
+  }
+	end,
+}

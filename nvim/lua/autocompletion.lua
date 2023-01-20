@@ -4,30 +4,39 @@
 --
 --
 
-local map = require('utils').mapKey
-local use = require('packer').use
+-- local map = require('utils').mapKey
 
 
+
+
+
+
+return {
+	name="autocompletion",
+	dependencies={
 
 -- Cmp autocompletion
-use 'hrsh7th/nvim-cmp'
-use 'hrsh7th/cmp-nvim-lsp'
-use 'hrsh7th/cmp-buffer'
-use 'hrsh7th/cmp-path'
-use 'hrsh7th/cmp-cmdline'
-use 'hrsh7th/cmp-nvim-lua' -- nvim api completion
-use { 'saadparwaiz1/cmp_luasnip', requires = '~/.config/nvim/lua/snippets' }
+ 'hrsh7th/nvim-cmp',
+ 'hrsh7th/cmp-nvim-lsp',
+ 'hrsh7th/cmp-buffer',
+ 'hrsh7th/cmp-path',
+ 'hrsh7th/cmp-cmdline',
+ 'hrsh7th/cmp-nvim-lua', -- nvim api completion
+-- { 'saadparwaiz1/cmp_luasnip', dependencies = {'~/.config/nvim/lua/snippets'} }, -- need this if we stored snippets in a global location
+{ 'saadparwaiz1/cmp_luasnip' },
 
 -- delay? https://github.com/hrsh7th/nvim-cmp/issues/715
 
 -- syntax sugar (matching closing brace)
-use "windwp/nvim-autopairs"
+ "windwp/nvim-autopairs"
+	},
+	config= function()
 
 require('nvim-autopairs').setup {
 	map_bs = false
 }
 
-local cmp_autopairs = require('nvim-autopairs.completion.cmp');
+-- local cmp_autopairs = require('nvim-autopairs.completion.cmp');
 
 
 --
@@ -142,6 +151,11 @@ cmp.setup.cmdline(':', {
 		{ name = 'cmdline' }
 	})
 })
+
+
+
+	end
+}
 
 
 -- cmp.setup.cmdline(':Rg', {
