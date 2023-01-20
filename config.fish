@@ -2,6 +2,8 @@
 # - gdate via  '$brew install coreutils'        (for gdate)
 # - nvm (or alternative with fish. see lower section on NVM)
 
+# READ
+# https://developerlife.com/2021/01/19/fish-scripting-manual/#:~:text=A%20fish%20function%20is%20just,variables%20in%20fish%20are%20lists).
 
 ## most config is here
 ## TODO: Run once on new init
@@ -36,7 +38,14 @@
 # - git prompt? https://www.martinklepsch.org/posts/git-prompt-for-fish-shell.html
 # - vim mode? https://fedragon.github.io/vimode-fishshell-osx/
 
-
+# https://developerlife.com/2021/01/19/fish-scripting-manual/#variable-scopes-local-global-global-export
+## FUNCTIONS
+function diffjson
+  # set local vars 
+	set -l FILE_A $argv[1]
+	set -l FILE_B $argv[2]
+  delta --diff-so-fancy (jq --sort-keys . $FILE_A | psub ) (jq --sort-keys . $FILE_B | psub )
+end
 
 #################################
 # Amazing tools I use (install via brew)
@@ -112,6 +121,8 @@ end
 # Timing metrics for how long this setup takes...
 set -g START_TIME (getTime)
 
+# Homebrew default brewfile location
+set -x HOMEBREW_BUNDLE_FILE '~/.config/brewfile/Brewfile'
 
 
 #################################################
@@ -247,6 +258,8 @@ end
 #######################
 # Brew things installed
 #######################
+# TODO: Use brewfile to manage / restore brew deps 
+
 # brew install coreutils (gdate) https://apple.stackexchange.com/questions/135742/time-in-milliseconds-since-epoch-in-the-terminal
 
 ######################

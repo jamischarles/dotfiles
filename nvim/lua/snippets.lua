@@ -17,13 +17,20 @@ local ls = require("luasnip")
 require("luasnip.loaders.from_vscode").lazy_load()
 
 
+-- remaining bug: insert in select mode is wonky
+ls.config.set_config({
+	-- I THINK this fixed the weird issue where it wouldn't exit the snippet
+	--https://github.com/LunarVim/LunarVim/pull/1689
+	-- https://github.com/L3MON4D3/LuaSnip/blob/master/DOC.md   -> exit_out_of_region(node)
+	region_check_events = 'InsertLeave' -- this causes it to exit "snippet" copy mode if you use insert outside of the region
+})
 
 
-  -- READING
-  --https://sbulav.github.io/vim/neovim-setting-up-luasnip/
+-- READING
+--https://sbulav.github.io/vim/neovim-setting-up-luasnip/
 
-  -- luasnip mappings
-  --  press <Tab> to expand or jump in a snippet. These can also be mapped separately
+-- luasnip mappings
+--  press <Tab> to expand or jump in a snippet. These can also be mapped separately
 -- via <Plug>luasnip-expand-snippet and <Plug>luasnip-jump-next.
 -- map("i", "<Tab>", ":luasnip#expand_or_jumpable() ? '<Plug>luasnip-expand-or-jump' : '<Tab>'")
 -- imap <silent><expr> <Tab> luasnip#expand_or_jumpable() ? '<Plug>luasnip-expand-or-jump' : '<Tab>'
@@ -65,10 +72,11 @@ local s = ls.snippet
 local sn = ls.snippet_node
 local t = ls.text_node
 local i = ls.insert_node
+local insert_node = ls.insert_node
 local f = ls.function_node
 local c = ls.choice_node
 local d = ls.dynamic_node
-local r = ls.restore_node
+local restore = ls.restore_node
 local l = require("luasnip.extras").lambda
 local dl = require("luasnip.extras").dynamic_lambda
 local fmt = require("luasnip.extras.fmt").fmt
@@ -94,67 +102,69 @@ ls.add_snippets("all", {
 		i(0),
 		t({ "", "}" }),
 	}),
-  })
+})
 
 
-  -- BUFFER type, not file name
-  -- FIXME: Explain how these mechanics work
-  ls.add_snippets("javascript", {
-    -- examples
-    s("repeat", { i(1, "text"), t({ "", "" }), rep(1) }),
-    s("dl1", { --lambda. Like mirroring but different?
-      i(1, "sample_text"),
-      t({ ":", "" }),
-      dl(2, l._1, 1),
-    }),
+-- BUFFER type, not file name
+-- FIXME: Explain how these mechanics work
+ls.add_snippets("javascript", {
+	-- examples
+	s("repeat", { i(1, "text"), t({ "", "" }), rep(1) }),
+	s("dl1", { --lambda. Like mirroring but different?
+		i(1, "sample_text"),
+		t({ ":", "" }),
+		dl(2, l._1, 1),
+	}),
 
-    -- lamdba with a transform?
-    s("dl2", {
-      i(1, "sample_text"),
-      i(2, "sample_text_2"),
-      t({ "", "" }),
-      dl(3, l._1:gsub("\n", " linebreak ") .. l._2, { 1, 2 }),
-    }),
+	-- lamdba with a transform?
+	s("dl2", {
+		i(1, "sample_text"),
+		i(2, "sample_text_2"),
+		t({ "", "" }),
+		dl(3, l._1:gsub("\n", " linebreak ") .. l._2, { 1, 2 }),
+	}),
 
-
-    s("cl", {
-      -- Simple static text.
-      --
-      t("console.log('"),
-      -- t(1, "' '"),
-      i(1, "test"),
-      t("', "),
-      rep(1), -- repeat 1 here
-      t(")"),
-      i(2)
-    }),
-    -- trigger is `cll`, second argument to snippet-constructor are the nodes to insert into the buffer on expansion.
-    s("cll", {
-      -- Simple static text.
-      t("console.log('"),
-      -- t(1, "' '"),
-      i(1, "test"),
-      f(copy, 2),
-      t("')"),
-      i(0)
-      -- function, first parameter is the function, second the Placeholders
-      -- whose text it gets as input.
-      -- f(copy, 2),
-      -- t({ "", "function " }),
-      -- -- Placeholder/Insert.
-      -- i(1),
-      -- t("("),
-      -- -- Placeholder with initial text.
-      -- i(2, "int foo"),
-      -- -- Linebreak
-      -- t({ ") {", "\t" }),
-      -- -- Last Placeholder, exit Point of the snippet.
-      -- i(0),
-      -- t({ "", "}" }),
-    }),
-  })
+	-- FIXME: HOW do I remove the extmark at the end when the cursor moves up or down?
+	s("cl", {
+		-- Simple static text.
+		--
+		t("console.log('"), -- text node
+		-- t(1, "' '"),
+		insert_node(1, "test"),
+		t("', "), -- text node
+		rep(1), -- repeat 1 here. When and how do we restore_node
+		t(")"),
+		-- i(2) -- move cursor to make this a jump point Q: Do we even need this? I think this allows you to stay in the snippet longer
+		-- i(0) -- is inserted automagically if it's missing. Means once you hit that jump point you are out 
+		-- insert_node(2)
+	}),
+	-- trigger is `cll`, second argument to snippet-constructor are the nodes to insert into the buffer on expansion.
+	s("cll", {
+		-- Simple static text.
+		t("console.log('"),
+		-- t(1, "' '"),
+		i(1, "test"),
+		f(copy, 2),
+		t("')"),
+		i(0)
+		-- function, first parameter is the function, second the Placeholders
+		-- whose text it gets as input.
+		-- f(copy, 2),
+		-- t({ "", "function " }),
+		-- -- Placeholder/Insert.
+		-- i(1),
+		-- t("("),
+		-- -- Placeholder with initial text.
+		-- i(2, "int foo"),
+		-- -- Linebreak
+		-- t({ ") {", "\t" }),
+		-- -- Last Placeholder, exit Point of the snippet.
+		-- i(0),
+		-- t({ "", "}" }),
+	}),
+})
 
 
 -- in a ts file: search typescript-, then js-, then all-snippets.
 ls.filetype_extend("typescript", { "javascript" })
-ls.filetype_extend("typescriptreact", {"typescript", "javascript" })
+ls.filetype_extend("typescriptreact", { "typescript", "javascript" })

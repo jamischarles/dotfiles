@@ -1,6 +1,7 @@
 -- -------------------------
 -- LSP config & tooling
 -- https://jose-elias-alvarez.medium.com/configuring-neovims-lsp-client-for-typescript-development-5789d58ea9c
+-- https://blog.codeminer42.com/configuring-language-server-protocol-in-neovim/
 -- ----------------------------
 --
 -- LOOK INTO:
@@ -17,6 +18,21 @@
 local map = require("utils").mapKey
 local unMap = require("utils").unmapKey
 local use = require("packer").use
+
+
+-----------------------
+-- LSP DEP MANAGEMENT. USE MASON so we can avoid having to manually npm install deps etc
+-- https://github.com/williamboman/mason.nvim
+-----------------------
+use { "williamboman/mason.nvim" }
+use { "williamboman/mason-lspconfig.nvim" }
+require("mason").setup()
+require("mason-lspconfig").setup({
+	ensure_installed = { "sumneko_lua", "rust_analyzer" },
+})
+-- MasonInstall
+
+
 
 -- Formatting
 use({ "ckipp01/stylua-nvim", run = "cargo install stylua" }) -- lua formatting
@@ -42,13 +58,13 @@ prettier.setup({
 	},
 })
 
--- Run prettier on save 
+-- Run prettier on save
 -- vim.cmd("autocmd BufWritePre *.js,*.ts,*.svelte,*.json Prettier")
 -- vim.cmd("autocmd BufWriteCmd *.js,*.ts,*.svelte,*.json Prettier")
 -- vim.cmd("autocmd BufWritePost *.js,*.ts,*.svelte,*.json Prettier")
 -- vim.cmd("autocmd BufWritePre *.js,*.ts,*.svelte,*.json lua vim.lsp.buf.formatting_sync()")
 vim.cmd("autocmd BufWritePre *.js,*.ts,*.svelte,*.json lua vim.lsp.buf.format()")
--- https://www.reddit.com/r/neovim/comments/pb2vd6/lsp_auto_format_on_save_causes_buffer_change/ or use efm formatter  
+-- https://www.reddit.com/r/neovim/comments/pb2vd6/lsp_auto_format_on_save_causes_buffer_change/ or use efm formatter
 
 -- https://github.com/jose-elias-alvarez/null-ls.nvim/discussions/324
 -- formatting.prettierd.with({
@@ -59,12 +75,28 @@ vim.cmd("autocmd BufWritePre *.js,*.ts,*.svelte,*.json lua vim.lsp.buf.format()"
 use({
 	"nvim-treesitter/nvim-treesitter",
 	run = ":TSUpdate",
+	-- run = "volta install typescript-language-server" -- FIXME: is this even working?
 })
 
 use("jparise/vim-graphql") -- NOT lua :(
 
+-- this seems to break syntax highlighting because it cannot find a typescript-language-server lsp?
+-- TODO: Trying this one instead
+-- https://github.com/jose-elias-alvarez/typescript.nvim
+-- IF we keep having problems, try using the one from Deno (built in) Deno TS lsp
+--
+-- https://github.com/jose-elias-alvarez/typescript.nvim
 require("nvim-treesitter.configs").setup({
-	ensure_installed = { "lua", "graphql", "rust", "svelte", "typescript", "tsx", "javascript", "css" },
+	-- use tree-sitter based syntax highlighting
+	highlight = {
+		enable = true,
+		-- Setting this to true will run `:h syntax` and tree-sitter at the same time.
+		-- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
+		-- Using this option may slow down your editor, and you may see some duplicate highlights.
+		-- Instead of true it can also be a list of languages
+		additional_vim_regex_highlighting = false,
+	},
+	ensure_installed = { "json", "lua", "graphql", "rust", "svelte", "typescript", "tsx", "javascript", "css", "fish" },
 })
 
 -- highlight current line & goodies
@@ -113,26 +145,39 @@ require("colorizer").setup({
 use({ "nvim-treesitter/nvim-treesitter-context", requires = "nvim-treesitter/nvim-treesitter" })
 
 -- Ctags-like plugin that shows all the fns for a file
-use({
-	"stevearc/aerial.nvim",
-	config = function()
-		require("aerial").setup({
-
-			-- attach aerial to LSP for ctags-like interface
-			-- require("aerial").on_attach(client, bufnr)
-			-- Toggle the aerial window with <leader>a
-			on_attach = function(bufnr)
-				-- Jump forwards/backwards with '{' and '}'
-				vim.api.nvim_buf_set_keymap(bufnr, "n", "{", "<cmd>AerialPrev<CR>", {})
-				vim.api.nvim_buf_set_keymap(bufnr, "n", "}", "<cmd>AerialNext<CR>", {})
-				-- Jump up the tree with '[[' or ']]'
-				vim.api.nvim_buf_set_keymap(bufnr, "n", "[[", "<cmd>AerialPrevUp<CR>", {})
-				vim.api.nvim_buf_set_keymap(bufnr, "n", "]]", "<cmd>AerialNextUp<CR>", {})
-			end,
-		})
-	end,
-})
-vim.keymap.set("n", "<leader>a", "<cmd>AerialToggle!<CR>")
+-- Using lsp-saga instead
+-- use({
+-- 	"stevearc/aerial.nvim",
+-- 	config = function()
+-- 		require("aerial").setup({
+-- 			backends = { "treesitter", "lsp", "markdown", "man" },
+-- 			filter_kind = false,
+-- 			-- filter_kind = {
+-- 			-- 	"Class",
+-- 			-- 	"Constructor",
+-- 			-- 	"Enum",
+-- 			-- 	"Function",
+-- 			-- 	"Interface",
+-- 			-- 	"Module",
+-- 			-- 	"Method",
+-- 			-- 	"Struct",
+-- 			-- },
+--
+-- 			-- attach aerial to LSP for ctags-like interface
+-- 			-- require("aerial").on_attach(client, bufnr)
+-- 			-- Toggle the aerial window with <leader>a
+-- 			on_attach = function(bufnr)
+-- 				-- Jump forwards/backwards with '{' and '}'
+-- 				vim.api.nvim_buf_set_keymap(bufnr, "n", "{", "<cmd>AerialPrev<CR>", {})
+-- 				vim.api.nvim_buf_set_keymap(bufnr, "n", "}", "<cmd>AerialNext<CR>", {})
+-- 				-- Jump up the tree with '[[' or ']]'
+-- 				vim.api.nvim_buf_set_keymap(bufnr, "n", "[[", "<cmd>AerialPrevUp<CR>", {})
+-- 				vim.api.nvim_buf_set_keymap(bufnr, "n", "]]", "<cmd>AerialNextUp<CR>", {})
+-- 			end,
+-- 		})
+-- 	end,
+-- })
+-- vim.keymap.set("n", "<leader>a", "<cmd>AerialToggle!<CR>")
 
 use("simrat39/symbols-outline.nvim")
 require("symbols-outline").setup({
@@ -145,6 +190,18 @@ require("symbols-outline").setup({
 
 -- navigating around the symbols in a file
 use("ziontee113/syntax-tree-surfer")
+
+-- NAVIGATING by symbol. SYMBOL hopping / jumping
+use({
+	'ray-x/navigator.lua',
+	requires = {
+		{ 'ray-x/guihua.lua', run = 'cd lua/fzy && make' },
+		{ 'neovim/nvim-lspconfig' },
+	},
+})
+
+require 'navigator'.setup()
+
 
 -- LSP config stuff
 use("nvim-lua/plenary.nvim") -- async lua lib writing easier async. needed for some of these deps
@@ -173,6 +230,80 @@ local buf_map = function(bufnr, mode, lhs, rhs, opts)
 		silent = true,
 	})
 end
+
+----------------------------------------------------
+-- HOVER improved for LSP-hover ---------------------
+----------------------------------------------------
+-- Read: https://github.com/neovim/nvim-lspconfig
+-- TODO: TRY THIS https://github.com/glepnir/lspsaga.nvim
+use({ --// WOOOOW. so good
+	"glepnir/lspsaga.nvim",
+	branch = "main",
+	config = function()
+		local saga = require("lspsaga")
+
+		saga.init_lsp_saga({
+			-- your configuration
+		})
+	end,
+})
+
+
+
+
+--
+--
+--
+-- TODO: Could I build my own displaeyr / viewer based on glow-hover? Or bring another one in?
+-- use {
+-- 	"JASONews/glow-hover"
+-- }
+--
+--
+-- require("glow-hover").setup({
+-- 	-- The followings are the default values
+-- 	max_width = 50,
+-- 	width= 40,
+-- 	padding = 10,
+-- 	border = "shadow",
+-- 	glow_path = "glow",
+-- })
+-- REQUIRES glow terminal command
+
+-- PROBLEM: Need much better LSPHover look since I use it ALL THE TIME now
+-- https://www.reddit.com/r/neovim/comments/tx40m2/is_it_possible_to_improve_lsp_hover_look/
+--https://github.com/neovim/neovim/blob/master/runtime/lua/vim/lsp/util.lua
+-- better hover framework?
+-- use {
+--     "lewis6991/hover.nvim",
+--     config = function()
+--         require("hover").setup {
+--             init = function()
+--                 -- Require providers
+--                 require("hover.providers.lsp")
+--                 -- require('hover.providers.gh')
+--                 -- require('hover.providers.gh_user')
+--                 -- require('hover.providers.jira')
+--                 -- require('hover.providers.man')
+--                 -- require('hover.providers.dictionary')
+--             end,
+--             preview_opts = {
+--                 border = nil
+--             },
+--             -- Whether the contents of a currently open hover window should be moved
+--             -- to a :h preview-window when pressing the hover keymap.
+--             preview_window = false,
+--             title = true
+--         }
+--
+--         -- Setup keymaps
+-- 		--
+-- 		-- map("n", "<C-l>", ":LspHover<CR>")
+-- 		-- map("n", "<C- >", ":LspHover<CR>") -- ctrl+space YES
+--         vim.keymap.set("n", "<C-l>", require("hover").hover, {desc = "hover.nvim"})
+--         vim.keymap.set("n", "<C- >", require("hover").hover_select, {desc = "hover.nvim (select)"}) -- ctrl space
+--     end
+-- }
 
 -- onattach callback
 -- This callback runs whenever a language server attaches to a buffer and is used to set up commands, keybindings, and other buffer-local options
@@ -217,6 +348,7 @@ local on_attach = function(client, bufnr)
 end
 
 -- npm install for these?
+-- tsserver doesn't exist? TODO: look at https://www.npmjs.com/package/typescript-language-server
 lspconfig.tsserver.setup({
 	-- cb that runs whenever we open a file that tsserver supports
 	on_attach = function(client, bufnr)
@@ -340,14 +472,25 @@ require("treesitter-context").setup({
 -- vim.keymap.del('n', '<C-L>')
 
 -- Ctrl-L to show definition etc under cursor
-map("n", "<C-l>", ":LspHover<CR>")
-map("n", "<C- >", ":LspHover<CR>") -- ctrl+space YES
-map("n", "<Leader>l", ":LspDiagLine<CR>")
+-- ?Using hover plugin above instead
+--
+-- FIXME: Maybe we use primarily the Ctrl+ layer as an LSP-type layer of shortcuts?
+-- Experiment with this
+map("n", "<leader>a", "<cmd>Lspsaga outline<CR>")
+vim.keymap.set("n", "<leader>l", ":Lspsaga hover_doc<CR>")
+map("n", "<C- >", ":Lspsaga peek_definition<CR>") -- ctrl+space YES
 
+vim.keymap.set("n", "<C-l>", ":Lspsaga show_line_diagnostics<CR>")
+vim.keymap.set("n", "<C-s>", ":LspSignatureHelp<CR>") -- Nice!
+
+vim.keymap.set("n", "<Leader>f", ":Lspsaga lsp_finder<CR>") -- find symbol in project. WOOOOOW
+
+-- map("n", "<C-l>", ":LspHover<CR>")
+-- map("n", "<C- >", ":LspHover<CR>") -- ctrl+space YES
+-- map("n", "<Leader>l", ":LspDiagLine<CR>")
 
 -- Format current buffer with jq command line tool
 vim.cmd("command! FormatJSON silent %!jq . %")
-
 
 -- maybe ctrl-} for moving to next lsp thing?
 -- Would be cool to have ctrl- layer for LSP and other diagnostic / code hints & help & renames and corrections... in normal mode...

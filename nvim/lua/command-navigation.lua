@@ -4,9 +4,14 @@
 -- Libs to look at!!!
 -- https://github.com/skywind3000/asyncrun.vim (async run shell cmd and pipe return to quickfix window
 --
+-- Try this for building my own commands in a floating window:
+-- https://www.chrisdeluca.me/article/diy-neovim-fzy-search/
+--
 
 local map = require("utils").mapKey
 local use = require("packer").use
+
+-- lua filesystem lib 
 
 use({
 	"ibhagwan/fzf-lua",
@@ -27,16 +32,62 @@ use({
 	requires = { "tami5/sqlite.lua" },
 })
 
+-- automagic toggling from/to test file
+-- TODO: look into what gt does? I do want a faster way to do recall / jump between contexts... Tabs?
+-- TODO: just make this my own plugin?
+
+-- alternate
+-- https://www.dev-log.me/Jump_between_test_files_and_implementation_in_Vim/
+-- Lua hacky version of... vim-projectionist
+function JumpToTestFileAndBack(opts)
+	-- find current path
+	-- does it include test file?
+	-- if no, find the associated test file 
+	-- if yes, find the implementation file
+	-- Q: Can I hook into the vitest config file to build a mapping of files when vim starts up in the project?  
+	local filename = vim.fn.expand('%:t') -- filename only ie: process-logview.test.ts 
+	local fileNameNoExt = vim.fn.expand('%:t:r') -- filename only minus extension ie: process-logview 
+
+	local targetFile
+
+	-- if includes .test.ts ext, then remove it, and find the same file name with .ts extension
+	-- else find fileName.test.ts
+	if string.find(filename, ".test.ts") then
+		fileNameNoExt = string.gsub(filename, '.test.ts', '') -- need to manually remove because the vim pattern only removes the last .* ext 
+		-- could also use vim.fs.find() to locate the file
+		targetFile = vim.fn.systemlist('fd ' .. fileNameNoExt .. '.ts -1')[1]
+	else
+		targetFile = vim.fn.systemlist('fd ' .. fileNameNoExt .. '.test.ts -1')[1]
+	end
+
+
+	-- open the file if it exists
+	if targetFile then
+		vim.api.nvim_command('edit ' .. targetFile) -- TODO: make it relative to current file. Or use fd to find it or fzf or something
+	end
+	-- TODO: run this command and parse the result into the edit
+	--
+	--
+-- :!fd test.ts --type f
+-- ./lib/logview/__tests__/process-logview-row.test.ts
+-- ./lib/logview/__tests__/process-logview.test.ts
+-- ./tests/happy.test.ts
+	
+	-- TODO: hook into fd. Return first result and use that. YAS
+end
+
+map("n", "mt", "<cmd>lua JumpToTestFileAndBack('test')<CR>")
 
 
 -- file explorer
-use {
-	'kyazdani42/nvim-tree.lua',
+-- try this https://github.com/stevearc/oil.nvim (buffer based file editing. INTERESTING)
+use({
+	"kyazdani42/nvim-tree.lua",
 	requires = {
-		'kyazdani42/nvim-web-devicons', -- optional, for file icons
+		"kyazdani42/nvim-web-devicons", -- optional, for file icons
 	},
-	tag = 'nightly' -- optional, updated every week. (see issue #1193)
-}
+	tag = "nightly", -- optional, updated every week. (see issue #1193)
+})
 
 require("nvim-tree").setup({
 	filters = { custom = { "^.git$" } },
@@ -48,24 +99,30 @@ require("nvim-tree").setup({
 			},
 		},
 	},
-
 })
 
 ---------------------
 -- Telescope for frecency
 ------------------
 require("telescope").load_extension("frecency")
-require('telescope').setup({
-  defaults = {
-    layout_config = {
-      horizontal = {height = 0.95, width = 0.9 },
-      vertical = {height = 0.9, width = 0.9 }
-      -- other layout configuration here
-    },
-    -- other defaults configuration here
-  },
-  -- other configuration values here
+require("telescope").setup({
+	defaults = {
+		layout_config = {
+			horizontal = { height = 0.95, width = 0.9 },
+			vertical = { height = 0.9, width = 0.9 },
+			-- other layout configuration here
+		},
+		-- other defaults configuration here
+	},
+	-- other configuration values here
 })
+
+-----------------------------------------------------------------
+-- NEEEEEEEEEEED a PRoject find symbols list generator (using TS)
+-- https://github.com/eckon/treesitter-current-functions
+---------------------
+
+
 
 
 -----------------
@@ -87,7 +144,7 @@ require("fzf-lua").setup({
 		["<S-down>"] = "preview-page-down",
 		["<S-up>"] = "preview-page-up",
 		["<S-left>"] = "preview-page-reset",
-},
+	},
 	winopts = {
 		-- split         = "belowright new",-- open in a split instead?
 		-- "belowright new"  : split below
@@ -102,11 +159,17 @@ require("fzf-lua").setup({
 		col = 0.50,
 		fullscreen = true,
 
+		border = false,
 		preview = {
 			scrollbar = "float",
-			layout = "vertical",
-			vertical = "up:75%",
+			layout = "horizontal",
+			horizontal = "right:65%",
 		},
+		-- preview = {
+		-- 	scrollbar = "float",
+		-- 	layout = "vertical",
+		-- 	vertical = "up:75%",
+		-- },
 	},
 	-- provider setup
 	files = {
@@ -124,7 +187,7 @@ require("fzf-lua").setup({
 		-- default options are controlled by 'fd|rg|find|_opts'
 		-- NOTE: 'find -printf' requires GNU find
 		--https://github.com/sharkdp/fd/issues/789 SORT
-		-- sort by recently openened/modified? Files only. include hidden files, but remove locales and java tests and .git  
+		-- sort by recently openened/modified? Files only. include hidden files, but remove locales and java tests and .git
 		cmd = "fd --color=never --type f --hidden --follow --exclude .git --exclude locales --exclude dist --exclude tests/functional -X ls -tu", -- -tu vs -tc?
 		-- find_opts = [[-type f -not -path '*/\.git/*' -printf '%P\n']],
 		-- rg_opts = "--color=never --files --hidden --follow -g '!.git'",
@@ -263,17 +326,12 @@ map("n", "<Leader>b", ":FzfLua buffers<CR>") -- could we sort this by frecency? 
 -- map("n", "<Leader>m", ":Telescope frecency<CR>") -- uses my custom frecency usin `fre` (see above)
 map("n", "<Leader>m", ":FzfLua oldfiles<CR>") -- uses my custom frecency usin `fre` (see above)
 
-
-
 -- To add nvim treesitter like menu options: https://github.com/kyazdani42/nvim-tree.lua/pull/1162
 -- For now maybe we can just commands on it... g? for keys
 -- f filter
 -- . run command
 map("n", "<Leader>n", ":NvimTreeToggle<CR>")
 map("n", "<C-F>", ":NvimTreeFindFile<CR>") -- uses my custom frecency usin `fre` (see above)
-
-
-
 
 -- retiring my own custom solution for now...
 -- map(
@@ -282,14 +340,12 @@ map("n", "<C-F>", ":NvimTreeFindFile<CR>") -- uses my custom frecency usin `fre`
 -- 	':lua require(\'fzf-lua\').files({cmd = "fre --sorted", actions = {["ctrl-x"] = {function(selected) vim.cmd(":!fre --delete ".. selected[1]) end, require"fzf-lua.actions".resume} }})<CR>'
 -- )
 
-
 -- FIXME: Can we cache this somehow to speed it up?
 -- https://github.com/junegunn/fzf/issues/1740 (caching commentary
 
 -- CLTRL-X deletes the result from the frecency dataset YASSSS
 --fre --sorted | fzf | xargs fre -D -- really we just need the command that ctr-d or ctrl-x would execute. fre --delete FILENAME
 -- can I map actions on these?
-
 
 -- Custom commands!!!
 map("n", "<Leader>e", ":FzfLua files cwd=~/.dotfiles/nvim<CR>") -- change folder for files() lookup
@@ -298,9 +354,10 @@ map("n", "<Leader>e", ":FzfLua files cwd=~/.dotfiles/nvim<CR>") -- change folder
 vim.api.nvim_create_user_command("Rg", function(arguments)
 	require("fzf-lua").files({
 		actions = { ["default"] = actions.file_edit },
-		cmd = "rg  --fixed-strings --max-count 5 --column --line-number --no-heading --color=always --smart-case --iglob !locales -- " .. arguments.args,
+		cmd = "rg  --fixed-strings --max-count 5 --column --line-number --no-heading --color=always --smart-case --iglob !locales -- "
+			.. arguments.args,
 	}) --ignores locales/*
-		-- cmd = "rg  --fixed-strings --max-count 1 --column --line-number --no-heading --color=always --smart-case --iglob !locales -- " .. arguments.args,
+	-- cmd = "rg  --fixed-strings --max-count 1 --column --line-number --no-heading --color=always --smart-case --iglob !locales -- " .. arguments.args,
 
 	-- ['--header'] = vim.fn.shellescape(('%s to close buffer, %s to open'):format(delBuffer, enterKey))    }
 	-- Old cmd-t function I used...
@@ -327,20 +384,20 @@ vim.api.nvim_create_user_command("Rgg", function(arguments)
 	require("fzf-lua").files({
 		actions = { ["default"] = actions.file_edit },
 
-		cmd = "git status --porcelain | sed s/^...// | xargs rg  --fixed-strings --max-count 1 --column --line-number --no-heading --color=always --smart-case --iglob !locales -- " .. arguments.args,
+		cmd = "git status --porcelain | sed s/^...// | xargs rg  --fixed-strings --max-count 1 --column --line-number --no-heading --color=always --smart-case --iglob !locales -- "
+			.. arguments.args,
 	})
 end, {
 	nargs = "*",
 	desc = "Say hi to someone",
 })
 
-
 local getOpenBufferList = function()
 	local bufferFileNames = {}
 	for _, bufNum in ipairs(vim.api.nvim_list_bufs()) do
 		-- map[b] = true
 		-- if vim.fn.buflisted(bufNum) then
-		local isListed = unpack(vim.fn.getbufinfo(bufNum))['listed'] -- weird way of getting open buffers
+		local isListed = unpack(vim.fn.getbufinfo(bufNum))["listed"] -- weird way of getting open buffers
 		if isListed == 1 then
 			-- table.insert(bufferFileNames, vim.api.nvim_buf_get_name(bufNum))
 			table.insert(bufferFileNames, vim.api.nvim_buf_get_name(bufNum))
@@ -350,7 +407,7 @@ local getOpenBufferList = function()
 end
 
 -- print(vim.inspect(getOpenBufferList()))
-	-- print(vim.fn.shellescape(table.concat(getOpenBufferList(), '\n')))
+-- print(vim.fn.shellescape(table.concat(getOpenBufferList(), '\n')))
 
 -- search only across open buffers
 vim.api.nvim_create_user_command("Rgb", function(arguments)
@@ -360,13 +417,14 @@ vim.api.nvim_create_user_command("Rgb", function(arguments)
 		actions = { ["default"] = actions.file_edit },
 
 		-- cmd = vim.fn.shellescape(table.concat(openBufferNames, '\n')) .. " | xargs bat" -- kind of works
-		cmd = vim.fn.shellescape(table.concat(openBufferNames, '\n')) .. " | xargs rg  --fixed-strings --max-count 1 --column --line-number --no-heading --color=always --smart-case -- " .. arguments.args,
+		cmd = vim.fn.shellescape(table.concat(openBufferNames, "\n"))
+			.. " | xargs rg  --fixed-strings --max-count 1 --column --line-number --no-heading --color=always --smart-case -- "
+			.. arguments.args,
 	})
 end, {
 	nargs = "*",
 	desc = "Say hi to someone",
 })
-
 
 -- print(vim.inspect(bufList))
 

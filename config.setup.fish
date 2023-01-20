@@ -57,6 +57,7 @@ if status --is-interactive
     abbr --add gfc 'git diff --name-only --diff-filter=U | xargs nvim'
     abbr --add gfca 'git diff --name-only --diff-filter=U | xargs git add'
 
+
     # node
     abbr --add nv 'node --version'
 
@@ -91,6 +92,9 @@ if status --is-interactive
 
   # special rust-based commands that I like
   # z, fd, rg, bat, exa,lsd, dust(du) (trying out): broot   (not much anymore) fzf
+  # choose  -   take a piece of the output
+  # sad - project wide find/replace. With preview. NICE
+  # jd -> JSON diff cli. WOW
   # zk zettelkasten https://github.com/mickael-menu/zk
 
 

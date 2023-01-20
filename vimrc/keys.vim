@@ -214,7 +214,7 @@ nnoremap <silent> <Leader>T :call fzf#run({
 
 "  https://github.com/junegunn/fzf/issues/274 https://unix.stackexchange.com/questions/64736/combine-output-from-two-commands-in-bash
 nnoremap <silent> <Leader>e :call fzf#run({
- \'source': 'find ~/.vim/vimrc/* -type f; find ~/.vimrc; find ~/.dotfiles/_codesnippets/snippets/javascript.snippets; find ~/.config/fish/config.fish; find ~/.vim/after/plugin/* -type f; find ~/.config/karabiner.edn; find ~/.config/starship.toml; find ~/.dotfiles/makesymlinks.sh; find ~/.config/alacritty.yml; find ~/.byobu/.tmux.conf; find ~/.byobu/color.tmux; find ~/.byobu/keybindings.tmux',
+ \'source': 'find ~/.config/nvim; find ~/.dotfiles/_codesnippets/snippets/javascript.snippets; find ~/.config/fish/config.fish; find ~/.config/karabiner.edn; find ~/.config/starship.toml; find ~/.dotfiles/makesymlinks.sh; find ~/.config/alacritty.yml; find ~/.byobu/.tmux.conf; find ~/.byobu/color.tmux; find ~/.byobu/keybindings.tmux',
 \   'options': '--multi --exact --tiebreak=end,length ' . ShowPreviewIfWideWindow(),
 \   '_hide_window': 1,
 \   'sink': function('Dontopeninnerdtree')

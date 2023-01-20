@@ -23,7 +23,7 @@ use { 'saadparwaiz1/cmp_luasnip', requires = '~/.config/nvim/lua/snippets' }
 -- syntax sugar (matching closing brace)
 use "windwp/nvim-autopairs"
 
-require('nvim-autopairs').setup{
+require('nvim-autopairs').setup {
 	map_bs = false
 }
 
@@ -33,7 +33,7 @@ local cmp_autopairs = require('nvim-autopairs.completion.cmp');
 --
 -- - Setup nvim-cmp.
 local luasnip = require 'luasnip'
-local cmp = require'cmp'
+local cmp = require 'cmp'
 
 -- cmp.event:on( 'confirm_done', cmp_autopairs.on_confirm_done())
 --
@@ -68,28 +68,28 @@ cmp.setup({
 				luasnip.expand()
 			elseif luasnip.expand_or_jumpable() then
 				luasnip.expand_or_jump()
-			elseif check_backspace() then
-				fallback()
+				-- elseif check_backspace() then Q: Where did this go?
+				-- 	fallback()
 			else
 				fallback()
 			end
 		end, {
-		"i",
-		"s",
-	}),
+			"i",
+			"s",
+		}),
 
-	["<S-Tab>"] = cmp.mapping(function(fallback)
-		if cmp.visible() then
-			cmp.select_prev_item()
-		elseif luasnip.jumpable(-1) then
-			luasnip.jump(-1)
-		else
-			fallback()
-		end
-	end, {
-	"i",
-	"s",
-}),
+		["<S-Tab>"] = cmp.mapping(function(fallback)
+			if cmp.visible() then
+				cmp.select_prev_item()
+			elseif luasnip.jumpable(-1) then
+				luasnip.jump(-1)
+			else
+				fallback()
+			end
+		end, {
+			"i",
+			"s",
+		}),
 
 
 
@@ -154,15 +154,12 @@ cmp.setup.cmdline(':', {
 -- })
 
 
-  -- Todo: try this: https://github.com/lukas-reineke/cmp-rg
-  -- cmp.setup.cmdline(':Rg', {
-  --   mapping = cmp.mapping.preset.cmdline(),
-  --   sources = cmp.config.sources({
-  --     { name = 'path'},{ name = 'buffer' }
-  --   }, {
-  --     { name = 'ripgrep' }
-  --   })
-  -- })
-
-
-
+-- Todo: try this: https://github.com/lukas-reineke/cmp-rg
+-- cmp.setup.cmdline(':Rg', {
+--   mapping = cmp.mapping.preset.cmdline(),
+--   sources = cmp.config.sources({
+--     { name = 'path'},{ name = 'buffer' }
+--   }, {
+--     { name = 'ripgrep' }
+--   })
+-- })

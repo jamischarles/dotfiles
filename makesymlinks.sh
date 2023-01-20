@@ -1,4 +1,6 @@
 #!/bin/bash
+#
+# TODO: Consider just bringing in the whole ~/.config/ folder. That would give us most things I think...
 
 #TODO: Clean this up and remove a bunch of them...
 #TODO: consider grouping vim or nvim folders in a folder named nvim?
@@ -28,6 +30,9 @@ for FILE in *.sym; do
 done;
 #for FILE in *.sym;  done;
 
+
+
+
 # symlink my zsh theme (TODO: DELETE?)
 # FILE="jamis-doubleend.zsh-theme"
 # FILE_PATH="$HOME/.oh-my-zsh/themes/$FILE"
@@ -48,6 +53,13 @@ ln -s "$HERE/nvim" "$HOME/.config/nvim"
 
 # FOR FISH SHELL ***************
 # symlink homebrew nvm version for fish shell to ~/.nvm
+
+
+# Brew file for keeping track of brew installs
+rm -r ~/.config/brewfile
+mkdir ~/.config/brewfile
+ln -s ~/.dotfiles/Brewfile ~/.config/brewfile/Brewfile
+
 
 # FISH config and FISHERMAN installed plugins, since these aren't dotfiles, I'm listing them manually here.
 echo "Linking FISH SHELL CONFIG FILES (config.fish and fishfile (for fisherman))"
@@ -73,6 +85,7 @@ rm ~/.vimrc
 # Probably because you can't symlink to hidden files, only from
 
 # symlink ~/.config/ files
+# TODO: REMOVE. I don't think I even use powerline anymore
 rm ~/.config/powerline
 ln -s ~/.dotfiles/powerline.sym ~/.config/powerline # do these need to be quoted?
 
