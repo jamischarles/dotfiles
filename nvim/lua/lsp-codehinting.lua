@@ -380,6 +380,9 @@ return {
 			},
 		})
 
+		-- TODO
+		vim.api.nvim_set_hl(0, "@text.comment", { link = "Identifier" })
+
 		-- coloring hex colors
 		require("colorizer").setup({
 			css = {

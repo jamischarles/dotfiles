@@ -69,8 +69,6 @@ return {
 		-- DARK themes I like (fox ones)
 		"ghifarit53/tokyonight-vim", --NICE. try it out more similar to night owl
 	},
-	init = function()
-	end,
 	config = function()
 
 		-- Put proper separators and gaps between components in sections
@@ -90,93 +88,6 @@ return {
 			end
 			return sections
 		end
-
-		-- options passed automagically to lualaine.
-		--
-		require("lualine").setup({
-			{
-				theme = "auto",
-				-- theme = theme,
-				component_separators = "",
-				section_separators = { left = "", right = "" },
-			},
-			sections = process_sections({
-				-- lualine_a = { { 'mode', fmt = function(str) return str:sub(1,1) end } },
-				-- lualine_a = { { "mode" } },
-				-- modes a group has certain colors associated etc.. good to know...
-				lualine_a = {{"mode"}, { filenameComponent, file_status = false }, },
-				-- lualine_b = {{'windows'}},
-				lualine_b = {search_result},
-				-- lualine_b = { { filenameComponent, file_status = false }, },
-				lualine_c = {
-					-- 'branch',
-					-- 'diff',
-					-- { search_result },
-					{
-						"diagnostics",
-						source = { "nvim" },
-						sections = { "error" },
-						diagnostics_color = { error = { bg = colors.red, fg = colors.white } },
-					},
-					{
-						"diagnostics",
-						source = { "nvim" },
-						sections = { "warn" },
-						diagnostics_color = { warn = { bg = colors.orange, fg = colors.white } },
-					},
-					-- { filename,icons_enabled=true, icon = function(section) return {'', align='right', color={fg='green'}} end,}, -- return { fg = vim.bo.modified and '#aa3355' or '#33aa88' } },
-					-- at what level are functions allowed?
-					-- function() return filenameComponent() end,
-					{
-						filename,
-						icons_enabled = true,
-						color = function()
-							return { fg = vim.bo.modified and colors.black, bg = vim.bo.modified and "#f6c177" }
-						end,
-					},
-					-- icon = {getFileIcon(), align = 'right', color= getFileIconColor() } },
-					-- { filename,icons_enabled=true, icon = {getFileIcon(), align = 'right', color= function(section) return{fg= vim.bo.modified and getFileIconColor()} end} },
-					-- color = function(section)
-					--  return { fg = vim.bo.modified and '#aa3355' or '#33aa88' }
-					-- icon={'', color={fg = "blue"}}},
-					--   end,icon={'',   color={fg = vim.bo.modified and "#aa3355"}}}, -- return { fg = vim.bo.modified and '#aa3355' or '#33aa88' } },
-					-- { filename,icons_enabled=true, icon={'',   color={fg = vim.bo.modified and "#aa3355"}}}, -- return { fg = vim.bo.modified and '#aa3355' or '#33aa88' } },
-					-- TODO: Make this a function call
-
-					-- { filename, unpack(fileNameOpts())},
-
-					-- { 'filename', icons_enabled = true, file_status = true, path = 3, icon = {'', align='right', color={fg='green'}} }, --1,3 are decent
-					-- { modified, color = {fg=colors.red, bg = colors.red } },  -- FIXME: use the theme color here? Some flavor of it?
-					-- return buffer.is_modified and get_hex('GitSignsChange', 'fg')
-					{
-						"%w",
-						cond = function()
-							return vim.wo.previewwindow
-						end,
-					},
-					{
-						"%r",
-						cond = function()
-							return vim.bo.readonly
-						end,
-					},
-					{
-						"%q",
-						cond = function()
-							return vim.bo.buftype == "quickfix"
-						end,
-					},
-					-- require('nvim-navic').get_location, cond = require('nvim-navic').is_available },
-				},
-				lualine_x = {},
-				lualine_y = { "filetype" },
-				lualine_z = { "%l:%c", "%p%%/%L" },
-			}),
-			inactive_sections = {
-				lualine_c = { "%f %y %m" },
-				lualine_x = {},
-			},
-		})
 
 
 
@@ -308,6 +219,94 @@ return {
 			-- self.options.icon = {icon, align='right'}
 			return data
 		end
+
+
+		-- options passed automagically to lualaine.
+		--
+		require("lualine").setup({
+			{
+				theme = "auto",
+				-- theme = theme,
+				component_separators = "",
+				section_separators = { left = "", right = "" },
+			},
+			sections = process_sections({
+				-- lualine_a = { { 'mode', fmt = function(str) return str:sub(1,1) end } },
+				-- lualine_a = { { "mode" } },
+				-- modes a group has certain colors associated etc.. good to know...
+				lualine_a = {{"mode"}, { filenameComponent, file_status = false }, },
+				-- lualine_b = {{'windows'}},
+				lualine_b = {search_result},
+				-- lualine_b = { { filenameComponent, file_status = false }, },
+				lualine_c = {
+					-- 'branch',
+					-- 'diff',
+					-- { search_result },
+					{
+						"diagnostics",
+						source = { "nvim" },
+						sections = { "error" },
+						diagnostics_color = { error = { bg = colors.red, fg = colors.white } },
+					},
+					{
+						"diagnostics",
+						source = { "nvim" },
+						sections = { "warn" },
+						diagnostics_color = { warn = { bg = colors.orange, fg = colors.white } },
+					},
+					-- { filename,icons_enabled=true, icon = function(section) return {'', align='right', color={fg='green'}} end,}, -- return { fg = vim.bo.modified and '#aa3355' or '#33aa88' } },
+					-- at what level are functions allowed?
+					-- function() return filenameComponent() end,
+					{
+						filename,
+						icons_enabled = true,
+						color = function()
+							return { fg = vim.bo.modified and colors.black, bg = vim.bo.modified and "#f6c177" }
+						end,
+					},
+					-- icon = {getFileIcon(), align = 'right', color= getFileIconColor() } },
+					-- { filename,icons_enabled=true, icon = {getFileIcon(), align = 'right', color= function(section) return{fg= vim.bo.modified and getFileIconColor()} end} },
+					-- color = function(section)
+					--  return { fg = vim.bo.modified and '#aa3355' or '#33aa88' }
+					-- icon={'', color={fg = "blue"}}},
+					--   end,icon={'',   color={fg = vim.bo.modified and "#aa3355"}}}, -- return { fg = vim.bo.modified and '#aa3355' or '#33aa88' } },
+					-- { filename,icons_enabled=true, icon={'',   color={fg = vim.bo.modified and "#aa3355"}}}, -- return { fg = vim.bo.modified and '#aa3355' or '#33aa88' } },
+					-- TODO: Make this a function call
+
+					-- { filename, unpack(fileNameOpts())},
+
+					-- { 'filename', icons_enabled = true, file_status = true, path = 3, icon = {'', align='right', color={fg='green'}} }, --1,3 are decent
+					-- { modified, color = {fg=colors.red, bg = colors.red } },  -- FIXME: use the theme color here? Some flavor of it?
+					-- return buffer.is_modified and get_hex('GitSignsChange', 'fg')
+					{
+						"%w",
+						cond = function()
+							return vim.wo.previewwindow
+						end,
+					},
+					{
+						"%r",
+						cond = function()
+							return vim.bo.readonly
+						end,
+					},
+					{
+						"%q",
+						cond = function()
+							return vim.bo.buftype == "quickfix"
+						end,
+					},
+					-- require('nvim-navic').get_location, cond = require('nvim-navic').is_available },
+				},
+				lualine_x = {},
+				lualine_y = { "filetype" },
+				lualine_z = { "%l:%c", "%p%%/%L" },
+			}),
+			inactive_sections = {
+				lualine_c = { "%f %y %m" },
+				lualine_x = {},
+			},
+		})
 
 
 
