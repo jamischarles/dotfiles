@@ -13,6 +13,11 @@ add_newline = true
 # [└─>](bold green) """
 
 
+
+# Timeout for commands executed by starship (ms)
+# https://starship.rs/config/#prompt
+command_timeout = 200 # default is 500
+
 format = """
 $nodejs$rust$package$directory$git_branch    $jobs$git_status$battery $cmd_duration
 $character

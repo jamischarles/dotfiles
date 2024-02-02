@@ -7,7 +7,18 @@
 local map = require("utils").mapKey
 
 -- READING
---https://sbulav.github.io/vim/neovim-setting-up-luasnip/
+-- https://sbulav.github.io/vim/neovim-setting-up-luasnip/
+
+-------------------------------------------------------------
+-- NOTES & Learnings
+-- https://github.com/L3MON4D3/LuaSnip/blob/master/DOC.md
+-- ---------------------------------------------------------
+-- i() is an insert node (can be jumped to and manipulated)
+-- t() is a text node
+-- if you want multi line, pass a table instead of a string:
+-- t("text_thing") vs t({"text_thing", "next_line_thing"})
+
+
 
 -- luasnip mappings
 --  press <Tab> to expand or jump in a snippet. These can also be mapped separately
@@ -124,6 +135,8 @@ return {
 			}),
 
 			-- FIXME: HOW do I remove the extmark at the end when the cursor moves up or down?
+                        -- TODO: Use a dynamic node for this:
+                        -- https://github.com/L3MON4D3/LuaSnip/blob/master/DOC.md#dynamicnode
 			s("cl", {
 				-- Simple static text.
 				--
@@ -161,6 +174,32 @@ return {
 				-- i(0),
 				-- t({ "", "}" }),
 			}),
+
+
+                        -- arrow fn
+			s("()", {
+				t({"() => {", "  "}), -- insert first piece, and 2nd line, and indent 2 spaces
+				i(1, ""), -- only the space here as an insert node since we don't want to highlight the closing }  
+                                t({"", "}"}), -- this is a regular text node, becuase we don't want to jump to here... 2 item means it inserts a newline, 
+				i(0), -- insert cursor at first param (jump point)
+			}),
+
+                        -- Test file snippets
+			s("desc", {
+				t("describe('"), -- insert first piece
+				i(1, " "), -- add first param and first jump point
+				t({ "', () => {", "", "});" }), -- each item here will be on a new line
+				i(0), -- insert cursor at first param (jump point)
+			}),
+
+			s("test", {
+				t("test('"), -- insert first piece
+				i(1, " "), -- add first param and first jump point
+				t({ "', () => {", "", "});" }), -- each item here will be on a new line
+				i(0), -- insert cursor at first param (jump point)
+			}),
+
+
 		})
 
 		-- in a ts file: search typescript-, then js-, then all-snippets.

@@ -47,6 +47,11 @@ function diffjson
   delta --diff-so-fancy (jq --sort-keys . $FILE_A | psub ) (jq --sort-keys . $FILE_B | psub )
 end
 
+function brewInstall
+  brew install $argv[1] # install it
+  brew dump # sync up bundle file
+end
+
 #################################
 # Amazing tools I use (install via brew)
 # original tool -> replacement I use now
@@ -56,6 +61,7 @@ end
 # NVM -> Volta
 # z -> zoxide
 # grep -> ripgrep
+# sed -> sad
 # zsh(terminal prompt config) -> starship
 # Fzf
 # lsd (super powered ls)
@@ -76,6 +82,10 @@ end
 # Homebrew path
 set -x PATH $PATH /opt/homebrew/bin
 
+set -x EDITOR nvim
+
+set -x PATH $PATH "/Applications/Sublime Text.app/Contents/SharedSupport/bin"
+
 # Homebrew default brewfile location
 set -x HOMEBREW_BUNDLE_FILE '~/.config/brewfile/Brewfile'
 
@@ -91,11 +101,14 @@ set -x PATH $PATH /usr/bin/python3
 # Needed for some cargo build commands includes py2 in the path. means python2 execute can be called?
 set -x PATH $PATH /Users/jacharles/.pyenv/versions/pypy2.7-7.3.9/bin
 
-# PYTHON env var
-set -x PYTHON /usr/bin/python3
+# PYTHON env var. Using pyenv makes this much simpler and fixes issues around node-gyp not finding python
+# set -x PYTHON /usr/bin/python3
 
 set -x BYOBU_PREFIX /usr/local
 
+pyenv init - | source
+alias python="$(pyenv which python)"
+# Had to run pyenv global python 3.9
 
 # For gdate...
 set -x PATH $PATH /usr/local/opt/coreutils/libexec/gnubin
@@ -132,6 +145,9 @@ set -g START_TIME (getTime)
 ## ALIASES -----------------------------------------------
 #################################################
 
+alias pn="pnpm"
+set -x PNPM_HOME /Users/jacharles/.volta/bin/pnpm # set pnpm home folder
+
 
 alias ctags="$brewDir/bin/ctags"
 
@@ -140,8 +156,19 @@ alias la="lsd -a --long --date=relative --blocks permission,size,date,name"
 alias lsl="lsd --long --date=relative --blocks permission,size,date,name"
 alias lsa="lsd --long --all --date=relative --blocks permission,size,date,name"
 
-alias PYTHON="/usr/bin/python3"
 
+
+
+#################
+### Abbreviations
+#################
+abbr --add gd  'git diff --color ":(exclude)*lock.json" | delta --diff-so-fancy | less --tabs=1,5 -R'
+
+abbr --add kp 'kill $(lsof -t -i:8080)'
+
+
+## Q: Move these? does it still matter?
+abbr --add watch 'chokidar **/*.js -c " "' # command in parens
 
 # ###############################################
 # NOTE: removing all the custom functions in lieu of starship.rs

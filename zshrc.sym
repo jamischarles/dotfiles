@@ -2,6 +2,11 @@
 # - move from oh-my-zsh to zplug.
 # - get startup down to 1.5 or 1 sec
 
+
+fish
+
+exit
+
 function getTime {
   python -c'import time; print repr(time.time())'
 }
@@ -520,3 +525,11 @@ source /Users/jacharles/.config/broot/launcher/bash/br
 export NODE_EXTRA_CA_CERTS='/usr/local/etc/openssl/certs/paypal_proxy_cacerts.pem'
 export VOLTA_HOME="$HOME/.volta"
 export PATH="$VOLTA_HOME/bin:$PATH"
+
+# pnpm
+export PNPM_HOME="/Users/jacharles/Library/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+# pnpm end

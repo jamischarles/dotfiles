@@ -14,7 +14,7 @@ local map = require('utils').mapKey
 vim.g.mapleader = " " -- "Remap leader to <space>.  make cursor speed REALLY fast http://stackoverflow.com/questions/23078078/speed-up-vim-cursor-moving-through-j      -k
 vim.opt.clipboard = "unnamed" -- yank will go to the system clipboard. Allows copy/paste from/to other apps
 -- https://advancedweb.hu/working-with-the-system-clipboard-in-vim/#:~:text=Set%20the%20%2B%20register%20as%20the,from%20it%20with%20%22%2Bp%20.
-vim.cmd("set tabstop=4 softtabstop=0 noexpandtab shiftwidth=4") -- http://stackoverflow.com/questions/1878974/redefine-tab-as-4-spaces
+vim.cmd("set tabstop=8 softtabstop=0 expandtab shiftwidth=2 smarttab") -- http://stackoverflow.com/questions/1878974/redefine-tab-as-4-spaces
 
 -- UNDO - Save beyond closing Persistent undo - http://stackoverflow.com/questions/2732267/vim-loses-undo-history-when-changing-buffers
 vim.cmd("set hidden") -- persist beyond buffer switching

@@ -14,11 +14,6 @@
 
 # Abbreviations --------------------------------------------
 
-
-#################
-### Abbreviations
-#################
-
 # https://github.com/fish-shell/fish-shell/blob/master/share/functions/__fish_git_prompt.fish  ?
 # this sets them privately for each session, even though the 'proper' way is to set them globally for lal sessions once from the command line
 # if below is too slow, try this https://superuser.com/questions/1049368/add-abbreviations-in-fish-config
@@ -28,6 +23,13 @@
 # > https://github.com/fish-shell/fish-shell/issues/2287
 # > Params !!! https://github.com/fish-shell/fish-shell/issues/731
 if status --is-interactive
+
+## TODO: Need to rework abbr since the behavior has changed 
+## Just add to config.fish?
+# https://github.com/fish-shell/fish-shell/pull/9313
+# https://fishshell.com/docs/current/cmds/abbr.html
+
+# To one-off it, DO NOT FORGET this commang to se them globally
     set -g fish_user_abbreviations
     abbr --add ef 'nvim ~/.config/fish/config.fish'
     abbr --add gpu 'nvim ~/.config/fish/config.fish'
@@ -41,7 +43,7 @@ if status --is-interactive
     abbr --add grc 'git rebase --continue'
     abbr --add gs  'git status -s'
     abbr --add gb  'git branch -v'
-    abbr --add gd  'git diff --color | delta --diff-so-fancy | less --tabs=1,5 -R'
+    # abbr --add gd  'git diff --color ":(exclude)*lock.json" | delta --diff-so-fancy | less --tabs=1,5 -R'
     abbr --add gdc 'git diff --cached --color | delta --diff-so-fancy | less --tabs=1,5 -R'
     abbr --add gdcn 'git diff --cached --color ":!package-lock.json" | delta --diff-so-fancy | less --tabs=1,5 -R'
     abbr --add gdn  'git diff --color ":!package-lock.json" | delta --diff-so-fancy | less --tabs=1,5 -R'
@@ -52,6 +54,7 @@ if status --is-interactive
     abbr --add gsp 'git stash pop'
     abbr --add gsgd 'git stash; git stash drop'
     # stash unstaged files (including new ones)
+    abbr --add gst 'git stash -k -u; git status -s'
     abbr --add gsu 'git stash -k -u; git status -s'
     # open conflicted files in nvim
     abbr --add gfc 'git diff --name-only --diff-filter=U | xargs nvim'
@@ -84,6 +87,7 @@ if status --is-interactive
     # list of special utils I use: z, rg, fd, bat, fzf (not often anymore)
     # abbr --add rgf "rg --files . | grep"
     abbr --add rgf "fd "
+	abbr --add rgs "rg --fixed-strings" # ignore regex markers. Treat as string
     abbr --add rga "rg --no-ignore -iF" # Searches ALLL files, exact string . ignore all gitignore etc. And case insensitive.
     abbr --add rgfi "rg --files-with-matches"
     abbr --add fbat "fzf | xargs bat" # find and then bat the file
