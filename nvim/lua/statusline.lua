@@ -152,7 +152,8 @@ return {
 			-- fname = vim.fn.expand('%:~:h:s?dev??') -- folder name relative to cwd (where we openend vim from) 
 
 			-- get folder path, but remove ~/dev and ~/dev_freelance from path
-			fname = vim.fn.expand('%:p:h:s?/Users/jacharles/dev_freelance/??:s?/Users/jacharles/dev/??') -- folder name relative to cwd (where we openend vim from) 
+                        -- replace modularcheckoutnodeweb with mdxo and the dev_xo path with ./        
+			fname = vim.fn.expand('%:p:h:s?/Users/jacharles/dev_freelance/??:s?modularcheckoutnodeweb?mdxo?:s?/Users/jacharles/dev_xo/?./?') -- folder name relative to cwd (where we openend vim from) 
 			-- TODO: use :S for shell command to get project root...
 
 			return fname

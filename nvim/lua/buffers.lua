@@ -357,75 +357,109 @@ map("n", "<leader><leader>", ":e#<CR>") -- switch to last opened buffer
 
 --
 return {
-	name="buffers",
-	dependencies = {{
-		'noib3/nvim-cokeline',
-		dependencies = {'kyazdani42/nvim-web-devicons'}, -- If you want devicons
-		-- options passed to require(cokeline).setup(opts) -- automagically called
-		config = function()
+  name="buffers",
+  dependencies = {{
+    'noib3/nvim-cokeline',
+    dependencies = {'kyazdani42/nvim-web-devicons'}, -- If you want devicons
+    -- options passed to require(cokeline).setup(opts) -- automagically called
+    config = function()
 
-			local get_hex = require('cokeline/utils').get_hex
-			require('cokeline').setup({
-	default_hl = {
-		fg = function(buffer)
+      local get_hex = require('cokeline/utils').get_hex
+      require('cokeline').setup({
+        default_hl = {
+          fg = function(buffer)
 
 
 
-			return buffer.is_modified and buffer.is_focused and colors.black
-			 -- or buffer.is_modified and  get_hex('ColorColumn', ' bg')
-			  or buffer.is_modified and get_hex('BufferCurrentMod', 'fg')
-			or  buffer.is_focused
-			and get_hex('ColorColumn', 'bg')
+            return buffer.is_modified and buffer.is_focused and colors.black
+            -- or buffer.is_modified and  get_hex('ColorColumn', ' bg')
+            or buffer.is_modified and get_hex('BufferCurrentMod', 'fg')
+            or  buffer.is_focused
+            and get_hex('ColorColumn', 'bg')
 
-			or get_hex('Normal', 'fg')
-		end,
-		bg = function(buffer)
-			-- return buffer.is_modified and buffer.is_focused  and get_hex('GitSignsChange', 'fg')
-			return buffer.is_modified and buffer.is_focused and colors.yellow
-			-- or buffer.is_modified and get_hex('GitSignsChange', 'fg')
-			 -- or buffer.is_modified and get_hex('BufferInactiveMod', 'fg')
+            or get_hex('Normal', 'fg')
+          end,
+          bg = function(buffer)
+            -- return buffer.is_modified and buffer.is_focused  and get_hex('GitSignsChange', 'fg')
+            return buffer.is_modified and buffer.is_focused and colors.yellow
+            -- or buffer.is_modified and get_hex('GitSignsChange', 'fg')
+            -- or buffer.is_modified and get_hex('BufferInactiveMod', 'fg')
 
-			or
-			buffer.is_focused
-			and get_hex('Normal', 'fg')
-			or get_hex('ColorColumn', 'bg')
-		end,
-	},
+            or
+            buffer.is_focused
+            and get_hex('Normal', 'fg')
+            or get_hex('ColorColumn', 'bg')
+          end,
+        },
 
-  components = {
-    -- {
-    --   text = ' ',
-    -- },
-    {
-      text = function(buffer) return ' ' .. buffer.devicon.icon end,
-      fg = function(buffer) return buffer.devicon.color end,
-    },
-    {
-      text = function(buffer) return buffer.unique_prefix end,
-      fg = get_hex('Comment', 'fg'),
-      style = 'italic',
-    },
-    {
-      text = function(buffer) return buffer.filename .. ' ' end,
-    },
-    -- {
-    --   text = '',
-    --   delete_buffer_on_left_click = true,
-    -- },
-	--
-    {
-		text = function(buffer )
-          return buffer.is_modified and " ●" or ''
+        components = {
+          -- {
+            --   text = ' ',
+            -- },
+            {
+              text = function(buffer) return ' ' .. buffer.devicon.icon end,
+              fg = function(buffer) return buffer.devicon.color end,
+            },
+            {
+              text = function(buffer) return buffer.unique_prefix end,
+              fg = get_hex('Comment', 'fg'),
+              style = 'italic',
+            },
+            { -- show filename first
+              text = function(buffer) return buffer.filename .. ' ' end,
+            },
+
+            {
+              text = function(buffer) 
+                -- then show the end of the filepath
+                -- Q: can we use this to find the project root?
+                --https://github.com/nvim-lua/plenary.nvim/blob/master/lua/plenary/path.lua plenary is really useful for path manipulation
+                --https://github.com/nvim-lua/plenary.nvim/blob/master/tests/plenary/path_spec.lua (usage)
+                local Path = require "plenary.path"
+                local cwd = vim.fn.getcwd() -- working directory we opened nvim in...
+                local relpath = Path:new(buffer.path):normalize(cwd)
+
+
+                local p = string.gsub(relpath, buffer.filename, "")
+
+                -- remove trailing slash
+                if string.sub(p, -1, -1) == "/" then
+                  p=string.sub(p, 1, -2)
+                end
+
+                -- local relpath = Path:new(buffer.path):make_relative(cwd)
+                local shortpath = Path.new(p):shorten(1, {1, 2, -1 }) -- don't apply shortend to those parts of path segments
+
+                -- local final2 = string.gsub(shortpath,  buffer.filename, "")  -- remove filename if still there (when no slash)
+                -- TODO: remove trailing slash if there is one
+                -- local shortpath = Path.new(relpath):shorten(3, {0,buffer.filename})
+                -- local shortpath = Path:shorten_len(relpath, 1) -- chaining? new path
+
+
+                -- return shortpath .. ' ' 
+                -- return shortpath
+                return shortpath 
+                -- return relpath 
+              end,
+            },
+            -- {
+              --   text = '',
+              --   delete_buffer_on_left_click = true,
+              -- },
+              --
+              {
+                text = function(buffer )
+                  return buffer.is_modified and " ●" or ''
+                end,
+              },
+              {
+                text = ' ',
+              },
+            },
+          })
         end,
-    },
-    {
-      text = ' ',
-    },
-  },
-})
-		end,
-	}}
-	
-	-- config=function()
-	-- end,
-}
+      }}
+
+      -- config=function()
+        -- end,
+      }
