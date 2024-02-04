@@ -10,7 +10,9 @@ return {
 		"EdenEast/nightfox.nvim", -- ++ Dark during the day. Has 10 themes inside. Very configurable.
 		"stillwwater/vim-nebula", -- ++ NICE in light AND Dark (nightshift decent)
 		-- DARK themes I like (fox ones)
-		"ghifarit53/tokyonight-vim", --NICE. try it out more similar to night owl
+		-- "ghifarit53/tokyonight-vim", --NICE. try it out more similar to night owl
+                "folke/tokyonight.nvim", --tokyonight-storm (decent) -moon
+
 	},
 	init = function()
 		vim.opt.background = "light"

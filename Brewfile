@@ -6,12 +6,16 @@ tap "ms-jpq/sad"
 tap "oven-sh/bun"
 # Clone of cat(1) with syntax highlighting and Git integration
 brew "bat"
+# New way to see and navigate directory trees
+brew "broot"
 # Vector graphics library with cross-device output support
 brew "cairo"
 # Human-friendly and fast alternative to cut and (sometimes) awk
 brew "choose-rust"
 # GNU File, Shell, and Text utilities
 brew "coreutils"
+# Secure runtime for JavaScript and TypeScript
+brew "deno"
 # Simple, fast and user-friendly alternative to find
 brew "fd"
 # GNU Transport Layer Security (TLS) Library
@@ -80,6 +84,8 @@ brew "unison"
 brew "volta"
 # JavaScript package manager
 brew "yarn"
+# Blazing fast terminal file manager written in Rust, based on async I/O
+brew "yazi"
 # Shell extension to navigate your filesystem faster
 brew "zoxide"
 # Search and replace | Space Age seD

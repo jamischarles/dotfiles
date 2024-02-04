@@ -96,6 +96,10 @@ ln -s ~/.dotfiles/karabiner.edn ~/.config/karabiner.edn
 rm ~/.config/alacritty.yml
 ln -s ~/.dotfiles/alacritty.yml ~/.config/alacritty.yml
 
+# broot symlink config ~/.config/broot/conf.toml
+rm ~/.config/broot/conf.toml
+ln -s ~/.dotfiles/broot.conf.toml ~/.config/broot/conf.toml
+
 # tmux flavor for window management. #gotta name folders .sym to avoid symlinking weirdness
 # TODO must do this when byobu is NOT running
 rm ~/.byobu/.tmux.conf

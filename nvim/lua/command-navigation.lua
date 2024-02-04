@@ -132,6 +132,50 @@ map("n", "mt", "<cmd>lua JumpToTestFileAndBack('test')<CR>")
 -- 	-- end
 -- })
 
+
+-- https://www.chrisdeluca.me/2022/01/12/diy-neovim-fzy.html
+-- Pop open broot as our filefinder / nerdtree replacement
+local brootExplorer = function()
+    local width = vim.o.columns * 2
+    local height = 41
+    if (vim.o.columns >= 85) then
+        width = 80 * 1.5 
+    end
+
+    -- creating a new window is this easy?!?!?!  
+    vim.api.nvim_open_win(
+        vim.api.nvim_create_buf(false, true),
+        true,
+        {
+            relative = 'editor',
+            style = 'minimal',
+            border = 'shadow',
+            noautocmd = true,
+            width = width,
+            height = height,
+            col = math.min((vim.o.columns - width) / 2),
+            row = math.min((vim.o.lines - height) / 2 - 1),
+        }
+    )
+
+    -- temp file we have to create (that's how broot does it too)
+    local file = vim.fn.tempname()
+
+    vim.api.nvim_command('startinsert') -- avoids having to switch to insert mode in popup
+    vim.fn.termopen('/opt/homebrew/bin/broot --conf ~/.dotfiles/broot-shell.conf.toml > ' .. file, {on_exit = function()
+        vim.api.nvim_command('bdelete!') -- automatically delete the terminal buffer
+        --
+        -- read the value from the temp file, then delete it
+        local f = io.open(file, 'r')
+        local stdout = f:read('*all')
+        f:close()
+        os.remove(file)
+        -- if we leave this as is, it opens the file in the popup window... Could be cool for manual preview... 
+        vim.api.nvim_command('edit ' .. stdout)
+    end})
+end
+
+
 -------------------------
 -- MAPPINGS
 -------------------------
@@ -155,8 +199,11 @@ map("n", "<Leader>m", ":FzfLua oldfiles<CR>") -- uses my custom frecency usin `f
 -- For now maybe we can just commands on it... g? for keys
 -- f filter
 -- . run command
-map("n", "<Leader>n", ":NvimTreeToggle<CR>")
-map("n", "<C-F>", ":NvimTreeFindFile<CR>") -- uses my custom frecency usin `fre` (see above)
+vim.api.nvim_create_user_command('Broot', brootExplorer,  { nargs = 0 })
+map("n", "<Leader>n", ":Broot<CR>") -- all files & folders
+
+-- map("n", "<Leader>n", ":NvimTreeToggle<CR>")
+-- map("n", "<C-F>", ":NvimTreeFindFile<CR>") -- uses my custom frecency usin `fre` (see above)
 
 -- retiring my own custom solution for now...
 -- map(
@@ -189,6 +236,9 @@ local getOpenBufferList = function()
 	end
 	return bufferFileNames
 end
+
+
+
 
 
 local function create_rg_search_commands(actions)
@@ -368,22 +418,48 @@ return {
 		--------------------------
 		--FILE navigation / exploration
 		------------------------------
-		{
-			"stevearc/oil.nvim",
-			config = function()
-				require("oil").setup()
-			end,
-		},
+		-- {
+		-- 	"stevearc/oil.nvim",
+		-- 	config = function()
+		-- 		require("oil").setup()
+		-- 	end,
+		-- },
 
-		{
-			"kyazdani42/nvim-tree.lua",
-			dependencies = {
-				"kyazdani42/nvim-web-devicons", -- optional, for file icons
-			},
+                --- if I don't like yazi, try this or fzf + broot
+                -- https://gist.github.com/Canop/9baee3bd8fe9fe904817572e94f99a32?permalink_comment_id=3789225#gistcomment-3789225
+                --
+                --
 
-			-- marks and other useful nav?
-			-- tag = "nightly", -- optional, updated every week. (see issue #1193)
-		},
+                -- trying floating nav window with broot or yazi... 
+                --https://github.com/MunifTanjim/nui.nvim try this with broot?
+                {
+                  "DreamMaoMao/yazi.nvim",
+                  dependencies = {
+                    "nvim-telescope/telescope.nvim",
+                    "nvim-lua/plenary.nvim",
+                  },
+
+                  -- trying broot instead
+                  -- Building my own floating window implementation for broot (didn't find a good plugin for it in nvim...)
+                  -- https://github.com/Canop/broot/issues/293
+                  -- https://www.chrisdeluca.me/2022/01/12/diy-neovim-fzy.html
+                  --
+                  --
+                  --
+                  -- keys = {
+                  --   { "<leader>n", "<cmd>Yazi<CR>", desc = "Toggle Yazi" },
+                  -- },
+                },
+
+		-- {
+		-- 	"kyazdani42/nvim-tree.lua",
+		-- 	dependencies = {
+		-- 		"kyazdani42/nvim-web-devicons", -- optional, for file icons
+		-- 	},
+		--
+		-- 	-- marks and other useful nav?
+		-- 	-- tag = "nightly", -- optional, updated every week. (see issue #1193)
+		-- },
 	},
 
 	-- fixme: is this a good pattern? Or should we group it in the deps list?
@@ -394,42 +470,42 @@ return {
           map("n", "gx", ":Browse<cr>") -- change folder for files() lookup
 
           -- https://github.com/nvim-tree/nvim-tree.lua#custom-mappings
-          local function my_on_attach(bufnr)
-            local api = require "nvim-tree.api"
-
-            local function opts(desc)
-              return { desc = "nvim-tree: " .. desc, buffer = bufnr, noremap = true, silent = true, nowait = true }
-            end
-
-            -- default mappings
-            api.config.mappings.default_on_attach(bufnr)
-
-            -- custom mappings
-            vim.keymap.set('n', 'u', api.tree.change_root_to_parent,        opts('folder up'))
-            vim.keymap.set('n', 'e', '<UP>',        opts('arrow-Up')) -- override the rename keymapping
-            vim.keymap.set('n', 'E', api.node.navigate.sibling.prev,        opts('arrow-Up')) -- override the rename keymapping
-            vim.keymap.set('n', 'N', api.node.navigate.sibling.next,        opts('arrow-Up')) -- override the rename keymapping
-
-            -- vim.keymap.set("n", "e", "<nop>", {}) -- NOT WORKING?!?!
-            -- vim.keymap.set("n", "k", "<nop>", {})
-            -- vim.keymap.set('n', 'e')
-          end
+          -- local function my_on_attach(bufnr)
+          --   local api = require "nvim-tree.api"
+          --
+          --   local function opts(desc)
+          --     return { desc = "nvim-tree: " .. desc, buffer = bufnr, noremap = true, silent = true, nowait = true }
+          --   end
+          --
+          --   -- default mappings
+          --   api.config.mappings.default_on_attach(bufnr)
+          --
+          --   -- custom mappings
+          --   vim.keymap.set('n', 'u', api.tree.change_root_to_parent,        opts('folder up'))
+          --   vim.keymap.set('n', 'e', '<UP>',        opts('arrow-Up')) -- override the rename keymapping
+          --   vim.keymap.set('n', 'E', api.node.navigate.sibling.prev,        opts('arrow-Up')) -- override the rename keymapping
+          --   vim.keymap.set('n', 'N', api.node.navigate.sibling.next,        opts('arrow-Up')) -- override the rename keymapping
+          --
+          --   -- vim.keymap.set("n", "e", "<nop>", {}) -- NOT WORKING?!?!
+          --   -- vim.keymap.set("n", "k", "<nop>", {})
+          --   -- vim.keymap.set('n', 'e')
+          -- end
 		-- file explorer
 		-- try this https://github.com/stevearc/oil.nvim (buffer based file editing. INTERESTING)
 		-- consider just putting this in .opts for the nvim-tree dep above
-		require("nvim-tree").setup({
-			filters = { custom = { "^.git$" } },
-                        on_attach = my_on_attach,
-			view = {
-				adaptive_size = true,
-				-- mappings = {
-				-- 	list = {
-				-- 		{ key = "u", action = "dir_up" },
-				-- 		{ key = "e", action = "" }, -- remove the `e` mapping so my mappings kick in (move up)
-				-- 	},
-				-- },
-			},
-		})
+		-- require("nvim-tree").setup({
+		-- 	filters = { custom = { "^.git$" } },
+  --                       on_attach = my_on_attach,
+		-- 	view = {
+		-- 		adaptive_size = true,
+		-- 		-- mappings = {
+		-- 		-- 	list = {
+		-- 		-- 		{ key = "u", action = "dir_up" },
+		-- 		-- 		{ key = "e", action = "" }, -- remove the `e` mapping so my mappings kick in (move up)
+		-- 		-- 	},
+		-- 		-- },
+		-- 	},
+		-- })
 
 		require("harpoon").setup()
 
@@ -452,6 +528,8 @@ return {
 
 		-----------------
 		-- FZF-LUA
+                -- TODO: consider trying skim instead of fzf. We can just swap it out here. fzf-lua supports both...
+                --
 		-- ---------------
 		local actions = require("fzf-lua.actions")
 		local utils = require("fzf-lua.utils")
@@ -506,6 +584,20 @@ return {
 				multiprocess = true, -- run command in a separate process
 				git_icons = false, -- show git icons? -- TOO slow
 				file_icons = true, -- show file icons?
+
+
+
+                                -- doesn't work?
+                                -- winopts = {
+                                --     fullscreen = false,
+                                --   preview = {
+                                --     -- flip to hor split after it's this many chars wide...
+                                --     layout         = 'flex', 
+                                --     flip_columns   = 20, 
+                                --
+                                --   }
+                                -- },
+
 				-- color_icons = true, -- colorize file|git icons
 				-- path_shorten   = 1,              -- 'true' or number, shorten path?
 				-- executed command priority is 'cmd' (if exists)
@@ -545,13 +637,68 @@ return {
                               buffers = {
                                 fzf_opts = {
                                   ["--header"] = vim.fn.shellescape(("%s to close buffer, %s to open"):format(delBuffer, enterKey)),
+
+                                  -- https://github.com/ibhagwan/fzf-lua/issues/814#issuecomment-1631061166
+                                  -- Tell fzf not to pass the buff nr etc... and all the buffer cruft
+                                  ["--delimiter"]="' '", -- split by string
+                                  ["--with-nth"]="-1,1,4.." -- keep these, 1, 3, rest
+
                                 },
 
+				file_icons = true, -- show file icons?
+
+                                -- https://github.com/ibhagwan/fzf-lua/wiki/Advanced#example-1-live-ripgrep
+                                fn_transform = function(x)
+                                  -- return "hello"
+                                  --
+                                  -- return "hiiii " .. x .. "hiii"
+
+                                  -- TODO: use plenary to add the file name
+                                  -- If this casuses issues, just create my own
+                                  -- use the same technique as the one for broot...
+                                  return require'fzf-lua'.make_entry.file(  x  , {--[[ file_icons=true, filename_only=true, color_icons=true, ]] path_shorten=true, __prefix="hi"})
+                                  -- local t =  require'fzf-lua'.make_entry.file("hello " .. x, {file_icons=true, filename_only=true, color_icons=true, path_shorten=true, __prefix="hi"})
+                                  -- print(t)
+                                  -- return "hi " .. t
+                                  -- print(x)
+                                  -- return fzf_lua.make_entry.file(x, opts)
+                                end,
+
+                                
+
+
+                                -- previewer = "builtin" ,
+                                -- previewer = false , -- to turn off
                                 winopts = {
+
+
+                                  -- REALLY slick. Try this split out...
+				-- split         = "aboveleft vnew",-- open in a split instead?
+
+				-- "belowright new"  : split below
+				-- "aboveleft new"   : split above
+				-- "belowright vnew" : split right
+				-- "aboveleft vnew   : split left
+				-- Only valid when using a float window
+				-- (i.e. when 'split' is not defined, default)
+				height = 0.97, -- window height
+				width = 0.75, -- window width
+				row = 0.70, -- window row position (0=top, 1=bottom)
+				col = 0.50,
+				fullscreen = false,
+
+				border = true,
+				-- preview = {
+				-- 	scrollbar = "float",
+				-- 	layout = "horizontal",
+				-- 	horizontal = "right:55%",
+				-- },
+
+
                                   preview = {
                                     scrollbar = "float",
                                     layout = "vertical",
-                                    vertical = "up:65%",
+                                    vertical = "down:65%",
                                   },
                                 }
                               },

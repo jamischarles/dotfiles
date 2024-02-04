@@ -1,6 +1,10 @@
 ----------------
 -- Git Features
 ----------------
+-- TODO: consider this one for easy searching through git history...
+--https://github.com/aaronhallaert/advanced-git-search.nvim?tab=readme-ov-file
+
+
 local map = require('utils').mapKey
 
 
