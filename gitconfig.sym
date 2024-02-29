@@ -3,8 +3,6 @@
 	email = jamis82@webutah.com
 [mergetool]
 	keepBackup = true
-[color]
-	ui = true
 [alias]
   l = log --graph --pretty=format:'%C(yellow)%h%C(cyan)%d%Creset %s %C(white)- %an, %ar%Creset'
   ll = log --stat --abbrev-commit
@@ -34,7 +32,7 @@
 	# newNormal = green bold
 	# newHighlight = green bold 22
 [color]
-	ui = always
+	ui = auto 
 [color "diff"]
 	meta = yellow
 	# meta = black  # yellow

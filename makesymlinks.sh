@@ -100,6 +100,10 @@ ln -s ~/.dotfiles/alacritty.yml ~/.config/alacritty.yml
 rm ~/.config/broot/conf.toml
 ln -s ~/.dotfiles/broot.conf.toml ~/.config/broot/conf.toml
 
+# yazi symlink config ~/.config/broot/conf.toml
+rm -rf ~/.config/yazi
+ln -s ~/.dotfiles/yazi ~/.config/yazi
+
 # tmux flavor for window management. #gotta name folders .sym to avoid symlinking weirdness
 # TODO must do this when byobu is NOT running
 rm ~/.byobu/.tmux.conf

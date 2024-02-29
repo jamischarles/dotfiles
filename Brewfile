@@ -4,6 +4,8 @@ tap "homebrew/aliases"
 tap "homebrew/bundle"
 tap "ms-jpq/sad"
 tap "oven-sh/bun"
+# Code searching, linting, rewriting
+brew "ast-grep"
 # Clone of cat(1) with syntax highlighting and Git integration
 brew "bat"
 # New way to see and navigate directory trees
@@ -12,6 +14,8 @@ brew "broot"
 brew "cairo"
 # Human-friendly and fast alternative to cut and (sometimes) awk
 brew "choose-rust"
+# Cross-platform make
+brew "cmake"
 # GNU File, Shell, and Text utilities
 brew "coreutils"
 # Secure runtime for JavaScript and TypeScript
@@ -56,10 +60,14 @@ brew "k6"
 brew "lsd"
 # Language Server for the Lua language
 brew "lua-language-server"
+# Package manager for the Lua programming language
+brew "luarocks"
 # Parser generator tool and incremental parsing library
 brew "tree-sitter"
 # Ambitious Vim-fork focused on extensibility and agility
 brew "neovim"
+# Tiny, lightning fast, feature-packed file manager
+brew "nnn"
 # Parse HTML at the command-line
 brew "pup"
 # Python version management
@@ -78,6 +86,8 @@ brew "sd"
 brew "sk"
 # Cross-shell prompt for astronauts
 brew "starship"
+# Opinionated Lua code formatter
+brew "stylua"
 # File synchronization tool
 brew "unison"
 # JavaScript toolchain manager for reproducible environments

@@ -108,7 +108,8 @@ vim.api.nvim_create_user_command("HandleBackspace", function()
 -- https://www.reddit.com/r/neovim/comments/s2v0cz/how_to_get_the_current_mode/
 	local mode = vim.api.nvim_get_mode()["mode"]
 
-	print("mode:"..mode)
+        -- print("filetype",vim.bo.filetype)
+	-- print("mode:"..mode)
 
 	if mode == "n" then
 		-- FIXME: read the modifier keys
@@ -129,15 +130,17 @@ vim.api.nvim_create_user_command("HandleBackspace", function()
 		--
 	end
 
+        -- if none of conditions are met, then escape insert and go to normal mode 
 	-- if buffertype is NOT telescropPrompt, exit insert mode
 	if vim.bo.filetype ~= "TelescopePrompt" then
-		vim.cmd("stopinsert")
+          -- print('stopinsers', vim.bo.filetype)
+          vim.cmd("stopinsert")
 	else
-
-
-		-- feedkeys("<C-H>", "i") -- in Vim, Ctrl+h is mapped to backspace
-	end
-end, { nargs = 0 })
+          -- WORKS!!!! -> in telescope prompt, send backspace while in insert mode, ensures we can use backspace
+          local keys = vim.api.nvim_replace_termcodes("<C-H>", true, false, true)
+          vim.api.nvim_feedkeys(keys, "i", false) -- in Vim, Ctrl+h is mapped to backspace
+	  end
+        end, { nargs = 0 })
 
 
 

@@ -1,0 +1,4 @@
+# yazi.toml
+[manager]
+sort_by = "natural"
+ratio = [2, 4, 6] #window ratio for panels

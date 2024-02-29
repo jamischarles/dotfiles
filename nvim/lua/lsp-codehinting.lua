@@ -22,8 +22,8 @@ local unMap = require("utils").unmapKey
 -- vim.cmd("autocmd BufWritePre *.js,*.ts,*.svelte,*.json Prettier")
 -- vim.cmd("autocmd BufWriteCmd *.js,*.ts,*.svelte,*.json Prettier")
 -- vim.cmd("autocmd BufWritePost *.js,*.ts,*.svelte,*.json Prettier")
--- vim.cmd("autocmd BufWritePre *.js,*.ts,*.svelte,*.json lua vim.lsp.buf.formatting_sync()")
--- vim.cmd("autocmd BufWritePre *.js,*.ts,*.svelte,*.json lua vim.lsp.buf.format()")
+vim.cmd("autocmd BufWritePre *.lua lua vim.lsp.buf.format()")
+-- vim.cmd("autocmd BufWritePre *.lua !stylua %")
 -- https://www.reddit.com/r/neovim/comments/pb2vd6/lsp_auto_format_on_save_causes_buffer_change/ or use efm formatter
 
 -- https://github.com/jose-elias-alvarez/null-ls.nvim/discussions/324
@@ -113,9 +113,9 @@ local unMap = require("utils").unmapKey
 -- })
 
 local buf_map = function(bufnr, mode, lhs, rhs, opts)
-	vim.api.nvim_buf_set_keymap(bufnr, mode, lhs, rhs, opts or {
-		silent = true,
-	})
+  vim.api.nvim_buf_set_keymap(bufnr, mode, lhs, rhs, opts or {
+    silent = true,
+  })
 end
 
 --
@@ -179,72 +179,70 @@ local async = event == "BufWritePost"
 -- This callback runs whenever a language server attaches to a buffer and is used to set up commands, keybindings, and other buffer-local options
 -- No hoisting in lua?
 local on_attach = function(client, bufnr)
-	vim.cmd("command! LspDef lua vim.lsp.buf.definition()")
-	-- vim.cmd("command! LspFormatting lua vim.lsp.buf.formatting()")
-	vim.cmd("command! LspCodeAction lua vim.lsp.buf.code_action()")
-	vim.cmd("command! LspHover lua vim.lsp.buf.hover()")
-	vim.cmd("command! LspRename lua vim.lsp.buf.rename()")
-	vim.cmd("command! LspRefs lua vim.lsp.buf.references()")
-	vim.cmd("command! LspTypeDef lua vim.lsp.buf.type_definition()")
-	vim.cmd("command! LspImplementation lua vim.lsp.buf.implementation()")
-	vim.cmd("command! LspDiagPrev lua vim.diagnostic.goto_prev()")
-	vim.cmd("command! LspDiagNext lua vim.diagnostic.goto_next()")
-	vim.cmd("command! LspDiagLine lua vim.diagnostic.open_float()")
-	vim.cmd("command! LspSignatureHelp lua vim.lsp.buf.signature_help()")
-	buf_map(bufnr, "n", "gd", ":LspDef<CR>")
-	buf_map(bufnr, "n", "gr", ":LspRename<CR>")
-	buf_map(bufnr, "n", "gy", ":LspTypeDef<CR>")
-	-- buf_map(bufnr, "n", "K", ":LspHover<CR>")
-	buf_map(bufnr, "n", "[a", ":LspDiagPrev<CR>")
-	buf_map(bufnr, "n", "]a", ":LspDiagNext<CR>")
-	buf_map(bufnr, "n", "ga", ":LspCodeAction<CR>")
-	-- buf_map(bufnr, "n", "<Leader>a", ":LspDiagLine<CR>")
-	buf_map(bufnr, "i", "<C-x><C-x>", "<cmd> LspSignatureHelp<CR>")
-	-- if client.server_capabilities.document_formatting then
-	-- 	vim.cmd("autocmd BufWritePre <buffer> lua vim.lsp.buf.format()")
-	-- end
+  vim.cmd("command! LspDef lua vim.lsp.buf.definition()")
+  vim.cmd("command! LspFormatting lua vim.lsp.buf.formatting()")
+  vim.cmd("command! LspCodeAction lua vim.lsp.buf.code_action()")
+  vim.cmd("command! LspHover lua vim.lsp.buf.hover()")
+  vim.cmd("command! LspRename lua vim.lsp.buf.rename()")
+  vim.cmd("command! LspRefs lua vim.lsp.buf.references()")
+  vim.cmd("command! LspTypeDef lua vim.lsp.buf.type_definition()")
+  vim.cmd("command! LspImplementation lua vim.lsp.buf.implementation()")
+  vim.cmd("command! LspDiagPrev lua vim.diagnostic.goto_prev()")
+  vim.cmd("command! LspDiagNext lua vim.diagnostic.goto_next()")
+  vim.cmd("command! LspDiagLine lua vim.diagnostic.open_float()")
+  vim.cmd("command! LspSignatureHelp lua vim.lsp.buf.signature_help()")
+  buf_map(bufnr, "n", "gd", ":LspDef<CR>")
+  buf_map(bufnr, "n", "gr", ":LspRename<CR>")
+  buf_map(bufnr, "n", "gy", ":LspTypeDef<CR>")
+  -- buf_map(bufnr, "n", "K", ":LspHover<CR>")
+  buf_map(bufnr, "n", "[a", ":LspDiagPrev<CR>")
+  buf_map(bufnr, "n", "]a", ":LspDiagNext<CR>")
+  buf_map(bufnr, "n", "ga", ":LspCodeAction<CR>")
+  -- buf_map(bufnr, "n", "<Leader>a", ":LspDiagLine<CR>")
+  buf_map(bufnr, "i", "<C-x><C-x>", "<cmd> LspSignatureHelp<CR>")
+  if client.server_capabilities.document_formatting then
+    vim.cmd("autocmd BufWritePre <buffer> lua vim.lsp.buf.format()")
+  end
 
+  -- TODO: Can we limit this to tsserver only?
+  client.server_capabilities.document_formatting = false -- disable built in tsserver formatter (we use prettier)
+  client.server_capabilities.document_range_formatting = false
 
-        -- TODO: Can we limit this to tsserver only?
-        client.server_capabilities.document_formatting = false -- disable built in tsserver formatter (we use prettier)
-        client.server_capabilities.document_range_formatting = false
+  -- format
+  if client.supports_method("textDocument/formatting") then
+    -- vim.keymap.set("n", "<Leader>f", function()
+    -- 	vim.lsp.buf.format({ bufnr = vim.api.nvim_get_current_buf() })
+    -- end, { buffer = bufnr, desc = "[lsp] format" })
 
+    -- format on save
+    vim.api.nvim_clear_autocmds({ buffer = bufnr, group = group })
+    vim.api.nvim_create_autocmd(event, {
+      buffer = bufnr,
+      group = group,
+      callback = function()
+        vim.lsp.buf.format({ bufnr = bufnr, async = async })
+      end,
+      desc = "[lsp] format on save",
+    })
+  end
 
-	-- format
-	if client.supports_method("textDocument/formatting") then
-		-- vim.keymap.set("n", "<Leader>f", function()
-		-- 	vim.lsp.buf.format({ bufnr = vim.api.nvim_get_current_buf() })
-		-- end, { buffer = bufnr, desc = "[lsp] format" })
+  if client.supports_method("textDocument/rangeFormatting") then
+    vim.keymap.set("x", "<Leader>f", function()
+      vim.lsp.buf.format({ bufnr = vim.api.nvim_get_current_buf() })
+    end, { buffer = bufnr, desc = "[lsp] format" })
+  end
 
-		-- format on save
-		vim.api.nvim_clear_autocmds({ buffer = bufnr, group = group })
-		vim.api.nvim_create_autocmd(event, {
-			buffer = bufnr,
-			group = group,
-			callback = function()
-				vim.lsp.buf.format({ bufnr = bufnr, async = async })
-			end,
-			desc = "[lsp] format on save",
-		})
-	end
+  -- quickfix window for lsp errors etc
+  require("trouble").setup({})
 
-	if client.supports_method("textDocument/rangeFormatting") then
-		vim.keymap.set("x", "<Leader>f", function()
-			vim.lsp.buf.format({ bufnr = vim.api.nvim_get_current_buf() })
-		end, { buffer = bufnr, desc = "[lsp] format" })
-	end
+  -- unmap C-t so we can map it?
+  -- vim.api.nvim_del_keymap("n", "<C-t>")
+  -- unMap('n', "<C-t>")
+  -- SEE inti.lua for trouble mapping
 
-	-- quickfix window for lsp errors etc
-	require("trouble").setup({})
-
-	-- unmap C-t so we can map it?
-	-- vim.api.nvim_del_keymap("n", "<C-t>")
-	-- unMap('n', "<C-t>")
-	-- SEE inti.lua for trouble mapping
-
-	-- code context info
-	-- require('nvim-navic').attach(client, bufnr)
-	--
+  -- code context info
+  -- require('nvim-navic').attach(client, bufnr)
+  --
 end
 
 -- npm install for these?
@@ -278,7 +276,7 @@ vim.keymap.set("n", "<leader>l", ":Lspsaga hover_doc<CR>")
 map("n", "<C- >", ":Lspsaga peek_definition<CR>") -- ctrl+space YES
 
 vim.keymap.set("n", "<C-l>", ":Lspsaga show_line_diagnostics<CR>")
-vim.keymap.set("n", "<C-s>", ":LspSignatureHelp<CR>") -- Nice!
+vim.keymap.set("n", "<C-s>", ":LspSignatureHelp<CR>")       -- Nice!
 
 vim.keymap.set("n", "<Leader>f", ":Lspsaga lsp_finder<CR>") -- find symbol in project. WOOOOOW
 
@@ -295,379 +293,407 @@ vim.cmd("command! FormatJSON silent %!jq . %")
 --
 --
 return {
-	name = "lsp-codehinting-syntax-highlighting",
-	dependencies = {
-		"williamboman/mason.nvim",
-		{ "jay-babu/mason-null-ls.nvim", dependencies = { "jose-elias-alvarez/null-ls.nvim" } },
+  name = "lsp-codehinting-syntax-highlighting",
+  dependencies = {
+    "williamboman/mason.nvim",
+    { "jay-babu/mason-null-ls.nvim",     dependencies = { "jose-elias-alvarez/null-ls.nvim" } },
 
-		"neovim/nvim-lspconfig", -- Configurations for Nvim LSP
-		{ "jose-elias-alvarez/null-ls.nvim", dependencies = { "nvim-lua/plenary.nvim" } }, --
-		"jose-elias-alvarez/typescript.nvim",
-		{ "williamboman/mason-lspconfig.nvim", dependencies = { "neovim/nvim-lspconfig" } },
+    "neovim/nvim-lspconfig",                                                           -- Configurations for Nvim LSP
+    { "jose-elias-alvarez/null-ls.nvim", dependencies = { "nvim-lua/plenary.nvim" } }, --
+    "jose-elias-alvarez/typescript.nvim",
+    { "williamboman/mason-lspconfig.nvim", dependencies = { "neovim/nvim-lspconfig" } },
 
-		-- Formatting
-		{ "wesleimp/stylua.nvim", dependencies = { "nvim-lua/plenary.nvim" } }, -- lua formatting
-		{
-			"MunifTanjim/prettier.nvim",
-			opts = {
-				bin = "prettierd", -- or `'prettierd'` (v0.22+)
-				filetypes = {
-					"css",
-					"graphql",
-					"html",
-					"javascript",
-					"svelte",
-					"javascriptreact",
-					"json",
-					"less",
-					"markdown",
-					"scss",
-					"typescript",
-					"typescriptreact",
-					"yaml",
-				},
-			},
-		}, -- prettier for JS/TS
-                -- RUST (including auto-format)
-                {'rust-lang/rust.vim'},
+    -- Formatting
+    { "wesleimp/stylua.nvim",              dependencies = { "nvim-lua/plenary.nvim" } }, -- lua formatting
+    {
+      "MunifTanjim/prettier.nvim",
+      opts = {
+        bin = "prettierd", -- or `'prettierd'` (v0.22+)
+        filetypes = {
+          "css",
+          "graphql",
+          "html",
+          "javascript",
+          "svelte",
+          "javascriptreact",
+          "json",
+          "less",
+          "markdown",
+          "scss",
+          "typescript",
+          "typescriptreact",
+          "yaml",
+        },
+      },
+    }, -- prettier for JS/TS
+    -- RUST (including auto-format)
+    { "rust-lang/rust.vim" },
 
-                -- ensure rust lsp features
-                {
-                  'mrcjkb/rustaceanvim',
-                  version = '^3', -- Recommended
-                  ft = { 'rust' },
-                  server = {
-                    on_attach = on_attach
-                  },
-                },
+    -- ensure rust lsp features
+    {
+      "mrcjkb/rustaceanvim",
+      version = "^3", -- Recommended
+      ft = { "rust" },
+      server = {
+        on_attach = on_attach,
+      },
+    },
 
+    -- linting ESLINT ENABLE 1/2
+    "MunifTanjim/eslint.nvim",
 
+    -- Syntax highlighting
+    {
+      "nvim-treesitter/nvim-treesitter",
+      build = ":TSUpdate",
+      -- run = "volta install typescript-language-server" -- FIXME: is this even working?
+    },
 
+    "jparise/vim-graphql",         -- NOT lua :(
 
-		-- linting ESLINT ENABLE 1/2
-		"MunifTanjim/eslint.nvim",
+    "norcalli/nvim-colorizer.lua", -- coloring hex colors
 
-		-- Syntax highlighting
-		{
-			"nvim-treesitter/nvim-treesitter",
-			build = ":TSUpdate",
-			-- run = "volta install typescript-language-server" -- FIXME: is this even working?
-		},
+    -- { "nvim-treesitter/nvim-treesitter-context", dependencies = { "nvim-treesitter/nvim-treesitter" } }, -- context nav (tells you what element you are in and the bounds)
 
-		"jparise/vim-graphql", -- NOT lua :(
+    -- NAVIGATING by symbol. SYMBOL hopping / jumping
+    {
+      "ray-x/navigator.lua",
+      dependencies = {
+        { "ray-x/guihua.lua",     build = "cd lua/fzy && make" },
+        { "neovim/nvim-lspconfig" },
+      },
+    },
+    "nvim-lua/plenary.nvim", -- async lua lib writing easier async. needed for some of these deps
 
-		"norcalli/nvim-colorizer.lua", -- coloring hex colors
+    -- Quickfix window with lsp errors etc
+    {
+      "folke/trouble.nvim",
+      dependencies = { "kyazdani42/nvim-web-devicons" },
+    },
 
-		-- { "nvim-treesitter/nvim-treesitter-context", dependencies = { "nvim-treesitter/nvim-treesitter" } }, -- context nav (tells you what element you are in and the bounds)
+    ----------------------------------------------------
+    -- HOVER improved for LSP-hover ---------------------
+    ----------------------------------------------------
+    -- Read: https://github.com/neovim/nvim-lspconfig
+    -- TODO: TRY THIS https://github.com/glepnir/lspsaga.nvim
+    -- TODO: Tweak and configure this more...
+    -- TODO: try guard.nvim # for linting...
+    { --// WOOOOW. so good
+      "glepnir/lspsaga.nvim",
+      branch = "main",
+      event = "BufRead",
+      config = function()
+        require("lspsaga").setup({
+          ui = {
+            -- turns off the ANNOYING lightbulb icon
+            code_action = "",
+          },
+        })
+      end,
+    },
+  },
+  config = function()
+    -----------------------
+    -- LSP DEP MANAGEMENT. USE MASON so we can avoid having to manually npm install deps etc
+    -- https://github.com/williamboman/mason.nvim
+    -----------------------
+    require("mason").setup()
+    require("mason-lspconfig").setup({
+      ensure_installed = {
+        -- "sumneko_lua",
+        --require'lspconfig'.lua_ls.setup{}
+        "rust_analyzer",
+        "lua_ls", -- lua_ls lua language server
+        -- "tsserver",
+        "svelte",
+        "stylelint_lsp",
+        "tailwindcss",
+        "jsonls",
+        -- "eslint",  -- ESLINT 3/3
+        "cssls",
+      },
+    })
 
-		-- NAVIGATING by symbol. SYMBOL hopping / jumping
-		{
-			"ray-x/navigator.lua",
-			dependencies = {
-				{ "ray-x/guihua.lua", build = "cd lua/fzy && make" },
-				{ "neovim/nvim-lspconfig" },
-			},
-		},
-		"nvim-lua/plenary.nvim", -- async lua lib writing easier async. needed for some of these deps
+    -- AFTER ^^^^^^^^^ we can now use normal lspconfig
 
-		-- Quickfix window with lsp errors etc
-		{
-			"folke/trouble.nvim",
-			dependencies = { "kyazdani42/nvim-web-devicons" },
-		},
+    require("lspconfig").lua_ls.setup({
+      settings = {
+        Lua = {
+          diagnostics = {
+            globals = { "vim" },
+          },
+        },
+      },
+    })
 
-		----------------------------------------------------
-		-- HOVER improved for LSP-hover ---------------------
-		----------------------------------------------------
-		-- Read: https://github.com/neovim/nvim-lspconfig
-		-- TODO: TRY THIS https://github.com/glepnir/lspsaga.nvim
-                -- TODO: Tweak and configure this more...
-                -- TODO: try guard.nvim # for linting...  
-		{ --// WOOOOW. so good
-			"glepnir/lspsaga.nvim",
-			branch = "main",
-			event = "BufRead",
-			config = function()
-				require("lspsaga").setup({
-                                  ui = {
-                                    -- turns off the ANNOYING lightbulb icon
-                                    code_action = ''
-                                  }
-                                })
-			end,
-		},
-	},
-	config = function()
-		-----------------------
-		-- LSP DEP MANAGEMENT. USE MASON so we can avoid having to manually npm install deps etc
-		-- https://github.com/williamboman/mason.nvim
-		-----------------------
-		require("mason").setup()
-		require("mason-lspconfig").setup({
-			ensure_installed = {
-				-- "sumneko_lua",
-				"rust_analyzer",
-				-- "tsserver",
-				"svelte",
-				"stylelint_lsp",
-				"tailwindcss",
-				"jsonls",
-				-- "eslint",  -- ESLINT 3/3
-				"cssls",
-			},
-		})
+    -- formatting
+    --let g:rustfmt_autosave = 1
+    vim.g.rustfmt_autosave = 1 -- enable autosave in rust files
+    -- require("mason-null-ls").setup({
+    -- 	ensure_installed = { "stylua", "jq", "prettier", "prettierd",  }, --eslint, eslint_d
+    -- })
 
-		-- formatting
-                --let g:rustfmt_autosave = 1
-                vim.g.rustfmt_autosave = 1 -- enable autosave in rust files
-		-- require("mason-null-ls").setup({
-		-- 	ensure_installed = { "stylua", "jq", "prettier", "prettierd",  }, --eslint, eslint_d
-		-- })
+    -- MasonInstall
 
-		-- MasonInstall
+    -- this seems to break syntax highlighting because it cannot find a typescript-language-server lsp?
+    -- TODO: Trying this one instead
+    -- https://github.com/jose-elias-alvarez/typescript.nvim
+    -- IF we keep having problems, try using the one from Deno (built in) Deno TS lsp
+    --
+    -- https://github.com/jose-elias-alvarez/typescript.nvim
+    --  USE MASON for installing lsp deps
+    require("nvim-treesitter.configs").setup({
+      -- use tree-sitter based syntax highlighting
+      highlight = {
+        enable = true,
+        -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
+        -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
+        -- Using this option may slow down your editor, and you may see some duplicate highlights.
+        -- Instead of true it can also be a list of languages
+        additional_vim_regex_highlighting = false,
+      },
+      ensure_installed = {
+        "json",
+        "lua",
+        "vim", -- needed for the lua files to highlight properly for some reason
+        "graphql",
+        "rust",
+        "svelte",
+        "typescript",
+        "tsx",
+        "javascript",
+        "css",
+        "fish",
+        "markdown",
+      },
+    })
 
-		-- this seems to break syntax highlighting because it cannot find a typescript-language-server lsp?
-		-- TODO: Trying this one instead
-		-- https://github.com/jose-elias-alvarez/typescript.nvim
-		-- IF we keep having problems, try using the one from Deno (built in) Deno TS lsp
-		--
-		-- https://github.com/jose-elias-alvarez/typescript.nvim
-                --  USE MASON for installing lsp deps
-		require("nvim-treesitter.configs").setup({
-			-- use tree-sitter based syntax highlighting
-			highlight = {
-				enable = true,
-				-- Setting this to true will run `:h syntax` and tree-sitter at the same time.
-				-- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
-				-- Using this option may slow down your editor, and you may see some duplicate highlights.
-				-- Instead of true it can also be a list of languages
-				additional_vim_regex_highlighting = false,
-			},
-			ensure_installed = {
-				"json",
-				"lua",
-				"vim", -- needed for the lua files to highlight properly for some reason
-				"graphql",
-				"rust",
-				"svelte",
-				"typescript",
-				"tsx",
-				"javascript",
-				"css",
-				"fish",
-				"markdown",
-			},
-		})
+    -- TODO
+    vim.api.nvim_set_hl(0, "@text.comment", { link = "Identifier" })
 
-		-- TODO
-		vim.api.nvim_set_hl(0, "@text.comment", { link = "Identifier" })
+    -- coloring hex colors
+    require("colorizer").setup({
+      css = {
+        rgb_fn = true, -- CSS rgb() and rgba() functions
+        hsl_fn = true, -- CSS hsl() and hsla() functions
+        css = true,    -- Enable all CSS features: rgb_fn, hsl_fn, names, RGB, RRGGBB
+        css_fn = true,
+      },
+      less = {
+        rgb_fn = true, -- CSS rgb() and rgba() functions
+        hsl_fn = true, -- CSS hsl() and hsla() functions
+        css = true,    -- Enable all CSS features: rgb_fn, hsl_fn, names, RGB, RRGGBB
+        css_fn = true,
+      },
+    })
 
-		-- coloring hex colors
-		require("colorizer").setup({
-			css = {
-				rgb_fn = true, -- CSS rgb() and rgba() functions
-				hsl_fn = true, -- CSS hsl() and hsla() functions
-				css = true, -- Enable all CSS features: rgb_fn, hsl_fn, names, RGB, RRGGBB
-				css_fn = true,
-			},
-			less = {
-				rgb_fn = true, -- CSS rgb() and rgba() functions
-				hsl_fn = true, -- CSS hsl() and hsla() functions
-				css = true, -- Enable all CSS features: rgb_fn, hsl_fn, names, RGB, RRGGBB
-				css_fn = true,
-			},
-		})
+    -- TODO: Move the lsp stuff into its own?
+    -- LANGUAGE SERVER CONFIGS ---------------------
+    -- CONFIGURING ALL THE language servers for LSP
 
-		-- TODO: Move the lsp stuff into its own?
-		-- LANGUAGE SERVER CONFIGS ---------------------
-		-- CONFIGURING ALL THE language servers for LSP
+    -- require("navigator").setup() TODO: try later?
 
-		-- require("navigator").setup() TODO: try later?
+    local lspconfig = require("lspconfig")
 
-		-- local lspconfig = require("lspconfig")
+    ----------- LUA LSP --------------
+    lspconfig.lua_ls.setup({
+      -- cb that runs whenever we open a file that tsserver supports
+      on_attach = on_attach,
+      -- on_attach = function(client, bufnr)
+      -- 	client.server_capabilities.document_formatting = true
+      -- 	client.server_capabilities.document_range_formatting = true
+      -- 	local ts_utils = require("nvim-lsp-ts-utils")
+      -- 	ts_utils.setup({})
+      -- 	ts_utils.setup_client(client)
+      -- 	-- buf_map(bufnr, "n", "gs", ":TSLspOrganize<CR>")
+      -- 	-- buf_map(bufnr, "n", "gi", ":TSLspRenameFile<CR>")
+      -- 	-- buf_map(bufnr, "n", "go", ":TSLspImportAll<CR>")
+      -- 	on_attach(client, bufnr)
+      -- end,
+    })
 
-                -- appears to fix the annoying tsserver typing lag issues
-                --https://github.com/jose-elias-alvarez/typescript.nvim
-                --https://www.reddit.com/r/neovim/comments/s6o051/nvim_lsp_tsserver_diagnostic_slow/
-                require("typescript").setup({
-                  disable_commands = false, -- prevent the plugin from creating Vim commands
-                  debug = true, -- enable debug logging for commands
-                  go_to_source_definition = {
-                    fallback = true, -- fall back to standard LSP definition on failure
-                  },
-                  server = { -- pass options to lspconfig's setup method
-                  on_attach = on_attach
-                },
-              })
+    -- appears to fix the annoying tsserver typing lag issues
+    --https://github.com/jose-elias-alvarez/typescript.nvim
+    --https://www.reddit.com/r/neovim/comments/s6o051/nvim_lsp_tsserver_diagnostic_slow/
+    require("typescript").setup({
+      disable_commands = false, -- prevent the plugin from creating Vim commands
+      debug = true,             -- enable debug logging for commands
+      go_to_source_definition = {
+        fallback = true,        -- fall back to standard LSP definition on failure
+      },
+      server = {                -- pass options to lspconfig's setup method
+        on_attach = on_attach,
+      },
+    })
 
-		-- lspconfig.tsserver.setup({
-		-- 	-- cb that runs whenever we open a file that tsserver supports
-		-- 	on_attach = function(client, bufnr)
-		-- 		client.server_capabilities.document_formatting = false -- disable built in tsserver formatter (we use prettier)
-		-- 		client.server_capabilities.document_range_formatting = false
-		-- 		local ts_utils = require("nvim-lsp-ts-utils")
-		-- 		ts_utils.setup({})
-		-- 		ts_utils.setup_client(client)
-		-- 		-- buf_map(bufnr, "n", "gs", ":TSLspOrganize<CR>")
-		-- 		-- buf_map(bufnr, "n", "gi", ":TSLspRenameFile<CR>")
-		-- 		-- buf_map(bufnr, "n", "go", ":TSLspImportAll<CR>")
-		-- 		on_attach(client, bufnr)
-		-- 	end,
-		-- })
+    -- lspconfig.tsserver.setup({
+    -- 	-- cb that runs whenever we open a file that tsserver supports
+    -- 	on_attach = function(client, bufnr)
+    -- 		client.server_capabilities.document_formatting = false -- disable built in tsserver formatter (we use prettier)
+    -- 		client.server_capabilities.document_range_formatting = false
+    -- 		local ts_utils = require("nvim-lsp-ts-utils")
+    -- 		ts_utils.setup({})
+    -- 		ts_utils.setup_client(client)
+    -- 		-- buf_map(bufnr, "n", "gs", ":TSLspOrganize<CR>")
+    -- 		-- buf_map(bufnr, "n", "gi", ":TSLspRenameFile<CR>")
+    -- 		-- buf_map(bufnr, "n", "go", ":TSLspImportAll<CR>")
+    -- 		on_attach(client, bufnr)
+    -- 	end,
+    -- })
 
-		local null_ls = require("null-ls")
+    local null_ls = require("null-ls")
 
-		-- for :LSPFormatting command
-		local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
-		-- require("null-ls").setup({
-		--
-		-- 	-- you can reuse a shared lspconfig on_attach callback here
-		-- 	on_attach = function(client, bufnr)
-		-- 		if client.supports_method("textDocument/formatting") then
-		-- 			vim.api.nvim_clear_autocmds({ group = augroup, buffer = bufnr })
-		-- 			vim.api.nvim_create_autocmd("BufWritePre", {
-		-- 				group = augroup,
-		-- 				buffer = bufnr,
-		-- 				callback = function()
-		-- 					-- on 0.8, you should use vim.lsp.buf.format({ bufnr = bufnr }) instead
-		-- 					vim.lsp.buf.format()
-		-- 				end,
-		-- 			})
-		-- 		end
-		-- 	end,
-		-- })
-		--
-		--
-		require("prettier").setup({
-			cli_options = {
-				-- https://prettier.io/docs/en/cli.html#--config-precedence
-				-- config_precedence = "prefer-file", -- or "cli-override" or "file-override"
-				config_precedence = "cli-override", -- use this config EVEN if prettier config files are found
-                                print_width = 80
-			},
-		})
+    -- for :LSPFormatting command
+    local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
+    -- require("null-ls").setup({
+    --
+    -- 	-- you can reuse a shared lspconfig on_attach callback here
+    -- 	on_attach = function(client, bufnr)
+    -- 		if client.supports_method("textDocument/formatting") then
+    -- 			vim.api.nvim_clear_autocmds({ group = augroup, buffer = bufnr })
+    -- 			vim.api.nvim_create_autocmd("BufWritePre", {
+    -- 				group = augroup,
+    -- 				buffer = bufnr,
+    -- 				callback = function()
+    -- 					-- on 0.8, you should use vim.lsp.buf.format({ bufnr = bufnr }) instead
+    -- 					vim.lsp.buf.format()
+    -- 				end,
+    -- 			})
+    -- 		end
+    -- 	end,
+    -- })
+    --
+    --
+    require("prettier").setup({
+      cli_options = {
+        -- https://prettier.io/docs/en/cli.html#--config-precedence
+        -- config_precedence = "prefer-file", -- or "cli-override" or "file-override"
+        config_precedence = "cli-override", -- use this config EVEN if prettier config files are found
+        print_width = 80,
+      },
+    })
 
-                -- ESLINT ? 2/3
-		null_ls.setup({})
-		-- null_ls.setup({
-		-- 	sources = {
-  --                         -- eslint is configged after this
-		-- 		-- null_ls.builtins.diagnostics.eslint_d,
-		-- 		-- null_ls.builtins.code_actions.eslint_d,
-		-- 		null_ls.builtins.formatting.prettierd.with({
-		-- 			filetypes = {
-		-- 				"html",
-		-- 				"json",
-		-- 				"svelte",
-		-- 				"markdown",
-		-- 				"css",
-		-- 				"javascript",
-		-- 				"javascriptreact",
-		-- 				"typescript",
-		-- 			},
-		-- 		}),
-		-- 	},
-		-- 	on_attach = on_attach,
-		-- })
+    -- ESLINT ? 2/3
+    null_ls.setup({})
+    -- null_ls.setup({
+    -- 	sources = {
+    --                         -- eslint is configged after this
+    -- 		-- null_ls.builtins.diagnostics.eslint_d,
+    -- 		-- null_ls.builtins.code_actions.eslint_d,
+    -- 		null_ls.builtins.formatting.prettierd.with({
+    -- 			filetypes = {
+    -- 				"html",
+    -- 				"json",
+    -- 				"svelte",
+    -- 				"markdown",
+    -- 				"css",
+    -- 				"javascript",
+    -- 				"javascriptreact",
+    -- 				"typescript",
+    -- 			},
+    -- 		}),
+    -- 	},
+    -- 	on_attach = on_attach,
+    -- })
 
-		-- ESLINT config -- ENABLE / DISABLE HERE 3/3
-                -- REBOOT needed of nvim to take effect
-                -- https://stackoverflow.com/questions/74655190/eslint-d-eslint-error-failed-to-load-plugin-import-declared-in-eslintrc
-		require("eslint").setup({
-			bin = "eslint_d", -- eslint or `eslint_d`
-			code_actions = {
-				enable = true, -- ESLINT 3/3
-				apply_on_save = {
-					enable = true,
-					types = { "directive", "problem", "suggestion", "layout" },
-				},
-				disable_rule_comment = {
-					enable = false,
-					location = "separate_line", -- or `same_line`
-				},
-			},
-			diagnostics = {
-				enable = true,
-				report_unused_disable_directives = false,
-				run_on = "type", -- or `save`
-			},
-		})
+    -- ESLINT config -- ENABLE / DISABLE HERE 3/3
+    -- REBOOT needed of nvim to take effect
+    -- https://stackoverflow.com/questions/74655190/eslint-d-eslint-error-failed-to-load-plugin-import-declared-in-eslintrc
+    require("eslint").setup({
+      bin = "eslint_d", -- eslint or `eslint_d`
+      code_actions = {
+        enable = true,  -- ESLINT 3/3
+        apply_on_save = {
+          enable = true,
+          types = { "directive", "problem", "suggestion", "layout" },
+        },
+        disable_rule_comment = {
+          enable = false,
+          location = "separate_line", -- or `same_line`
+        },
+      },
+      diagnostics = {
+        enable = true,
+        report_unused_disable_directives = false,
+        run_on = "type", -- or `save`
+      },
+    })
 
-		-- require("null-ls").builtins.formatting.stylua,
+    -- require("null-ls").builtins.formatting.stylua,
 
-		-- LSP for LUA
-		-- https://formulae.brew.sh/formula/lua-language-server
-		-- https://jdhao.github.io/2021/08/12/nvim_sumneko_lua_conf/
+    -- LSP for LUA
+    -- https://formulae.brew.sh/formula/lua-language-server
+    -- https://jdhao.github.io/2021/08/12/nvim_sumneko_lua_conf/
 
-		--https://github.com/neovim/nvim-lspconfig/blob/master/lua/lspconfig/server_configurations/sumneko_lua.lua
-		-- require("lspconfig").sumneko_lua.setup({
-		-- 	commands = {
-		-- 		Format = {
-		-- 			function()
-		-- 				require("stylua").format()
-		-- 			end,
-		-- 		},
-		-- 	},
-		-- 	settings = {
-		-- 		Lua = {
-		-- 			runtime = {
-		-- 				-- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
-		-- 				version = "LuaJIT",
-		-- 			},
-		-- 			diagnostics = {
-		-- 				-- Get the language server to recognize the `vim` global
-		-- 				globals = { "vim" },
-		-- 			},
-		-- 			workspace = {
-		-- 				-- Make the server aware of Neovim runtime files
-		-- 				library = vim.api.nvim_get_runtime_file("", true),
-		-- 			},
-		-- 			-- Do not send telemetry data containing a randomized but unique identifier
-		-- 			telemetry = {
-		-- 				enable = false,
-		-- 			},
-		-- 		},
-		-- 	},
-		-- })
+    --https://github.com/neovim/nvim-lspconfig/blob/master/lua/lspconfig/server_configurations/sumneko_lua.lua
+    -- require("lspconfig").sumneko_lua.setup({
+    -- 	commands = {
+    -- 		Format = {
+    -- 			function()
+    -- 				require("stylua").format()
+    -- 			end,
+    -- 		},
+    -- 	},
+    -- 	settings = {
+    -- 		Lua = {
+    -- 			runtime = {
+    -- 				-- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
+    -- 				version = "LuaJIT",
+    -- 			},
+    -- 			diagnostics = {
+    -- 				-- Get the language server to recognize the `vim` global
+    -- 				globals = { "vim" },
+    -- 			},
+    -- 			workspace = {
+    -- 				-- Make the server aware of Neovim runtime files
+    -- 				library = vim.api.nvim_get_runtime_file("", true),
+    -- 			},
+    -- 			-- Do not send telemetry data containing a randomized but unique identifier
+    -- 			telemetry = {
+    -- 				enable = false,
+    -- 			},
+    -- 		},
+    -- 	},
+    -- })
 
-		-- DISABLED
-		-- require("treesitter-context").setup({
-		-- 	enable = false, -- Enable this plugin (Can be enabled/disabled later via commands)
-		-- 	max_lines = 0, -- How many lines the window should span. Values <= 0 mean no limit.
-		-- 	trim_scope = "outer", -- Which context lines to discard if `max_lines` is exceeded. Choices: 'inner', 'outer'
-		-- 	patterns = { -- Match patterns for TS nodes. These get wrapped to match at word boundaries.
-		-- 		-- For all filetypes
-		-- 		-- Note that setting an entry here replaces all other patterns for this entry.
-		-- 		-- By setting the 'default' entry below, you can control which nodes you want to
-		-- 		-- appear in the context window.
-		-- 		default = {
-		-- 			"class",
-		-- 			"function",
-		-- 			"method",
-		-- 			-- 'for', -- These won't appear in the context
-		-- 			-- 'while',
-		-- 			-- 'if',
-		-- 			-- 'switch',
-		-- 			-- 'case',
-		-- 		},
-		-- 		-- Example for a specific filetype.
-		-- 		-- If a pattern is missing, *open a PR* so everyone can benefit.
-		-- 		--   rust = {
-		-- 		--       'impl_item',
-		-- 		--   },
-		-- 	},
-		-- 	exact_patterns = {
-		-- 		-- Example for a specific filetype with Lua patterns
-		-- 		-- Treat patterns.rust as a Lua pattern (i.e "^impl_item$" will
-		-- 		-- exactly match "impl_item" only)
-		-- 		-- rust = true,
-		-- 	},
-		--
-		-- 	-- [!] The options below are exposed but shouldn't require your attention,
-		-- 	--     you can safely ignore them.
-		--
-		-- 	zindex = 20, -- The Z-index of the context window
-		-- 	mode = "cursor", -- Line used to calculate context. Choices: 'cursor', 'topline'
-		-- })
-	end,
+    -- DISABLED
+    -- require("treesitter-context").setup({
+    -- 	enable = false, -- Enable this plugin (Can be enabled/disabled later via commands)
+    -- 	max_lines = 0, -- How many lines the window should span. Values <= 0 mean no limit.
+    -- 	trim_scope = "outer", -- Which context lines to discard if `max_lines` is exceeded. Choices: 'inner', 'outer'
+    -- 	patterns = { -- Match patterns for TS nodes. These get wrapped to match at word boundaries.
+    -- 		-- For all filetypes
+    -- 		-- Note that setting an entry here replaces all other patterns for this entry.
+    -- 		-- By setting the 'default' entry below, you can control which nodes you want to
+    -- 		-- appear in the context window.
+    -- 		default = {
+    -- 			"class",
+    -- 			"function",
+    -- 			"method",
+    -- 			-- 'for', -- These won't appear in the context
+    -- 			-- 'while',
+    -- 			-- 'if',
+    -- 			-- 'switch',
+    -- 			-- 'case',
+    -- 		},
+    -- 		-- Example for a specific filetype.
+    -- 		-- If a pattern is missing, *open a PR* so everyone can benefit.
+    -- 		--   rust = {
+    -- 		--       'impl_item',
+    -- 		--   },
+    -- 	},
+    -- 	exact_patterns = {
+    -- 		-- Example for a specific filetype with Lua patterns
+    -- 		-- Treat patterns.rust as a Lua pattern (i.e "^impl_item$" will
+    -- 		-- exactly match "impl_item" only)
+    -- 		-- rust = true,
+    -- 	},
+    --
+    -- 	-- [!] The options below are exposed but shouldn't require your attention,
+    -- 	--     you can safely ignore them.
+    --
+    -- 	zindex = 20, -- The Z-index of the context window
+    -- 	mode = "cursor", -- Line used to calculate context. Choices: 'cursor', 'topline'
+    -- })
+  end,
 }
