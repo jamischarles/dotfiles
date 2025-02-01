@@ -48,43 +48,104 @@ set title titlestring=
 ---------------------
 local fn = vim.fn
 -- Fresh install ensures it's there
+-- OLD LAZY install
+--local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+--if not vim.loop.fs_stat(lazypath) then
+--  vim.fn.system({
+--    "git",
+--    "clone",
+--    "--filter=blob:none",
+--    "https://github.com/folke/lazy.nvim.git",
+--    "--branch=stable", -- latest stable release
+--    lazypath,
+--  })
+--end
+--vim.opt.rtp:prepend(lazypath)
+
+
+-- NEW lazy install
+
+
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
-if not vim.loop.fs_stat(lazypath) then
-  vim.fn.system({
-    "git",
-    "clone",
-    "--filter=blob:none",
-    "https://github.com/folke/lazy.nvim.git",
-    "--branch=stable", -- latest stable release
-    lazypath,
-  })
+if not (vim.uv or vim.loop).fs_stat(lazypath) then
+  local lazyrepo = "https://github.com/folke/lazy.nvim.git"
+  local out = vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
+  if vim.v.shell_error ~= 0 then
+    vim.api.nvim_echo({
+      { "Failed to clone lazy.nvim:\n", "ErrorMsg" },
+      { out,                            "WarningMsg" },
+      { "\nPress any key to exit..." },
+    }, true, {})
+    vim.fn.getchar()
+    os.exit(1)
+  end
 end
 vim.opt.rtp:prepend(lazypath)
+
+
+
 
 -- No plugins in these
 require("keymap-reset-colemak")
 require("keys")
 
 
+-- Make sure to setup `mapleader` and `maplocalleader` before
+-- loading lazy.nvim so that mappings are correct.
+-- This is also a good place to setup other settings (vim.opt)
+vim.g.mapleader = " "
+vim.g.maplocalleader = "\\"
+
+
+
+
 
 -- table
 local pluginTree = {}
 
+
+-- ______________ ALMOOOST WORKS. going to use plugin.lua for now instead... -----
+
 -- build a table of plugin specs that are returned from the local plugin files
 -- Makes it easy to load local plugins using an array
+-- is this slower than the other way? Can we speed this up?
+-- LATER: optimize for startup speed...
 function buildPluginList(list)
   for _, localPlugin in ipairs(list) do
-    local pluginSpec = require(localPlugin)
-    pluginSpec.dir = "~/.dotfiles/nvim/lua"
-    pluginSpec.name = "./" .. localPlugin .. ".lua"
+    -- similar to require.cache in node??
+    -- https://www.gammon.com.au/scripts/doc.php?lua=package.preload
 
-    -- print('pluginSpec', pluginSpec)
+    local pluginSpec = {
+      -- dir = "~/.dotfiles/nvim/lua/plugins/",
+      -- apparently in lua, instead of require('[folder]/[file]') you use a `.` delimeter
+      -- so we do require('plugins.colorscheme')
+      -- aaaand, this works amazingly with lazy!!!!
+      import = "plugins." .. localPlugin
+    }
+
+    -- print("localspec", vim.inspect(pluginSpec))
+    -- essentially merge the specs together
     table.insert(pluginTree, pluginSpec)
   end
 end
 
+-- IF THIS DOESN"T WORK, go back to manual equivalen in plugins.lua...
+-- If this manual setup becomes too painful, try one of the distros... like https://www.lazyvim.org/ or lunar-nvim
+-- then put a THIN layer of my own keybindings on top of it...
+--
+--
+-- plugins to try:
+--
+-- blink + snacks + fzf-lua (would be nice to replace a bunch of the the smaller plugins I've been trying to use together...
+--
+-- https://www.lazyvim.org/news
+--vtsls instead of tsserver
+-- blink.cmp (completion), snacks (QoL), grug-far, biome instead of lint/prettier...
+-- lsp stuff from there ^?
+-- mini.diff??? (from mini.nvim)?
+
 buildPluginList({
-  'colorscheme',
+  -- WHY DOES ORDER MATTER SO MUCH? Probably because of how I config things in the files outside of init...
   'cursorline', -- highlight current line after a jump
   -- set highlight current line number only. PERFECT -- TODO: consider moving this to sign column bg instead...
   -- vim.cmd('set number') -- line numbers
@@ -94,80 +155,79 @@ buildPluginList({
   -- hi CursorLineNr guifg=#af00af guibg=color -- CursorLineNr   xxx cterm=bold gui=bold guifg=#ba793e
   --
   --
-  -- modules by feature / UI functionality
-  'statusline',
   'git',
-  --
-  --
-  -- command-nav (fzf quick commands etc)
-  'command-navigation',
-  'find-replace',
+  -- modules by feature / UI functionality
+  -- 'statusline',
+  -- --
+  -- --
+  -- -- command-nav (fzf quick commands etc)
+  'command-navigation', -- depends in telescope ctr-t <-
   'telescope-ctrl-t',
-
-
-  -- bufferline features
+  'find-replace',
+  --
+  --
+  -- -- bufferline features
   'buffers',
   'windows', -- window management
-
+  --
   'comments',
+  --
+  -- -- Autocompletion sources & Snippets
+  -- Provided by lsp now??
+  -- 'snippets',
+  -- 'autocompletion',
+  --
+  --  --'sessions', -- session managements
+  --
 
-  -- Autocompletion sources & Snippets
-  'snippets',
-  'autocompletion',
 
-  'sessions', -- session managements
-
-  -- LSP/codehinting/linting
-  'lsp-codehinting',
-
-  -- Text manipulation & text objects
+  --
+  -- -- Text manipulation & text objects
   'text-object-manipulation',
 
+
+  -- -- LSP/codehinting/linting
+  'lsp-codehinting',
+  'colorscheme',
+  'statusline',
 })
 
 -- print(vim.inspect(pluginTree))
 
--- plugin tree
-require("lazy").setup(pluginTree, {
-  -- dev = {
-  -- doesn't seem to work
-  -- 	-- directory where you store your local plugin projects
-  -- 	path = "~/.dotfiles/nvim/lua",
-  -- 	---@type string[] plugins that match these patterns will use your local versions instead of being fetched from GitHub
-  -- 	patterns = {"*.lua"}, -- For example {"folke"}
-  -- },
-})
 
--- return
+
+
+-- print("pluginTree2", vim.inspect(pluginTree2))
+-- print("pluginTree", vim.inspect(pluginTree))
+
+--print("required plugin tree!!!", vim.inspect(require("plugins")))
+--print("required plugin tree!!!", vim.inspect(require("plugins")[1].config))
+
+-- plugin tree
+-- require("lazy").setup(pluginTree)
+--require("lazy").setup("~/.dotfiles/nvim/plugins/colorscheme.lua", {
+
+require("lazy").setup(pluginTree, {
+  -- require("lazy").setup("plugins", {
+
+  profiling = {
+    -- Enables extra stats on the debug tab related to the loader cache.
+    -- Additionally gathers stats about all package.loaders
+    -- loader = true,
+    -- Track each new require in the Lazy profiling tab
+    -- require = true,
+  },
+}
+)
+
 
 -- reset keymappings. At END? Is this the best place? (does position actually matter?)
 
-
-
--- TODO: co-locate the plugins with the functionality areas... YAS
--- require('plugins')
-
--- Colorscheme
--- require('colorscheme')
-
-
--- Start requiring stuff in
-
--- require('plugins') -- run packerSync from fresh to ensure it's installed
-
-
--- syntax sugar
-
-
-
-
-
--- comments
-
-
 -- CORRECTIVE MAPPINGS
 -- These are mapping that aren't being applied properly in other files (for whatever reasons...)
-map('n', "<C-t>", ":Trouble<CR>")
+-- map('n', "<C-t>", ":Trouble<CR>")
+-- map('n', "<C-t>", ":Trouble diagnostics toggle focus=false filter.buf=0<CR>")
+map('n', "<C-t>", ":Trouble diagnostics_buffer<CR>")
 
 
 --

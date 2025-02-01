@@ -1,14 +1,14 @@
 -------------------------------------
 -- Cursorline plugin by me.
--- Highlights the number column of the current line you are on. 
+-- Highlights the number column of the current line you are on.
 -- This was very tricky because I had to override the signs added by gitSigns.
 -- I did that by adding my own sign to the curren line with a higher priority.
 -------------------------------------
 
 -- :h sign_place, :h signs
 
-vim.cmd('set number') -- show line numbers
-vim.cmd('set cursorline') -- FIXME: find more lua way to do this? Maybe with the vim global options part?
+vim.cmd('set number')               -- show line numbers
+vim.cmd('set cursorline')           -- FIXME: find more lua way to do this? Maybe with the vim global options part?
 vim.cmd('set cursorlineopt=number') -- only highlight the number, not the whole line
 --
 
@@ -17,15 +17,16 @@ vim.fn.sign_define("MyCurrentLineHighlightSign", { numhl = "GitSignsChange" })
 
 -- vim.fn.sign_place(999, "", "MyCurrentLineHighlightSign", vim.fn.bufname(), {lnum=24})
 
-			-- call sign_place(5, '', 'sign2', 'json.c')
+-- call sign_place(5, '', 'sign2', 'json.c')
 
 -- local CursorLine = {}
 
 local function moveNumberHighlight()
-	local lineNr,_ = unpack(vim.api.nvim_win_get_cursor(0))
-	vim.fn.sign_unplace("MyCustomGroup", {buffer=vim.fn.bufname()}) -- :h sign_unplace
-	vim.fn.sign_place("", "MyCustomGroup", "MyCurrentLineHighlightSign", vim.fn.bufname(), {lnum=lineNr, priority=100}) -- must be higher than signs from git-sign (10)
-	-- vim.cmd("set cursorline") -- FIXME: find more lua way to do this? Maybe with the vim global options part?
+  local lineNr, _ = unpack(vim.api.nvim_win_get_cursor(0))
+  vim.fn.sign_unplace("MyCustomGroup", { buffer = vim.fn.bufname() }) -- :h sign_unplace
+  vim.fn.sign_place("", "MyCustomGroup", "MyCurrentLineHighlightSign", vim.fn.bufname(),
+    { lnum = lineNr, priority = 100 })                                -- must be higher than signs from git-sign (10)
+  -- vim.cmd("set cursorline") -- FIXME: find more lua way to do this? Maybe with the vim global options part?
 end
 
 -- init
@@ -43,19 +44,22 @@ end
 
 
 return {
-	name="cursorline",
-	dependencies = {
-	},
-	init = function()
-	local myluafun = function()
-		moveNumberHighlight()
-	end
+  {
+    -- don't really need this. Just putting this here because you can't have this spec be blank...
+    -- so throwing this one in here.
+    -- alternatively... could just make this a single file we can require in similar to keymap reset etc...
+    'lewis6991/gitsigns.nvim',
+    dependencies = {},
+    init = function()
+      local myluafun = function()
+        moveNumberHighlight()
+      end
 
-	vim.api.nvim_create_autocmd({ "CursorMoved" }, {
-		callback = myluafun,
-	})
-	end,
-}
+      vim.api.nvim_create_autocmd({ "CursorMoved" }, {
+        callback = myluafun,
+      })
+    end,
+  } }
 
 
 ------********************** OLD VERSION. Worked really well. Didn't love the style

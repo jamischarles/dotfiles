@@ -271,16 +271,31 @@ end
 --
 -- FIXME: Maybe we use primarily the Ctrl+ layer as an LSP-type layer of shortcuts?
 -- Experiment with this
+--
+-- TODO: use p+ for PEEK
+--
 map("n", "<leader>a", "<cmd>Lspsaga outline<CR>")
-vim.keymap.set("n", "<leader>l", ":Lspsaga hover_doc<CR>")
-map("n", "<C- >", ":Lspsaga peek_definition<CR>") -- ctrl+space YES
+vim.keymap.set("n", "<leader>l", ":LspHover<CR>")
+-- vim.keymap.set("n", "<leader>l", ":Lspsaga hover_doc<CR>")
+-- vim.keymap.set("n", "<leader>l", ":Lspsaga peek_definition<CR>")
+map("n", "<C-p>", ":Lspsaga peek_definition<CR>") -- ctrl+space YES
+-- vim.cmd('command! Peek "Lspsaga peek_definition<CR>"')
 
-vim.keymap.set("n", "<C-l>", ":Lspsaga show_line_diagnostics<CR>")
-vim.keymap.set("n", "<C-s>", ":LspSignatureHelp<CR>")       -- Nice!
+vim.api.nvim_create_user_command(
+  'Peek',
+  'Lspsaga peek_definition',
+  { nargs = 0 }
+)
+-- https://github.com/nanotee/nvim-lua-guide?tab=readme-ov-file#defining-user-commands
 
-vim.keymap.set("n", "<Leader>f", ":Lspsaga lsp_finder<CR>") -- find symbol in project. WOOOOOW
+-- using the ts pretty errors one instead...
+-- vim.keymap.set("n", "<C-l>", ":Lspsaga show_line_diagnostics<CR>")
+-- PEEK
+vim.keymap.set("n", "ps", ":LspSignatureHelp<CR>")      -- Nice!
+map("n", "pd", ":LspHover<CR>")                         -- consider swapping this with <C-l>
 
--- map("n", "<C-l>", ":LspHover<CR>")
+vim.keymap.set("n", "<Leader>f", ":Lspsaga finder<CR>") -- find symbol in project. WOOOOOW
+
 -- map("n", "<C- >", ":LspHover<CR>") -- ctrl+space YES
 -- map("n", "<Leader>l", ":LspDiagLine<CR>")
 
@@ -302,6 +317,28 @@ return {
     { "jose-elias-alvarez/null-ls.nvim", dependencies = { "nvim-lua/plenary.nvim" } }, --
     "jose-elias-alvarez/typescript.nvim",
     { "williamboman/mason-lspconfig.nvim", dependencies = { "neovim/nvim-lspconfig" } },
+
+
+    -- project wide tsc diagnostics
+    "dmmulroy/tsc.nvim",
+
+
+    -- nice formatting for TS
+    {
+      "OlegGulevskyy/better-ts-errors.nvim",
+      dependencies = { "MunifTanjim/nui.nvim" },
+      config = {
+        keymaps = {
+          -- toggle = '<leader>dd',          -- default '<leader>dd'
+          toggle = '<C-l>',               -- default '<leader>dd'
+          go_to_definition = '<leader>dx' -- default '<leader>dx'
+          -- TODO: set up peek items as p-*
+          -- set up GO items as g-*
+        }
+      }
+    },
+
+
 
     -- Formatting
     { "wesleimp/stylua.nvim",              dependencies = { "nvim-lua/plenary.nvim" } }, -- lua formatting
@@ -355,6 +392,19 @@ return {
 
     -- { "nvim-treesitter/nvim-treesitter-context", dependencies = { "nvim-treesitter/nvim-treesitter" } }, -- context nav (tells you what element you are in and the bounds)
 
+
+
+    -- PREVIEW markdown
+    -- try https://github.com/toppair/peek.nvim
+    {
+      "iamcco/markdown-preview.nvim",
+      cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
+      ft = { "markdown" },
+      build = function() vim.fn["mkdp#util#install"]() end,
+    },
+
+
+
     -- NAVIGATING by symbol. SYMBOL hopping / jumping
     {
       "ray-x/navigator.lua",
@@ -368,7 +418,7 @@ return {
     -- Quickfix window with lsp errors etc
     {
       "folke/trouble.nvim",
-      dependencies = { "kyazdani42/nvim-web-devicons" },
+      dependencies = { "nvim-tree/nvim-web-devicons" },
     },
 
     ----------------------------------------------------
@@ -384,10 +434,28 @@ return {
       event = "BufRead",
       config = function()
         require("lspsaga").setup({
+          finder = {
+            max_width  = 0.9,
+            max_height = 0.9
+          },
+          -- right rail symbols
+          outline = {
+            win_width = 40,
+            keys = {
+              jump = "+" -- throwaway just so e isn't used
+            }
+          },
           ui = {
             -- turns off the ANNOYING lightbulb icon
             code_action = "",
+            max_width   = 0.9,
+            max_height  = 0.9
+
           },
+          keymaps = {
+            scroll_down = '<C-n>',
+            scroll_up = '<C-e>',
+          }
         })
       end,
     },
@@ -405,6 +473,7 @@ return {
         "rust_analyzer",
         "lua_ls", -- lua_ls lua language server
         -- "tsserver",
+        "vtsls",
         "svelte",
         "stylelint_lsp",
         "tailwindcss",
@@ -468,6 +537,21 @@ return {
       },
     })
 
+    -- add support for mdx
+    vim.filetype.add({
+      extension = {
+        mdx = 'mdx'
+      }
+    })
+
+    -- FIXME w
+    -- local ft_to_parser = require("nvim-treesitter.parsers").filetype_to_parsername
+    -- ft_to_parser.mdx = "markdown"
+
+
+    -- https://phelipetls.github.io/posts/mdx-syntax-highlight-treesitter-nvim/
+
+
     -- TODO
     vim.api.nvim_set_hl(0, "@text.comment", { link = "Identifier" })
 
@@ -526,6 +610,12 @@ return {
       },
     })
 
+
+
+    require('tsc').setup({
+      use_trouble_qflist = false,
+    })
+
     -- lspconfig.tsserver.setup({
     -- 	-- cb that runs whenever we open a file that tsserver supports
     -- 	on_attach = function(client, bufnr)
@@ -574,27 +664,32 @@ return {
     })
 
     -- ESLINT ? 2/3
-    null_ls.setup({})
-    -- null_ls.setup({
-    -- 	sources = {
-    --                         -- eslint is configged after this
-    -- 		-- null_ls.builtins.diagnostics.eslint_d,
-    -- 		-- null_ls.builtins.code_actions.eslint_d,
-    -- 		null_ls.builtins.formatting.prettierd.with({
-    -- 			filetypes = {
-    -- 				"html",
-    -- 				"json",
-    -- 				"svelte",
-    -- 				"markdown",
-    -- 				"css",
-    -- 				"javascript",
-    -- 				"javascriptreact",
-    -- 				"typescript",
-    -- 			},
-    -- 		}),
-    -- 	},
-    -- 	on_attach = on_attach,
-    -- })
+    -- null_ls.setup({})
+    null_ls.setup({
+      sources = {
+        null_ls.builtins.diagnostics.eslint_d.with({                                              -- js/ts linter
+          condition = function(utils)
+            return utils.root_has_file({ ".eslintrc.js", ".eslintrc.cjs", ".eslint.config.mjs" }) -- only enable if root has .eslintrc.js or .eslintrc.cjs
+          end,
+        }),
+        -- eslint is configged after this
+        -- null_ls.builtins.diagnostics.eslint_d,
+        -- null_ls.builtins.code_actions.eslint_d,
+        null_ls.builtins.formatting.prettierd.with({
+          filetypes = {
+            "html",
+            "json",
+            "svelte",
+            "markdown",
+            "css",
+            "javascript",
+            "javascriptreact",
+            "typescript",
+          },
+        }),
+      },
+      on_attach = on_attach,
+    })
 
     -- ESLINT config -- ENABLE / DISABLE HERE 3/3
     -- REBOOT needed of nvim to take effect

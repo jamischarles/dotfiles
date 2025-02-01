@@ -7,5 +7,4 @@ map('n', '<Space><Tab>', '<C-W>w') -- navigate to next split pane/window
 
 
 return {
-	name = "windows"
 }

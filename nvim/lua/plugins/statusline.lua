@@ -36,7 +36,7 @@ local theme = {
 -- 	return fname .. " %1*" .. icon .. "%*"
 -- end
 
-function options()
+local function options()
 	return { bg = colors.red }
 	-- icon = {},
 	-- color = function(section)
@@ -58,10 +58,11 @@ end
 
 
 return {
-	name="statusline",
-	dependencies = {
-		"kyazdani42/nvim-web-devicons", -- (for lualine) 
+
+  {
 		"nvim-lualine/lualine.nvim",
+	dependencies = {
+		"nvim-tree/nvim-web-devicons", -- (for lualine) 
 
 		"cocopon/iceberg.vim", -- "++ (Blue + purple)
 		"EdenEast/nightfox.nvim", -- ++ Dark during the day. Has 10 themes inside. Very configurable.
@@ -312,6 +313,7 @@ return {
 
 
 	end
+}
 }
 
 

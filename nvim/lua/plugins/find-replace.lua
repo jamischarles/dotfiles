@@ -10,11 +10,10 @@ local map = require("utils").mapKey
 map("n", "<leader>fr", ":lua require('spectre').open_file_search()<CR>") -- current file
 --
 return {
-	name = "find-replace",
-	dependencies = {
-		"windwp/nvim-spectre", -- requires brew install gnu-sed
-	},
-	config = function()
-		require("spectre").setup()
-	end,
-}
+  {
+    "windwp/nvim-spectre", -- requires brew install gnu-sed
+
+    config = function()
+      require("spectre").setup()
+    end,
+  } }

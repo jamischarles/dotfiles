@@ -1,0 +1,243 @@
+-- -- TODO LUA VIM:
+-- -- Split files by UI feature / functionality... like (buffers), then consider having their own requires there as well...
+--
+--
+--
+--
+
+
+
+
+-- THIS is what I'm building dynamically 
+-- After talking to lazy.nvim guy several things became clear...
+-- 1. For REAL plugins, the expectation is that the plugin is a separate folder, not a single file.
+-- 2. Lazy expects that
+-- 3. below is my own hacky setup, that I'm doing dynamically
+-- If init exists, assign init. If config exists, assign that. 
+-- if deps exist, assign those too...
+-- works great with Lazy.nvim 11.x
+
+return {
+
+  {
+    dir = "~/.dotfiles/nvim/lua",
+    name = "statusline.lua",
+    lazy = false,
+    priority = 998,
+ --  dependencies = require("statusline").dependencies,
+    dependencies = {
+
+		"nvim-tree/nvim-web-devicons", -- (for lualine) 
+		"nvim-lualine/lualine.nvim",
+
+		"cocopon/iceberg.vim", -- "++ (Blue + purple)
+		"EdenEast/nightfox.nvim", -- ++ Dark during the day. Has 10 themes inside. Very configurable.
+		"stillwwater/vim-nebula", -- ++ NICE in light AND Dark (nightshift decent)
+		-- DARK themes I like (fox ones)
+		"ghifarit53/tokyonight-vim", --NICE. try it out more similar to night owl
+
+},
+
+
+   --config = require("statusline").config
+   -- FIXME: look at config order of execution within lazy...
+   -- when I change git to config it clobbers statusline
+   config=function()
+     print('load statusline')
+     require('statusline').config()
+     -- when this is init too it breaks it...
+     -- there must be some vim.opts that statusline breaks???
+   end,
+  },
+
+
+  -- does order matter??? should it???
+  -- the import is just merged into this...
+  {
+    dir = "~/.dotfiles/nvim/lua",
+    name = "git.lua",
+    lazy=false,
+    priority = 995,
+   dependencies = {
+
+    'lewis6991/gitsigns.nvim'
+   },
+   -- JUST this empty config block causes statusline to fail... :hmmm this is likely being overridden in the spec?
+   -- maybe init just borks it for everybody
+ --init =   function()
+
+ config =    function()
+-- even if it's empty...
+     print('load git')
+--  require("git").config()-- THIS breaks the status line? WHYYYY?
+    -- WEIRDDDDD. using INIT made them both work...
+ end,
+  },
+
+
+  {
+    dir = "~/.dotfiles/nvim/lua",
+    name = "colorscheme.lua",
+   --dependencies = require("colorscheme").dependencies,
+     dependencies = {
+       -- LIGHT themes I like
+       "cocopon/iceberg.vim",    -- "++ (Blue + purple)
+       "EdenEast/nightfox.nvim", -- ++ Dark during the day. Has 10 themes inside. Very configurable.
+       "stillwwater/vim-nebula", -- ++ NICE in light AND Dark (nightshift decent)
+       -- DARK themes I like (fox ones)
+       -- "ghifarit53/tokyonight-vim", --NICE. try it out more similar to night owl
+       "folke/tokyonight.nvim", --tokyonight-storm (decent) -moon
+    
+     },
+    lazy = false,
+    -- dev=true,
+    priority = 1001,
+    init = function()
+      -- why isn't this called???
+       print('load colorscheme')
+      -- does this require kill it?
+      require("colorscheme").init()
+      vim.cmd("colorscheme nordfox") -- no lua equivalent of this :colorscheme command
+    end,
+  },
+
+-- {
+--     dir = "~/.dotfiles/nvim/lua",
+--     name = "cursorline.lua",
+--     dependencies = require("cursorline").dependencies,
+--     config = function()
+--       require("cursorline").config()
+--     end,
+--   },
+
+
+}
+-- {
+--     dir = "~/.dotfiles/nvim/lua/cursorline.lua",
+--     name = "local-cursorline",
+--     -- lazy = false,
+--     -- init = function()
+--     --   require("colorscheme").init()
+--     -- end,
+--     -- dev=true
+--   }
+
+-- {      require("colorscheme")},
+-- {require("comments")},
+--
+-- {  require'cursorline'}, -- highlight current line after a jump
+  -- set highlight current line number only. PERFECT -- TODO: consider moving this to sign column bg instead...
+  -- vim.cmd('set number') -- line numbers
+  -- vim.cmd('set cursorline') -- FIXME: find more lua way to do this? Maybe with the vim global options part?
+  -- vim.cmd('set cursorlineopt=number ') -- FIXME: find more lua way to do this? Maybe with the vim global options part?
+
+  -- hi CursorLineNr guifg=#af00af guibg=color -- CursorLineNr   xxx cterm=bold gui=bold guifg=#ba793e
+  --
+  --
+  -- modules by feature / UI functionality
+  -- {require'statusline'},
+  -- 'git',
+  --
+  --
+  -- command-nav (fzf quick commands etc)
+  -- 'command-navigation',
+  -- 'find-replace',
+  -- 'telescope-ctrl-t',
+
+
+  -- bufferline features
+  -- 'buffers',
+  -- 'windows', -- window management
+
+  -- 'comments',
+
+  -- Autocompletion sources & Snippets
+  -- 'snippets',
+  -- 'autocompletion',
+
+   --'sessions', -- session managements
+
+  -- LSP/codehinting/linting
+   -- 'lsp-codehinting',
+
+  -- Text manipulation & text objects
+   -- 'text-object-manipulation',
+
+
+    -- dev=true
+  
+--
+
+
+-- return require('packer').startup(function(use)
+--
+--   use 'wbthomason/packer.nvim' -- needs to be here so it doesn't always ask to remove itself during install
+--
+--
+--   -- FIXME: namespace my stuff
+--   -- require('colorscheme').deps(use)
+--
+--   use {
+--     'nvim-telescope/telescope.nvim', -- Like fzf but with Lua
+--     requires = { {'nvim-lua/plenary.nvim'} }
+--   }
+--   use { -- load files based on frecency
+--     "nvim-telescope/telescope-frecency.nvim",
+--     config = function()
+--       require"telescope".load_extension("frecency")
+--     end,
+--     requires = {"tami5/sqlite.lua"}
+--   }
+--
+--   use {'nvim-telescope/telescope-fzf-native.nvim', run = 'make' }
+--   -- use {
+--   --   "nvim-telescope/telescope-fzy-native.nvim",
+--   --   config = function()
+--   --     require"telescope".load_extension("frecency")
+--   --   end
+--   -- }
+--
+--
+--   -- buffer management
+--  --use {'akinsho/bufferline.nvim', tag = "v2.*", requires = 'kyazdani42/nvim-web-devicons'}
+--
+--   -- statusline
+--
+--
+--
+--
+--   -- Syntax Support for additional langs (common langs syntax comes from treesitter)
+--   use 'evanleck/vim-svelte'
+--   use 'HerringtonDarkholme/yats.vim'
+--   --" or Plug 'leafgarland/typescript-vim'
+--   use 'maxmellon/vim-jsx-pretty'
+--
+--   -- Git / sign columns
+--   -- use {'lewis6991/gitsigns.nvim', branch = "diffthisfix"}
+--
+--
+--
+-- -- Autocomplete
+-- -- FIXME: Should we move this part to a "autocomplete" file as well?
+-- -- use 'neovim/nvim-lspconfig'
+--
+--
+--   -- use { 'sindrets/diffview.nvim', requires = 'nvim-lua/plenary.nvim' } -- git diff viewer
+--
+--   -- Indent guides
+--   use "lukas-reineke/indent-blankline.nvim"
+--
+--
+--   -- Window management
+--   -- use {"caenrique/swap-buffers.nvim"}
+--
+--
+--
+--   -- Automatically set up your configuration after cloning packer.nvim
+--   -- Put this at the end after all plugins
+--   if packer_bootstrap then
+--     require('packer').sync()
+--   end
+-- end)
+--
+--

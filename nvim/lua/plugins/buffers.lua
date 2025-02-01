@@ -2,7 +2,7 @@
 -- BUFFER managment
 -- ---------------------------
 local map = require("utils").mapKey
--- use {'akinsho/bufferline.nvim', tag = "v2.*", requires = 'kyazdani42/nvim-web-devicons'}
+-- use {'akinsho/bufferline.nvim', tag = "v2.*", requires = 'nvim-tree/nvim-web-devicons'}
 -- use 'rcarriga/nvim-notify'
 -- use 'MunifTanjim/nui.nvim' -- simple floating window/popup manager
 -- use 'alex-popov-tech/timer.nvim' -- set timer expiration on window
@@ -23,8 +23,8 @@ vim.opt.termguicolors = true
 
 -- FIXME: use HL groups since those will be modified by the theme
 local colors = {
-	black = "#383a42",
-	yellow = "#f6c177"
+  black = "#383a42",
+  yellow = "#f6c177"
 
 }
 
@@ -140,9 +140,9 @@ local colors = {
 --   }
 
 
-  ----------------------
-  -- NOTIFICATIONS popup on buffer switch
-  -- ---------------------------------
+----------------------
+-- NOTIFICATIONS popup on buffer switch
+-- ---------------------------------
 -- require("notify")("My super important message")
 -- local plugin = "My Awesome Plugin"
 
@@ -192,28 +192,28 @@ local colors = {
 -- vim.cmd[[highlight ColorColumn guibg=#171717]]
 
 -- notify filenumber when we enter a new buffer
-  -- vim.api.nvim_create_autocmd({"BufEnter"}, { -- do we need both? BufWinEnter
-	 --  -- update CLI command for manual frecency
-	 --  -- command = ':silent !fre --add ' .. vim.fn.expand('%')  -- FIXME: Find lua api of this?
-	 --  callback = function()
-		--   -- TODO: debounce this. Hide old ones. You should never see more than one 
-		--   local pathname = vim.fn.expand('%:h')
-		--   -- notify.dismiss({}) -- hide all the other notifications
-  --         -- notify.notify(pathname)
-	 --  end
-  -- })
-  --
+-- vim.api.nvim_create_autocmd({"BufEnter"}, { -- do we need both? BufWinEnter
+--  -- update CLI command for manual frecency
+--  -- command = ':silent !fre --add ' .. vim.fn.expand('%')  -- FIXME: Find lua api of this?
+--  callback = function()
+--   -- TODO: debounce this. Hide old ones. You should never see more than one
+--   local pathname = vim.fn.expand('%:h')
+--   -- notify.dismiss({}) -- hide all the other notifications
+--         -- notify.notify(pathname)
+--  end
+-- })
+--
 
-  -- map("n", "<tab>", ':lua require"cokeline/mappings".by_step("switch", 1)<CR>') --moves it around
-  map("n", "<tab>", '<cmd>lua  require"cokeline/mappings".by_step("focus", 1)<CR>') -- <cmd> makes it silent
-  map("n", "<S-tab>", '<cmd>lua require"cokeline/mappings".by_step("focus", -1)<CR>')
+-- map("n", "<tab>", ':lua require"cokeline/mappings".by_step("switch", 1)<CR>') --moves it around
+map("n", "<tab>", '<cmd>lua  require"cokeline/mappings".by_step("focus", 1)<CR>') -- <cmd> makes it silent
+map("n", "<S-tab>", '<cmd>lua require"cokeline/mappings".by_step("focus", -1)<CR>')
 -- map("n", "<tab>", ":BufferLineCycleNext<CR>")
 -- map("n", "<S-tab>", ":BufferLineCyclePrev<CR>")
 map("n", "<leader><leader>", ":edit #<CR>") -- go to last open buffer
 -- " nnoremap <leader><leader> <C-^>| " Goto last buffer
 -- map("n", "<leader>q", ":CloseCurrentBufferOrWindow<CR>")
 map("n", "<leader>q", ":bdelete<CR>")
-map("n", "<leader>o", ":only<CR>") -- Close all other windows
+map("n", "<leader>o", ":only<CR>")      -- Close all other windows
 
 map("n", "<leader><leader>", ":e#<CR>") -- switch to last opened buffer
 
@@ -299,9 +299,9 @@ map("n", "<leader><leader>", ":e#<CR>") -- switch to last opened buffer
 
 -- TODO: convert this to Lua
 -- function breakhabits.createmappings(keys, message)
-    -- for key in a:keys
-    --     call nvim_set_keymap('n', key, ':call BreakHabitsWindow(' . string(a:message). ')<CR>', {'silent': v:true, 'nowait': v:true, 'noremap': v:true})
-    -- endfor
+-- for key in a:keys
+--     call nvim_set_keymap('n', key, ':call BreakHabitsWindow(' . string(a:message). ')<CR>', {'silent': v:true, 'nowait': v:true, 'noremap': v:true})
+-- endfor
 -- end
 
 -- function! BreakHabitsWindow(message) abort
@@ -357,43 +357,41 @@ map("n", "<leader><leader>", ":e#<CR>") -- switch to last opened buffer
 
 --
 return {
-  name="buffers",
-  dependencies = {{
-    'noib3/nvim-cokeline',
-    dependencies = {'kyazdani42/nvim-web-devicons'}, -- If you want devicons
-    -- options passed to require(cokeline).setup(opts) -- automagically called
-    config = function()
+  
+    "numtostr/BufOnly.nvim", -- delete all other buffers
+    {
+      'noib3/nvim-cokeline',
+      dependencies = { 'nvim-tree/nvim-web-devicons',   -- If you want devicons
+    "nvim-lua/plenary.nvim"},
+      -- options passed to require(cokeline).setup(opts) -- automagically called
+      config = function()
+        local get_hex = require('cokeline/utils').get_hex
+        require('cokeline').setup({
+          default_hl = {
+            fg = function(buffer)
+              return buffer.is_modified and buffer.is_focused and colors.black
+                  -- or buffer.is_modified and  get_hex('ColorColumn', ' bg')
+                  or buffer.is_modified and get_hex('BufferCurrentMod', 'fg')
+                  or buffer.is_focused
+                  and get_hex('ColorColumn', 'bg')
 
-      local get_hex = require('cokeline/utils').get_hex
-      require('cokeline').setup({
-        default_hl = {
-          fg = function(buffer)
+                  or get_hex('Normal', 'fg')
+            end,
+            bg = function(buffer)
+              -- return buffer.is_modified and buffer.is_focused  and get_hex('GitSignsChange', 'fg')
+              return buffer.is_modified and buffer.is_focused and colors.yellow
+                  -- or buffer.is_modified and get_hex('GitSignsChange', 'fg')
+                  -- or buffer.is_modified and get_hex('BufferInactiveMod', 'fg')
 
+                  or
+                  buffer.is_focused
+                  and get_hex('Normal', 'fg')
+                  or get_hex('ColorColumn', 'bg')
+            end,
+          },
 
-
-            return buffer.is_modified and buffer.is_focused and colors.black
-            -- or buffer.is_modified and  get_hex('ColorColumn', ' bg')
-            or buffer.is_modified and get_hex('BufferCurrentMod', 'fg')
-            or  buffer.is_focused
-            and get_hex('ColorColumn', 'bg')
-
-            or get_hex('Normal', 'fg')
-          end,
-          bg = function(buffer)
-            -- return buffer.is_modified and buffer.is_focused  and get_hex('GitSignsChange', 'fg')
-            return buffer.is_modified and buffer.is_focused and colors.yellow
-            -- or buffer.is_modified and get_hex('GitSignsChange', 'fg')
-            -- or buffer.is_modified and get_hex('BufferInactiveMod', 'fg')
-
-            or
-            buffer.is_focused
-            and get_hex('Normal', 'fg')
-            or get_hex('ColorColumn', 'bg')
-          end,
-        },
-
-        components = {
-          -- {
+          components = {
+            -- {
             --   text = ' ',
             -- },
             {
@@ -410,7 +408,7 @@ return {
             },
 
             {
-              text = function(buffer) 
+              text = function(buffer)
                 -- then show the end of the filepath
                 -- Q: can we use this to find the project root?
                 --https://github.com/nvim-lua/plenary.nvim/blob/master/lua/plenary/path.lua plenary is really useful for path manipulation
@@ -424,11 +422,11 @@ return {
 
                 -- remove trailing slash
                 if string.sub(p, -1, -1) == "/" then
-                  p=string.sub(p, 1, -2)
+                  p = string.sub(p, 1, -2)
                 end
 
                 -- local relpath = Path:new(buffer.path):make_relative(cwd)
-                local shortpath = Path.new(p):shorten(1, {1, 2, -1 }) -- don't apply shortend to those parts of path segments
+                local shortpath = Path.new(p):shorten(1, { 1, 2, -1 }) -- don't apply shortend to those parts of path segments
 
                 -- local final2 = string.gsub(shortpath,  buffer.filename, "")  -- remove filename if still there (when no slash)
                 -- TODO: remove trailing slash if there is one
@@ -436,30 +434,30 @@ return {
                 -- local shortpath = Path:shorten_len(relpath, 1) -- chaining? new path
 
 
-                -- return shortpath .. ' ' 
+                -- return shortpath .. ' '
                 -- return shortpath
-                return shortpath 
-                -- return relpath 
+                return shortpath
+                -- return relpath
               end,
             },
             -- {
-              --   text = '',
-              --   delete_buffer_on_left_click = true,
-              -- },
-              --
-              {
-                text = function(buffer )
-                  return buffer.is_modified and " ●" or ''
-                end,
-              },
-              {
-                text = ' ',
-              },
+            --   text = '',
+            --   delete_buffer_on_left_click = true,
+            -- },
+            --
+            {
+              text = function(buffer)
+                return buffer.is_modified and " ●" or ''
+              end,
             },
-          })
-        end,
-      }}
+            {
+              text = ' ',
+            },
+          },
+        })
+      end,
+    } 
 
-      -- config=function()
-        -- end,
-      }
+  -- config=function()
+  -- end,
+}

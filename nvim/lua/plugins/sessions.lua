@@ -13,10 +13,10 @@
 -- }
 
 return {
-	name = "sessions",
-	dependencies = {
-		{ "Shatur/neovim-session-manager", opts = {
-			autoload_mode = "disabled",
-		} },
-	},
+  {
+    "Shatur/neovim-session-manager",
+    opts = {
+      autoload_mode = "disabled",
+    }
+  },
 }
