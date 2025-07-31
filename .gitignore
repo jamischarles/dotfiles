@@ -12,3 +12,5 @@ tags
 Session.vim
 .terminfo
 scratchpaper.md
+# don't check these in to source control
+.private-env-vars-gitignored.fish

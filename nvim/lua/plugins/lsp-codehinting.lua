@@ -16,12 +16,21 @@
 -- --
 
 
+-- for github copiliot
+local setupAiCodingAssist = function()
+  -- lua
+  -- vim.g.copilot_node_command = "~/.nvm/versions/node/v16.15.0/bin/node"
+  vim.g.copilot_node_command = "~/.volta/tools/image/node/20.10.0/bin/node"
+end
+
+-- for nvim_cmp
 local setupAutocomplete = function()
   local cmp = require('cmp')
 
   cmp.setup({
     sources = {
       { name = 'nvim_lsp' },
+      { name = 'buffer' },
     },
     snippet = {
       expand = function(args)
@@ -152,6 +161,26 @@ local setupDiagnostics = function()
 end
 
 return {
+  -- indent guides
+  -- {
+  --   "folke/snacks.nvim",
+  --   ---@type snacks.Config
+  --   opts = {
+  --     indent = {
+  --       -- your indent configuration comes here
+  --       -- or leave it empty to use the default settings
+  --       -- refer to the configuration section below
+  --     }
+  --   }
+  -- },
+
+
+
+  -- AI assistance... TODO: Make a seperate file for this?
+  'github/copilot.vim',
+
+
+
   -- trouble
   --
   -- require('tsc').setup({
@@ -189,6 +218,97 @@ return {
       )
     end
   },
+
+  ---------------------
+  --- Autocomplete... (see autocomplete.lua file for most of it)
+
+  {
+    'saghen/blink.cmp',
+    -- optional: provides snippets for the snippet source
+    dependencies = 'rafamadriz/friendly-snippets',
+
+    -- use a release tag to download pre-built binaries
+    version = 'v0.11.0', -- need to do this OR build from source... for the fuzzy matcher...
+    -- ^ this way we can download a pre-built binary of the fuzzy matcher...
+    -- pinned to git release tag
+
+    -- AND/OR build from source, requires nightly: https://rust-lang.github.io/rustup/concepts/channels.html#working-with-nightly-rust
+    -- build = 'cargo +nightly build --release',
+    -- If you use nix, you can build from source using latest nightly rust with:
+    -- build = 'nix run .#build-plugin',
+
+    ---@module 'blink.cmp'
+    ---@type blink.cmp.Config
+    opts = {
+      -- 'default' for mappings similar to built-in completion
+      -- 'super-tab' for mappings similar to vscode (tab to accept, arrow keys to navigate)
+      -- 'enter' for mappings similar to 'super-tab' but with 'enter' to accept
+      -- See the full "keymap" documentation for information on defining your own keymap.
+      keymap = {
+        preset = 'enter',
+        ['<Tab>'] = { 'select_next', 'fallback' },
+        ['<S-Tab>'] = { 'select_prev', 'fallback' },
+        -- accept on enter, don't auto-select
+        ['<CR>'] = { 'accept', 'fallback' },
+
+        -- accept on enter. select if none is selected
+        -- ['<CR>'] = {
+        --   function(cmp)
+        --     if cmp.snippet_active() then
+        --       return cmp.accept()
+        --     else
+        --       return cmp.select_and_accept()
+        --     end
+        --   end,
+        --   'snippet_forward',
+        --   'fallback'
+        -- },
+        -- ['<S-Tab>'] = { 'snippet_backward', 'fallback' },
+
+
+      },
+      completion = {
+        list = {
+          selection = {
+            preselect = false,
+            auto_insert = true,
+          },
+        },
+        ghost_text = {
+          enabled = false,
+          -- Show the ghost text when an item has been selected
+          show_with_selection = true,
+          -- Show the ghost text when no item has been selected, defaulting to the first item
+          show_without_selection = false,
+        },
+      },
+
+
+      appearance = {
+        -- Sets the fallback highlight groups to nvim-cmp's highlight groups
+        -- Useful for when your theme doesn't support blink.cmp
+        -- Will be removed in a future release
+        use_nvim_cmp_as_default = true,
+        -- Set to 'mono' for 'Nerd Font Mono' or 'normal' for 'Nerd Font'
+        -- Adjusts spacing to ensure icons are aligned
+        nerd_font_variant = 'mono'
+      },
+
+
+      -- Default list of enabled providers defined so that you can extend it
+      -- elsewhere in your config, without redefining it, due to `opts_extend`
+      sources = {
+        default = { 'lsp', 'path', 'snippets', 'buffer' },
+      },
+    },
+    opts_extend = { "sources.default" }
+  },
+
+
+
+
+
+
 
   ----------------------------------------------------
   -- HOVER improved for LSP-hover ---------------------
@@ -232,8 +352,13 @@ return {
   {
     'neovim/nvim-lspconfig',
     dependencies = {
-      'hrsh7th/cmp-nvim-lsp',
-      'hrsh7th/nvim-cmp',
+      -- 'hrsh7th/cmp-nvim-lsp',
+      -- 'hrsh7th/nvim-cmp',
+      -- 'hrsh7th/cmp-buffer', -- buffer completion
+
+      -- 'saghen/blink.cmp',
+
+
       "L3MON4D3/LuaSnip", -- snippet engine
 
       "williamboman/mason.nvim",
@@ -249,12 +374,21 @@ return {
     config = function()
       -- Add cmp_nvim_lsp capabilities settings to lspconfig
       -- This should be executed before you configure any language server
-      local lspconfig_defaults = require('lspconfig').util.default_config
-      lspconfig_defaults.capabilities = vim.tbl_deep_extend(
-        'force',
-        lspconfig_defaults.capabilities,
-        require('cmp_nvim_lsp').default_capabilities()
-      )
+
+      -- cmp_nvim_lsp
+      -- local lspconfig_defaults = require('lspconfig').util.default_config
+      -- lspconfig_defaults.capabilities = vim.tbl_deep_extend(
+      --   'force',
+      --   lspconfig_defaults.capabilities,
+      --   require('cmp_nvim_lsp').default_capabilities()
+      -- )
+
+      -- BLINK
+      local capabilities = require('blink.cmp').get_lsp_capabilities()
+      local lspconfig = require('lspconfig')
+
+      lspconfig['lua_ls'].setup({ capabilities = capabilities })
+
 
       -- This is where you enable features that only work
       -- if there is a language server active in the file
@@ -287,12 +421,14 @@ return {
 
       -- FIXME: How do we accept the selection???
       -- Should this be in autocomplete.lua file?
-      setupAutocomplete()
+      -- setupAutocomplete()
 
       setupLanguageServers()
 
       setupFormatOnSave()
 
       setupDiagnostics()
+
+      setupAiCodingAssist()
     end
   } }

@@ -177,7 +177,7 @@ buildPluginList({
   -- 'snippets',
   -- 'autocompletion',
   --
-  --  --'sessions', -- session managements
+  'sessions', -- session managements
   --
 
 

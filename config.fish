@@ -7,6 +7,7 @@
 
 ## most config is here
 ## TODO: Run once on new init
+## Apparently you now run this always
 # ~/.dotfiles/config.setup.fish
 
 # FIXME: use this for abbr?
@@ -84,6 +85,8 @@ set -x PATH $PATH /opt/homebrew/bin
 
 set -x EDITOR nvim
 
+set -x JAVA_HOME "/Library/Java/JavaVirtualMachines/JDK-17.0.8_zulu_v2/Contents/Home"
+
 set -x PATH $PATH "/Applications/Sublime Text.app/Contents/SharedSupport/bin"
 
 # Homebrew default brewfile location
@@ -100,6 +103,8 @@ set -x PATH $PATH /usr/local/bin/
 set -x PATH $PATH /usr/bin/python3
 # Needed for some cargo build commands includes py2 in the path. means python2 execute can be called?
 set -x PATH $PATH /Users/jacharles/.pyenv/versions/pypy2.7-7.3.9/bin
+
+set -x SHELL /opt/homebrew/bin/fish
 
 # PYTHON env var. Using pyenv makes this much simpler and fixes issues around node-gyp not finding python
 # set -x PYTHON /usr/bin/python3
@@ -149,6 +154,8 @@ alias pn="pnpm"
 set -x PNPM_HOME /Users/jacharles/.volta/bin/pnpm # set pnpm home folder
 
 
+
+
 alias ctags="$brewDir/bin/ctags"
 
 alias ls="lsd"
@@ -157,14 +164,13 @@ alias lsl="lsd --long --date=relative --blocks permission,size,date,name"
 alias lsa="lsd --long --all --date=relative --blocks permission,size,date,name"
 
 
-
-
 #################
 ### Abbreviations
 #################
 abbr --add gd  'git diff --color ":(exclude)*lock.json" | delta --diff-so-fancy | less --tabs=1,5 -R'
 
 abbr --add kp 'kill $(lsof -t -i:8080)'
+abbr --add pk 'kill $(lsof -t -i:8080)'
 
 
 ## Q: Move these? does it still matter?
@@ -328,6 +334,22 @@ end
 # source ~/.dotfiles/config.setup.fish
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # Z command. HACKY workaround for the "abbr to reomve doesn't exist.
 abbr --add z 'ls'
 abbr --add zi 'ls'
@@ -343,6 +365,11 @@ starship init fish | source
 
 
 
+# AI SETUP FOR WORK - vars we don't want to commit to github
+source ~/.dotfiles/.private-env-vars-gitignored.fish
+
+
+
 # Use fnm instead of NVM (faster for fish) https://github.com/Schniz/fnm
 # Set up fnm
 # fnm env --multi | source
@@ -353,5 +380,21 @@ starship init fish | source
 
 # List of things I have brew installed...
 # - https://github.com/yqrashawn/GokuRakuJoudo - easy karabiner config
+set -gx VOLTA_FEATURE_PNPM 1 # Your new line
 set -gx VOLTA_HOME "$HOME/.volta"
 set -gx PATH "$VOLTA_HOME/bin" $PATH
+
+
+
+
+
+### MANAGED BY RANCHER DESKTOP START (DO NOT EDIT)
+set --export --prepend PATH "/Users/jacharles/.rd/bin"
+### MANAGED BY RANCHER DESKTOP END (DO NOT EDIT)
+
+# Added by `rbenv init` on Thu Jun  5 13:31:23 MDT 2025
+status --is-interactive; and rbenv init - --no-rehash fish | source
+
+# Added by LM Studio CLI (lms)
+set -gx PATH $PATH /Users/jacharles/.lmstudio/bin
+# End of LM Studio CLI section

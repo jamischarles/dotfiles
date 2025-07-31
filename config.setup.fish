@@ -87,11 +87,15 @@ if status --is-interactive
     # list of special utils I use: z, rg, fd, bat, fzf (not often anymore)
     # abbr --add rgf "rg --files . | grep"
     abbr --add rgf "fd "
-	abbr --add rgs "rg --fixed-strings" # ignore regex markers. Treat as string
+    abbr --add rgs "rg --fixed-strings" # ignore regex markers. Treat as string
     abbr --add rga "rg --no-ignore -iF" # Searches ALLL files, exact string . ignore all gitignore etc. And case insensitive.
     abbr --add rgfi "rg --files-with-matches"
     abbr --add fbat "fzf | xargs bat" # find and then bat the file
     abbr --add rbat "rg --files-with-matches | xargs bat" #bat files with matches
+
+
+    abbr --add fda --set-cursor -- "fd %  --no-ignore-vcs --exclude node_modules/"
+
 
 
   # special rust-based commands that I like
@@ -100,6 +104,11 @@ if status --is-interactive
   # sad - project wide find/replace. With preview. NICE
   # jd -> JSON diff cli. WOW
   # zk zettelkasten https://github.com/mickael-menu/zk
+
+
+
+  # start an rg search through the til folder. And move the cursor to pattern location 
+  abbr --add til --set-cursor -- "rg %  ~/dev_freelance/til"
 
 
     # search hidden files (not node_modules or .git but other ones), including dotfiles and files hidden by .gitignore

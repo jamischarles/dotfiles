@@ -115,3 +115,11 @@ ln -s ~/.dotfiles/byobu-keybindings.tmux ~/.byobu/keybindings.tmux
 
 rm ~/.config/starship.toml
 ln -s ~/.dotfiles/starship.toml ~/.config/starship.toml
+
+
+rm ~/.wezterm.lua
+ln -s ~/.dotfiles/wezterm.lua ~/.wezterm.lua
+
+# bun
+rm ~/.bunfig.toml
+ln -s ~/.dotfiles/bunfig.toml ~/.bunfig.toml

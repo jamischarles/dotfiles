@@ -13,10 +13,25 @@
 -- }
 
 return {
+  -- {
+  --   "Shatur/neovim-session-manager",
+  --   opts = {
+  --     autoload_mode = "disabled",
+  --   }
+  -- },
   {
-    "Shatur/neovim-session-manager",
+    "folke/persistence.nvim",
+    event = "BufReadPre", -- this will only start session saving when an actual file was opened
     opts = {
-      autoload_mode = "disabled",
-    }
-  },
+      -- add any custom options here
+      -- Set to 0 to always save
+      need = 0, -- 1
+    },
+    init = function()
+      -- set up commands
+      -- vim.api.nvim_create_user_command("SessionLoad", "lua require('persistence').select()", {})
+      vim.api.nvim_create_user_command("SessionLoad", "lua require('persistence').select()", {})
+      vim.api.nvim_create_user_command("SessionLoadLast", "lua require('persistence').load({ last = true })", {})
+    end
+  }
 }

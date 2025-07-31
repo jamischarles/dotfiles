@@ -419,6 +419,8 @@ end
 return {
   {
     "ibhagwan/fzf-lua",
+    lazy = true,
+    cmd = "FzfLua", -- on which commands to load. Needed if you lazy=true
     dependencies = {
       {
         -- optional for icon support
@@ -434,6 +436,7 @@ return {
 
       {
         "aaronhallaert/advanced-git-search.nvim",
+        lazy = true,
         dependencies = { "nvim-telescope/telescope.nvim" },
         config = function()
           -- optional: setup telescope before loading the extension
@@ -803,7 +806,7 @@ return {
       --
       vim.api.nvim_create_user_command("HarpoonTerm", "lua require('harpoon.term').gotoTerminal(1)", {})
 
-      vim.api.nvim_create_user_command("HarpoonAddFile", "lua harpoon:list():append()", {})
+      vim.api.nvim_create_user_command("HarpoonAddFile", "lua harpoon:list():add()", {})
       vim.api.nvim_create_user_command("HarpoonRemoveFile", "lua harpoon:list():remove()", {})
       vim.api.nvim_create_user_command("HarpoonToggle", "lua harpoon.ui:toggle_quick_menu(harpoon:list())", {})
       vim.api.nvim_create_user_command("HarpoonNext", "lua harpoon:list():next()", {})

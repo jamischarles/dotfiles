@@ -1,17 +1,17 @@
 [[manager.prepend_keymap]]
 on   = [ "l"] # multiple means you have to press multiple. INTERESTING
-exec = "plugin --sync smart-enter"
+run = "plugin --sync smart-enter"
 desc = "Enter the child directory, or open the file"
 
 # override enter mapping
 [[manager.prepend_keymap]]
 on   = [ "<Enter>" ]
-exec = "plugin --sync smart-enter"
+run = "plugin --sync smart-enter"
 desc = "Enter the child directory, or open the file"
 
 [[manager.prepend_keymap]]
 on   = [ "<Esc>" ]
-exec = "close"
+run = "close"
 desc = "Exit the process"
 
 # [[select.append_keymap]]
@@ -23,12 +23,18 @@ desc = "Exit the process"
 # override preview scroll
 [[manager.prepend_keymap]]
  on = [ "<C-e>" ]
- exec = "seek -5"
+ run = "seek -5"
  desc = "Seek up 5 units in the preview" 
 
 [[manager.prepend_keymap]]
  on = [ "<C-n>" ]
- exec = "seek 5"
+ run = "seek 5"
  desc = "Seek down 5 units in the preview"
+
+
+[[manager.prepend_keymap]]
+on  = [ "c", "g" ]
+run = "yank"
+desc = "Copy the selected files"
 
 

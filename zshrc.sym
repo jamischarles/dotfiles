@@ -218,6 +218,10 @@ export PATH=/usr/local/share/npm/bin:$PATH.
 export PATH=/usr/local/bin:$PATH
 
 
+# ensure we can easily run fish 
+export PATH=/opt/homebrew/bin/fish:$PATH
+
+
 # Golang
 export GOPATH=$HOME/go
 export PATH=$PATH:$GOPATH/bin
@@ -533,3 +537,15 @@ case ":$PATH:" in
   *) export PATH="$PNPM_HOME:$PATH" ;;
 esac
 # pnpm end
+### MANAGED BY RANCHER DESKTOP START (DO NOT EDIT)
+export PATH="/Users/jacharles/.rd/bin:$PATH"
+### MANAGED BY RANCHER DESKTOP END (DO NOT EDIT)
+
+# Added by Windsurf
+export PATH="/Users/jacharles/.codeium/windsurf/bin:$PATH"
+
+. "$HOME/.local/bin/env"
+
+# Added by LM Studio CLI (lms)
+export PATH="$PATH:/Users/jacharles/.lmstudio/bin"
+# End of LM Studio CLI section

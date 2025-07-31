@@ -1,0 +1,4 @@
+[install.registry]
+url = "https://artifactory.g.devqa.gcp.dev.paypalinc.com/artifactory/api/npm/npm-all/"
+# Bun v1.0.3+ supports using an environment variable here
+# url = "$NPM_CONFIG_REGISTRY"
