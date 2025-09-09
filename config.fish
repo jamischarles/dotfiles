@@ -59,7 +59,7 @@ end
 # cat -> bat
 # find -> fd
 # grep -> rg
-# NVM -> Volta
+# NVM -> Volta -> Mise (like asdf)
 # z -> zoxide
 # grep -> ripgrep
 # sed -> sad
@@ -150,8 +150,8 @@ set -g START_TIME (getTime)
 ## ALIASES -----------------------------------------------
 #################################################
 
-alias pn="pnpm"
-set -x PNPM_HOME /Users/jacharles/.volta/bin/pnpm # set pnpm home folder
+# alias pn="pnpm"
+# set -x PNPM_HOME /Users/jacharles/.volta/bin/pnpm # set pnpm home folder
 
 
 
@@ -380,9 +380,9 @@ source ~/.dotfiles/.private-env-vars-gitignored.fish
 
 # List of things I have brew installed...
 # - https://github.com/yqrashawn/GokuRakuJoudo - easy karabiner config
-set -gx VOLTA_FEATURE_PNPM 1 # Your new line
-set -gx VOLTA_HOME "$HOME/.volta"
-set -gx PATH "$VOLTA_HOME/bin" $PATH
+# set -gx VOLTA_FEATURE_PNPM 1 # Your new line
+# set -gx VOLTA_HOME "$HOME/.volta"
+# set -gx PATH "$VOLTA_HOME/bin" $PATH
 
 
 
@@ -398,3 +398,13 @@ status --is-interactive; and rbenv init - --no-rehash fish | source
 # Added by LM Studio CLI (lms)
 set -gx PATH $PATH /Users/jacharles/.lmstudio/bin
 # End of LM Studio CLI section
+/opt/homebrew/opt/mise/bin/mise activate fish | source
+
+
+# Android SDK environment variables
+export ANDROID_HOME="$HOME/Library/Android/sdk"
+# Add both traditional Android SDK paths and Homebrew paths
+# BREW_PREFIX=$(brew --prefix)
+set BREW_PREFIX $(brew --prefix)
+
+export PATH="$PATH:$ANDROID_HOME/emulator:$ANDROID_HOME/platform-tools:$ANDROID_HOME/cmdline-tools/latest/bin:$BREW_PREFIX/share/android-commandlinetools/cmdline-tools/latest/bin:$BREW_PREFIX/bin"

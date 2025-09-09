@@ -16,12 +16,16 @@ brew "jpeg-xl"
 brew "aom"
 # Compression/decompression library aiming for high speed
 brew "snappy"
+# Record and share terminal sessions
+brew "asciinema"
 # Code searching, linting, rewriting
 brew "ast-grep"
 # Official Amazon AWS command-line interface
 brew "awscli"
 # Clone of cat(1) with syntax highlighting and Git integration
 brew "bat"
+# Emulate a GCP BigQuery server on your local machine
+brew "bigquery-emulator"
 # New way to see and navigate directory trees
 brew "broot"
 # GNU internationalization (i18n) and localization (l10n) library
@@ -32,10 +36,20 @@ brew "cairo"
 brew "choose-rust"
 # Cross-platform make
 brew "cmake"
+# Container runtimes on MacOS (and Linux) with minimal setup
+brew "colima", restart_service: :changed
 # GNU File, Shell, and Text utilities
 brew "coreutils"
 # Secure runtime for JavaScript and TypeScript
 brew "deno"
+# Pack, ship and run any application as a lightweight container
+brew "docker"
+# Docker CLI plugin for extended build capabilities with BuildKit
+brew "docker-buildx"
+# Isolated development environments using Docker
+brew "docker-compose"
+# Platform keystore credential helper for Docker
+brew "docker-credential-helper"
 # Embeddable SQL OLAP Database Management System
 brew "duckdb"
 # More intuitive version of du in rust
@@ -98,9 +112,11 @@ brew "lsd"
 brew "lua-language-server"
 # Package manager for the Lua programming language
 brew "luarocks"
+# Polyglot runtime manager (asdf rust clone)
+brew "mise"
 # Simple tool to make locally trusted development certificates
 brew "mkcert"
-# Parser generator tool and incremental parsing library
+# Incremental parsing library
 brew "tree-sitter"
 # Ambitious Vim-fork focused on extensibility and agility
 brew "neovim"
@@ -162,12 +178,20 @@ brew "supabase/tap/supabase"
 cask "alacritty"
 # Open source IDE for exploring and testing APIs
 cask "bruno"
+# Column-oriented database management system
+cask "clickhouse"
+# Universal database tool and SQL client
+cask "dbeaver-community"
+# Set of tools to manage resources and applications hosted on Google Cloud
+cask "gcloud-cli"
 # Utility to provide quick look previews for files that aren't natively supported
 cask "glance-chamburr"
 # Terminal built on web technologies
 cask "hyper"
 # Open-source keystroke visualiser
 cask "keycastr"
+# Agent-centric IDE with spec-driven development
+cask "kiro"
 # Break time reminder app
 cask "lookaway"
 # Todo manager based on the todo.txt syntax

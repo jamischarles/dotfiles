@@ -549,3 +549,7 @@ export PATH="/Users/jacharles/.codeium/windsurf/bin:$PATH"
 # Added by LM Studio CLI (lms)
 export PATH="$PATH:/Users/jacharles/.lmstudio/bin"
 # End of LM Studio CLI section
+
+# Android SDK environment variables
+export ANDROID_HOME="/opt/homebrew/share/android-commandlinetools"
+export PATH="$PATH:$ANDROID_HOME/emulator:$ANDROID_HOME/platform-tools:$ANDROID_HOME/cmdline-tools/latest/bin"
