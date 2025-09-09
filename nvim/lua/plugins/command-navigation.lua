@@ -899,7 +899,7 @@ return {
       local enterKey = utils.ansi_codes.yellow("<Return>")
       local delBuffer = utils.ansi_codes.yellow("<Ctrl-X>")
       require("fzf-lua").setup({
-        "telescope",                          -- look and feel from profile...
+        -- "telescope",                          -- REMOVED: profile was forcing quickfix behavior
         keymap = {
           ["<ctrl-a>"] = "preview-page-down", -- navigate preview up/down
           ["<c-a>"] = "preview-page-down",    -- navigate preview up/down
@@ -911,6 +911,25 @@ return {
           ["<S-down>"] = "preview-page-down",
           ["<S-up>"] = "preview-page-up",
           ["<S-left>"] = "preview-page-reset",
+        },
+        -- GLOBAL OVERRIDE: Never use quickfix, always open files as buffers
+        actions = {
+          files = {
+            ["enter"] = actions.file_edit,     -- Always open as buffers, never quickfix
+            ["default"] = actions.file_edit,   -- Fallback
+          },
+          buffers = {
+            ["enter"] = actions.buf_edit,
+            ["default"] = actions.buf_edit,
+          },
+          grep = {
+            ["enter"] = actions.file_edit,
+            ["default"] = actions.file_edit,
+          },
+          lsp = {
+            ["enter"] = actions.file_edit,
+            ["default"] = actions.file_edit,
+          },
         },
         winopts = {
           -- split         = "belowright new",-- open in a split instead?
@@ -973,9 +992,6 @@ return {
           -- rg_opts = "--color=never --files --hidden --follow -g '!.git'",
           -- fd_opts = "--color=never --type f --hidden --follow --exclude .git",
           actions = {
-            -- inherits from 'actions.files', here we can override
-            -- or set bind to 'false' to disable a default action
-            ["default"] = actions.file_edit,
             -- custom actions are available too
             ["ctrl-y"] = function(selected)
               print(selected[1])
