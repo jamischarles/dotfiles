@@ -553,3 +553,8 @@ export PATH="$PATH:/Users/jacharles/.lmstudio/bin"
 # Android SDK environment variables
 export ANDROID_HOME="/opt/homebrew/share/android-commandlinetools"
 export PATH="$PATH:$ANDROID_HOME/emulator:$ANDROID_HOME/platform-tools:$ANDROID_HOME/cmdline-tools/latest/bin"
+eval "$(rbenv init -)"
+
+# Enable zsh autocompletion
+autoload -Uz compinit
+compinit

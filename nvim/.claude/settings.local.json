@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:github.com)",
+      "WebSearch",
+      "WebFetch(domain:www.reddit.com)",
+      "mcp__git__git_add",
+      "mcp__git__git_commit",
+      "mcp__git__git_diff_staged",
+      "Read(//Users/jacharles/.claude/**)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

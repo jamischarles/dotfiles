@@ -179,6 +179,8 @@ return {
   -- AI assistance... TODO: Make a seperate file for this?
   'github/copilot.vim',
 
+  -- cucumber feature -> step navigation
+  'tpope/vim-cucumber',
 
 
   -- trouble
