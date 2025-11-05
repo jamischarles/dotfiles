@@ -100,9 +100,11 @@ set -x PATH $PATH /usr/local/opt/coreutils/libexec/gnubin
 # Add all the utils that are normally in the path. Need to set this up now, so all the other commands work...
 set -x PATH $PATH /usr/local/bin/
 # Needed for providers to call python3 properly in nevim in anacritty only... https://neovim.io/doc/user/provider.html
-set -x PATH $PATH /usr/bin/python3
+# COMMENTED OUT: This was breaking PATH by adding a file instead of directory
+# set -x PATH $PATH /usr/bin/python3
 # Needed for some cargo build commands includes py2 in the path. means python2 execute can be called?
-set -x PATH $PATH /Users/jacharles/.pyenv/versions/pypy2.7-7.3.9/bin
+# COMMENTED OUT: pyenv not installed
+# set -x PATH $PATH /Users/jacharles/.pyenv/versions/pypy2.7-7.3.9/bin
 
 set -x SHELL /opt/homebrew/bin/fish
 
@@ -111,8 +113,9 @@ set -x SHELL /opt/homebrew/bin/fish
 
 set -x BYOBU_PREFIX /usr/local
 
-pyenv init - | source
-alias python="$(pyenv which python)"
+# COMMENTED OUT: pyenv not installed
+# pyenv init - | source
+# alias python="$(pyenv which python)"
 # Had to run pyenv global python 3.9
 
 # For gdate...
@@ -125,8 +128,9 @@ set -x PATH $PATH $HOME/go $HOME/go/bin $HOME/.cargo/bin
 set -x PATH $PATH /Applications/Genymotion.app/Contents/MacOS/tools/
 
 # For rbenv (ruby version manager)
-set -x PATH $PATH ~/.rbenv/shims
-set -x PATH $PATH ~/.rbenv/bin
+# COMMENTED OUT: rbenv not installed
+# set -x PATH $PATH ~/.rbenv/shims
+# set -x PATH $PATH ~/.rbenv/bin
 
 # theme for BAT... useful for vim preview etc...
 set -x BAT_THEME 'Monokai Extended'
@@ -167,14 +171,45 @@ alias lsa="lsd --long --all --date=relative --blocks permission,size,date,name"
 #################
 ### Abbreviations
 #################
+## Git abbreviations
+abbr --add gs  'git status -s'
+abbr --add gb  'git branch -v'
 abbr --add gd  'git diff --color ":(exclude)*lock.json" | delta --diff-so-fancy | less --tabs=1,5 -R'
+abbr --add gdc 'git diff --cached --color | delta --diff-so-fancy | less --tabs=1,5 -R'
+abbr --add gdcn 'git diff --cached --color ":!package-lock.json" | delta --diff-so-fancy | less --tabs=1,5 -R'
+abbr --add gdn  'git diff --color ":!package-lock.json" | delta --diff-so-fancy | less --tabs=1,5 -R'
+abbr --add gch 'git checkout'
+abbr --add gc 'git commit -v'
+abbr --add grm 'git remote -v'
+abbr --add gca 'git commit -v --amend'
+abbr --add gsp 'git stash pop'
+abbr --add gsgd 'git stash; git stash drop'
+abbr --add gst 'git stash -k -u; git status -s'
+abbr --add gsu 'git stash -k -u; git status -s'
+abbr --add gfc 'git diff --name-only --diff-filter=U | xargs nvim'
+abbr --add gfca 'git diff --name-only --diff-filter=U | xargs git add'
+abbr --add gpu 'git pull --rebase upstream'
+abbr --add grb 'git rebase -i upstream/develop'
+abbr --add gra 'git rebase --abort'
+abbr --add grc 'git rebase --continue'
 
+## Other abbreviations
 abbr --add kp 'kill $(lsof -t -i:8080)'
 abbr --add pk 'kill $(lsof -t -i:8080)'
-
-
-## Q: Move these? does it still matter?
 abbr --add watch 'chokidar **/*.js -c " "' # command in parens
+abbr --add ef 'nvim ~/.config/fish/config.fish'
+abbr --add nv 'node --version'
+abbr --add ns 'nvim -S' # resume session
+abbr --add rmf "rm -rf"
+abbr --add dp "docker ps"
+abbr --add rgf "fd "
+abbr --add rgs "rg --fixed-strings"
+abbr --add rga "rg --no-ignore -iF"
+abbr --add rgfi "rg --files-with-matches"
+abbr --add rgh "rg --follow --no-ignore-vcs  --files-with-matches --hidden -g \"!.git\" -g \"!node_modules\""
+abbr --add fbat "fzf | xargs bat"
+abbr --add rbat "rg --files-with-matches | xargs bat"
+abbr --add cr "cargo run"
 
 # ###############################################
 # NOTE: removing all the custom functions in lieu of starship.rs
@@ -366,7 +401,8 @@ starship init fish | source
 
 
 # AI SETUP FOR WORK - vars we don't want to commit to github
-source ~/.dotfiles/.private-env-vars-gitignored.fish
+# Only source if file exists
+test -f ~/.dotfiles/.private-env-vars-gitignored.fish; and source ~/.dotfiles/.private-env-vars-gitignored.fish
 
 
 
@@ -393,7 +429,8 @@ set --export --prepend PATH "/Users/jacharles/.rd/bin"
 ### MANAGED BY RANCHER DESKTOP END (DO NOT EDIT)
 
 # Added by `rbenv init` on Thu Jun  5 13:31:23 MDT 2025
-status --is-interactive; and rbenv init - --no-rehash fish | source
+# COMMENTED OUT: rbenv not installed
+# status --is-interactive; and rbenv init - --no-rehash fish | source
 
 # Added by LM Studio CLI (lms)
 set -gx PATH $PATH /Users/jacharles/.lmstudio/bin

@@ -32,8 +32,8 @@ if status --is-interactive
 # To one-off it, DO NOT FORGET this commang to se them globally
     set -g fish_user_abbreviations
     abbr --add ef 'nvim ~/.config/fish/config.fish'
-    abbr --add gpu 'nvim ~/.config/fish/config.fish'
-    abbr --add gs 'nvim ~/.config/fish/config.fish'
+    # REMOVED: duplicate gs abbreviation (keeping the git status version below)
+    # abbr --add gs 'nvim ~/.config/fish/config.fish'
     abbr --add itermps 'setItermProfile Pluralsight'
 
     # git
