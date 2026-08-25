@@ -27,7 +27,6 @@
 # 	- or pick one of the premade ones that look nice...
 # 	- consider removing git from first prompt to make the prompt faster? Is it slower every time?
 # - Add symlinks for config file, so it's in dotfiles... (add bashrc too)
-	# - ctags file
 # - install z for zsh too? It's friggin amazing...
 # - pick one of these? https://github.com/jbucaran/awesome-fish
 # - get the terminal switch to work...
@@ -91,9 +90,6 @@ set -x PATH $PATH "/Applications/Sublime Text.app/Contents/SharedSupport/bin"
 
 # Homebrew default brewfile location
 set -x HOMEBREW_BUNDLE_FILE '~/.config/brewfile/Brewfile'
-
-# Ctags - exuberant... Because there's already one installed for universal ctags
-set -x PATH $PATH /usr/local/Cellar/ctags/5.8_1/bin/ctags
 
 # Needs to be done first for gDate... to be available below...
 set -x PATH $PATH /usr/local/opt/coreutils/libexec/gnubin
@@ -159,8 +155,6 @@ set -g START_TIME (getTime)
 
 
 
-
-alias ctags="$brewDir/bin/ctags"
 
 alias ls="lsd"
 alias la="lsd -a --long --date=relative --blocks permission,size,date,name"
