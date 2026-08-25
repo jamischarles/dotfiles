@@ -248,62 +248,83 @@ than a fresh clone + build on the new machine. Default: **don't bring build outp
 (`.xcarchive`, `.xcframework`, `.ipa`, `DerivedData`) -- source + fresh build is the
 normal path. `TestBuilds` and `dev_games`'s built artifacts fall under this rule.
 
-## Git setup (EMU / work + public GitHub)
+## Git setup (public GitHub first, then EMU / work)
+
+Public GitHub access has to come first on a new machine -- `~/.dotfiles` itself
+lives at `github.com/jamischarles/dotfiles`, so it's a hard dependency of even
+cloning the dotfiles repo. EMU/work access can follow once the base environment
+is up.
 
 `gitconfig.sym` (symlinked to `~/.gitconfig` by `makesymlinks.sh`) covers identity and
 git behavior, but **not** SSH keys or the SSH-level host routing -- those live in
 `~/.ssh/`, which isn't part of the dotfiles repo (private key material should never be
 committed) and needs manual setup on the new machine.
 
-### What's in gitconfig.sym
-
-- `user.email` is `jacharles@paypal.com` (work identity, used for everything by default
-  -- there's no per-directory `includeIf` split between work/personal repos currently)
-- `url "git@github.paypal.com:".insteadOf = https://github.paypal.com/` -- this is the
-  key EMU piece. Any `https://github.paypal.com/...` clone/fetch URL gets silently
-  rewritten to use SSH via the `github.paypal.com` host, so cloning by HTTPS URL still
-  works without prompting for a password
-- `http.postBuffer` / `http.maxRequestBuffer` bumped up -- needed for large repo pushes
-  (e.g. `dev_xo` monorepos), not strictly required but avoids "RPC failed" errors on push
-
 ### SSH keys needed
 
-- **`paypal_github`** -- the EMU/work key. Referenced by the `github.paypal.com` SSH
-  host below. This is the one that actually matters day-to-day; regenerate or securely
-  copy this one first.
-- Other keys present on the old machine (`github_rsa` for public github.com, `id_rsa` as
-  a generic fallback) exist but weren't prioritized here -- reconcile those as needed
-  when a specific personal/public-repo workflow comes up.
+- **`github_rsa`** -- personal/public `github.com` key. Set up first; needed to clone
+  the dotfiles repo itself.
+- **`paypal_github`** -- the EMU/work key, used via the `github.com-paypal` SSH alias
+  (see below). Set up second, once the base environment is running.
+- `id_rsa` exists as a generic fallback (`Host *` default `IdentityFile` in
+  `~/.ssh/config`) -- not tied to a specific GitHub account, low priority.
 
 ### SSH config (`~/.ssh/config`)
 
-The relevant host entry to recreate:
+Confirmed live config (verified 2026-08-25, not speculative):
 
 ```
+Host *
+  AddKeysToAgent yes
+  UseKeychain yes
+  IdentityFile ~/.ssh/id_rsa
+
 Host github.com-paypal
   HostName github.com
   IdentityFile ~/.ssh/paypal_github
   User git
+
+host github.com
+  HostName github.com
+  IdentityFile ~/.ssh/github_rsa
+  User git
 ```
 
-Note the live `~/.ssh/config` on the old machine has `Host github.com-paypal` (SSH
-alias) while `gitconfig.sym`'s URL rewrite points at `git@github.paypal.com:` (a
-different literal host). Verify on the new machine which one your EMU setup actually
-expects -- GitHub Enterprise Managed User orgs sometimes use a dedicated hostname
-(`github.paypal.com`) rather than `github.com` with a custom alias. Confirm with
-whatever's current in PayPal's internal git docs before assuming either is still correct.
+Note: EMU/work access uses the `github.com-paypal` **alias** with `github.com` as the
+actual hostname -- it is NOT a distinct `github.paypal.com` hostname. Anything cloned
+from `github.paypal.com` (e.g. via browser copy-paste of an HTTPS URL) relies on
+`gitconfig.sym`'s `url "git@github.paypal.com:".insteadOf` rewrite to redirect through
+SSH -- that rewrite targets a different literal host than the `github.com-paypal` SSH
+alias above, so double-check which one a given work repo's remote actually uses. If in
+doubt, `git remote -v` on an old-machine clone of the same repo to see which form it
+resolved to.
+
+### What's in gitconfig.sym
+
+- `user.email` is `jacharles@paypal.com` (work identity, used for everything by default
+  -- there's no per-directory `includeIf` split between work/personal repos currently)
+- `url "git@github.paypal.com:".insteadOf = https://github.paypal.com/` -- rewrites any
+  `https://github.paypal.com/...` clone/fetch URL to SSH via `git@github.paypal.com`
+  (a literal host, distinct from the `github.com-paypal` alias above)
+- `http.postBuffer` / `http.maxRequestBuffer` bumped up -- needed for large repo pushes
+  (e.g. `dev_xo` monorepos), not strictly required but avoids "RPC failed" errors on push
 
 ### Setup steps on new machine
 
-1. Generate a new SSH key (or securely transfer `paypal_github` + `paypal_github.pub`)
-   for EMU/work GitHub access.
-2. Add the corresponding `Host` block to `~/.ssh/config` (see above, verify hostname).
-3. Add the public key to the EMU GitHub account/org settings.
-4. Confirm `~/.gitconfig` (symlinked from `gitconfig.sym`) has the correct
-   `url.insteadOf` rewrite for the org's actual GHE hostname.
-5. Test with a clone of a known-small work repo before relying on it for real work.
-6. Set up public GitHub (`github.com`) access separately if/when a personal-repo
-   workflow is needed -- lower priority, can be JIT'd.
+1. **Public GitHub first**: generate a new SSH key (or securely transfer `github_rsa` +
+   `github_rsa.pub`) for personal `github.com` access. Add the `host github.com` block
+   to `~/.ssh/config`. Add the public key to your personal GitHub account. Test with
+   `git clone git@github.com:jamischarles/dotfiles.git`.
+2. Optionally `gh auth login` (or transfer existing `gh` auth) for GitHub CLI access,
+   separate from raw SSH.
+3. **EMU/work second**: generate a new SSH key (or securely transfer `paypal_github` +
+   `paypal_github.pub`) for EMU/work GitHub access.
+4. Add the `Host github.com-paypal` block to `~/.ssh/config` (see above).
+5. Add the public key to the EMU GitHub account/org settings.
+6. Confirm `~/.gitconfig` (symlinked from `gitconfig.sym`) still has the
+   `url.insteadOf` rewrite for `github.paypal.com` -- keep both mechanisms since some
+   work repos may use either remote form.
+7. Test with a clone of a known-small work repo before relying on it for real work.
 
 ## Version manager (mise)
 
