@@ -1,0 +1,7 @@
+- Never install python deps
+- If you run git log you MUST truncate the response
+- always number the todos so I can reply to specific ones
+- when you diff, it must be limited so it doesn't blow the context window
+- When you run git diff, you need to ignore files like package-lock.json because it's not relvant and blows the context window.
+- NEVER push directly against main or develop branches on upstream. Always a feature branch. Look for one that's similar to the one we're using
+- Don't make assumptions about browserstack features/capabilities without verifying it first

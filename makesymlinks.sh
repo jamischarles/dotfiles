@@ -1,125 +1,65 @@
 #!/bin/bash
 #
-# TODO: Consider just bringing in the whole ~/.config/ folder. That would give us most things I think...
+# Symlinks the dotfiles in ~/.dotfiles into their expected locations in $HOME.
+# Run from the ~/.dotfiles directory.
 
-#TODO: Clean this up and remove a bunch of them...
-#TODO: consider grouping vim or nvim folders in a folder named nvim?
-#TODO: Consider suffixing these files with -symlink so we know which to fetch specifically. And so it doesn't include the shell script...
-
-# this script links all the dotfiles (.*) in the ~/.dotfiles folder and symlinks them to ~/
-# This assumes that you've moved all your important dotfiles from ~/.* to ~/.dotfiles.
-
-# Run this script from your dotfiles directory.
-
-# current folder
 HERE=$(pwd)
 
-# Create symlinks
-
-# from http://unix.stackexchange.com/questions/64459/create-symbolic-links-to-files-using-wildcards
-# symlink from nondot file in this folder to a dotfile in the home folder...
- #echo 'Creating symlinks from ~/ to ~/.dotfiles/*.sym files';
-
-# get all *.sym files in the current folder and symlink them to the home folder MINUS the .sym extension
-# needed because we can't link to a hidden file
-echo 'Converting *.sym files to hidden files in ~/ folder'
+# *.sym files -> hidden dotfiles in $HOME (can't symlink directly to a hidden
+# file target, so files are named without the leading dot and a .sym suffix).
+echo "Linking *.sym files into \$HOME"
 for FILE in *.sym; do
-    echo 'Deleting and creating symlink: ' $(echo "$HOME/.$FILE" | sed 's/.sym$//');
-    rm  $(echo "$HOME/.$FILE" | sed 's/.sym$//');
-    ln -s "$HERE/$FILE" $(echo "$HOME/.$FILE" | sed 's/.sym$//');
-done;
-#for FILE in *.sym;  done;
+    TARGET="$HOME/.$(basename "$FILE" .sym)"
+    echo "  ~/.${FILE%.sym} -> $HERE/$FILE"
+    rm -f "$TARGET"
+    ln -s "$HERE/$FILE" "$TARGET"
+done
 
-
-
-
-# symlink my zsh theme (TODO: DELETE?)
-# FILE="jamis-doubleend.zsh-theme"
-# FILE_PATH="$HOME/.oh-my-zsh/themes/$FILE"
-# echo "Deleting and creating $FILE_PATH symlink"
-# rm "$FILE_PATH"
-# ln -s "$HERE/$FILE" "$FILE_PATH"
-
-# NEOVIM new setup. ~/.config/nvim -> ~/.dotfiles/nvim  
-echo "NEOVIM setup"
+echo "Linking neovim config"
+rm -rf "$HOME/.config/nvim"
 ln -s "$HERE/nvim" "$HOME/.config/nvim"
 
+echo "Linking Rio terminal config"
+mkdir -p "$HOME/.config/rio"
+rm -f "$HOME/.config/rio/config.toml"
+ln -s "$HERE/rio/config.toml" "$HOME/.config/rio/config.toml"
 
-# ln -s "$HERE/$FILE" "$FILE_PATH"
+echo "Linking Claude config (CLAUDE.md, agents, commands)"
+mkdir -p "$HOME/.claude"
+rm -f "$HOME/.claude/CLAUDE.md"
+ln -s "$HERE/claude/CLAUDE.md" "$HOME/.claude/CLAUDE.md"
+rm -rf "$HOME/.claude/agents"
+ln -s "$HERE/claude/agents" "$HOME/.claude/agents"
+rm -rf "$HOME/.claude/commands"
+ln -s "$HERE/claude/commands" "$HOME/.claude/commands"
+echo "  NOTE: claude/mcp.json.template has machine-specific paths (e.g. Tolaria.app)."
+echo "        Review and copy manually to ~/.claude/mcp.json -- not symlinked."
 
-# make nvim seamlessly work with vim configs
-# ~/.config/nvim -> ~/.vim
-# ~/.config/nvim/init.vim -> ~/.vimrc
+echo "Linking Brewfile"
+mkdir -p "$HOME/.config/brewfile"
+rm -f "$HOME/.config/brewfile/Brewfile"
+ln -s "$HERE/Brewfile" "$HOME/.config/brewfile/Brewfile"
 
-# FOR FISH SHELL ***************
-# symlink homebrew nvm version for fish shell to ~/.nvm
-
-
-# Brew file for keeping track of brew installs
-rm -r ~/.config/brewfile
-mkdir ~/.config/brewfile
-ln -s ~/.dotfiles/Brewfile ~/.config/brewfile/Brewfile
-
-
-# FISH config and FISHERMAN installed plugins, since these aren't dotfiles, I'm listing them manually here.
-echo "Linking FISH SHELL CONFIG FILES (config.fish and fishfile (for fisherman))"
-rm "$HOME/.config/fish/config.fish"
+echo "Linking fish shell config"
+mkdir -p "$HOME/.config/fish"
+rm -f "$HOME/.config/fish/config.fish"
 ln -s "$HERE/config.fish" "$HOME/.config/fish/config.fish"
-rm "$HOME/.config/fish/fishfile"
+rm -f "$HOME/.config/fish/fishfile"
 ln -s "$HERE/fishfile" "$HOME/.config/fish/fishfile"
-# END FOR FISH SHELL ************
 
+echo "Linking starship prompt config"
+rm -f "$HOME/.config/starship.toml"
+ln -s "$HERE/starship.toml" "$HOME/.config/starship.toml"
 
-# symlink ~/config/nvim to ~/.vim Used for Vim and Neovim.
-# TODO: Just make the jump already? likely never going back to vim
-echo "Delete ~/.vim and .vimrc"
-rm -rf "$HOME/.vim"
-rm ~/.vimrc
+echo "Linking yazi file manager config"
+rm -rf "$HOME/.config/yazi"
+ln -s "$HERE/yazi" "$HOME/.config/yazi"
 
-# echo "Linkin real main.shada to fake ~/.viminfo since nvim uses main.shada instead"
-# ln -s "$HOME/.local/share/nvim/shada/main.shada" "$HOME/.viminfo"
+echo "Linking bun config"
+rm -f "$HOME/.bunfig.toml"
+ln -s "$HERE/bunfig.toml" "$HOME/.bunfig.toml"
 
-
-
-# NOTE: if it's a HIDDEN file, then name it *.sym without . prefix. This is important but I can't rememeber why
-# Probably because you can't symlink to hidden files, only from
-
-# symlink ~/.config/ files
-# TODO: REMOVE. I don't think I even use powerline anymore
-rm ~/.config/powerline
-ln -s ~/.dotfiles/powerline.sym ~/.config/powerline # do these need to be quoted?
-
-# symlink ~/.config/karabiner.edn
-rm ~/.config/karabiner.edn
-ln -s ~/.dotfiles/karabiner.edn ~/.config/karabiner.edn
-
-rm ~/.config/alacritty.yml
-ln -s ~/.dotfiles/alacritty.yml ~/.config/alacritty.yml
-
-# broot symlink config ~/.config/broot/conf.toml
-rm ~/.config/broot/conf.toml
-ln -s ~/.dotfiles/broot.conf.toml ~/.config/broot/conf.toml
-
-# yazi symlink config ~/.config/broot/conf.toml
-rm -rf ~/.config/yazi
-ln -s ~/.dotfiles/yazi ~/.config/yazi
-
-# tmux flavor for window management. #gotta name folders .sym to avoid symlinking weirdness
-# TODO must do this when byobu is NOT running
-rm ~/.byobu/.tmux.conf
-rm ~/.byobu/color.tmux
-rm ~/.byobu/keybindings.tmux
-ln -s ~/.dotfiles/byobu-tmux.conf ~/.byobu/.tmux.conf
-ln -s ~/.dotfiles/byobu-color.tmux ~/.byobu/color.tmux
-ln -s ~/.dotfiles/byobu-keybindings.tmux ~/.byobu/keybindings.tmux
-
-rm ~/.config/starship.toml
-ln -s ~/.dotfiles/starship.toml ~/.config/starship.toml
-
-
-rm ~/.wezterm.lua
-ln -s ~/.dotfiles/wezterm.lua ~/.wezterm.lua
-
-# bun
-rm ~/.bunfig.toml
-ln -s ~/.dotfiles/bunfig.toml ~/.bunfig.toml
+echo "Done. Next steps:"
+echo "  1. brew bundle --file=$HERE/Brewfile (review the Brewfile first -- it hasn't been pruned)"
+echo "  2. Review claude/mcp.json.template and copy to ~/.claude/mcp.json if needed"
+echo "  3. Install Rio, nvim, fish, yazi, starship if not already present"

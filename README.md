@@ -1,68 +1,32 @@
 # dotfiles
 
-TODO:
+Minimal, current setup: fish, neovim, Rio, yazi, starship, and Claude Code global config.
 
-- change the whole folder structure to work with nvim... (it's not going
-  x Move all my vimscript files over to lua (SO much better).
-- Replace my complex symlinking with 1 symlink  
-  `~/.config/nvim` ->.dotfiles/nvim
-  anywhere for a long time)
-- [ ] Screenshot of my prompt and vim
-- [ ] Make a note about colemak
-- [ ] Abbreviations, git sugar, colemak etc
+Legacy setup (zsh/oh-my-zsh, vim, wezterm/alacritty, byobu/tmux, karabiner, powerline,
+broot, ctags) is preserved on the `legacy-setup-pre-2026` branch / `legacy-pre-2026` tag,
+not maintained here.
 
-Currently using neovim on the terminal
- 
+## Clean install on a new machine
 
-Todo (pressing):
-- figure out how to be able to packer-install in one pass instead of many passes?
- - (write a quick node module that scans all the lua files, extracts the lua requires, (builds a require tree), then installs all those in one pass)
-try one of these? https://www.google.com/search?q=lua+build+dependency+tree&ie=UTF-8&oe=UTF-8&hl=en-us&client=safari&safe=active
+1. Clone this repo to `~/.dotfiles`.
+2. Run `./makesymlinks.sh` from inside `~/.dotfiles`.
+3. Install Homebrew if needed, then `brew bundle --file=~/.dotfiles/Brewfile`.
+   (The Brewfile hasn't been pruned in this pass -- skim it before installing everything.)
+4. Review `claude/mcp.json.template` -- it has machine-specific paths (e.g. the Tolaria
+   app path) and is not symlinked automatically. Copy to `~/.claude/mcp.json` once verified.
+5. Install Rio, neovim, fish, yazi, starship if not already present.
+6. Open neovim and let lazy.nvim install plugins.
+7. Restart the terminal / fish shell.
 
-Read this? (esp for the brew stuff?)
-https://cpojer.net/posts/set-up-a-new-mac-fast 
+## Layout
 
-## Clean install steps needed
-1. clone / restore ~/.dotfile
-2. run makesymlinks.sh
-3. install homebrew
-4. brew install all the things found in the fish config file
-5. have some shared location for iterm2 settings (restore those)
-6. Install neovim via brew
-7. Install packer manually
-- brew install yarn (volta can't handle yarn in our PP locked down env)
-brew install sqlite (needed for some nvim modules I use?
-- brew install alacritty
-- brew install lua-language-server
-8. start and install packer modules that are missing until no more errors
-9. npm i -g the lsp servers I need (lame. TODO: autmoate this better)
-`npm install -g typescript typescript-language-server`
-
-Any serious plugin modifications (like a whole file's worth, should go in /plugin, which is linked to ~/.vim/plugin)
-
-## Update:
-
-Now uses fish instead of zsh. Update this every time I change laptops.
-
-### How to set up Vim:
-
-0. Run makemysymlinks.sh
-1. `brew install neovim`
-2. Setup plugin system by copying `plug.vim` to `~/.vim/autoload` folder https://github.com/junegunn/vim-plug#installation
-3. Start neovim. Run `PlugInstall` to install all the plugins.
-
----
-
-This readme is very out of date...
-
-If you want to override plugins, like for keyboard collisions, place a file in after/plugin. That will be loaded AFTER the plugins.
-
-My understanding is that .vimrc is loaded FIRST, and plugins are loaded sometime after (seems strange to me...
-
-To see the startup time and LOAD order for things, run this:
-
-```
-$ mvim -v --startuptime /dev/stdout/ +qall
-```
-
-For ZSH, copy `jamis-doubleend.zsh.theme` to `~/.oh-my-zsh/themes`.
+- `config.fish`, `config.setup.fish`, `fishfile` -- fish shell config
+- `nvim/` -- neovim config (lazy.nvim)
+- `rio/config.toml` -- Rio terminal config
+- `starship.toml` -- prompt
+- `yazi/` -- file manager config
+- `claude/` -- global Claude Code config (`CLAUDE.md`, `agents/`, `commands/`, MCP template)
+- `Brewfile` -- package list (unaudited)
+- `gitconfig.sym`, `gitignore_global.sym` -- git config
+- `zshrc.sym` -- bare survival config in case zsh ever launches directly (fish is primary)
+- `.private-env-vars-gitignored.fish` -- local secrets, not checked in
