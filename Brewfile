@@ -1,11 +1,4 @@
-tap "ctrlspice/otel-desktop-viewer"
-tap "domq/gdb"
-tap "equinix-labs/otel-cli"
-tap "fsouza/prettierd"
-tap "homebrew/aliases"
 tap "homebrew/bundle"
-tap "ms-jpq/sad"
-tap "nextdns/tap"
 tap "oven-sh/bun"
 tap "supabase/tap"
 # Asciicast to GIF converter
@@ -20,20 +13,12 @@ brew "snappy"
 brew "asciinema"
 # Code searching, linting, rewriting
 brew "ast-grep"
-# Official Amazon AWS command-line interface
-brew "awscli"
 # Clone of cat(1) with syntax highlighting and Git integration
 brew "bat"
-# Emulate a GCP BigQuery server on your local machine
-brew "bigquery-emulator"
-# New way to see and navigate directory trees
-brew "broot"
 # GNU internationalization (i18n) and localization (l10n) library
 brew "gettext"
 # Vector graphics library with cross-device output support
 brew "cairo"
-# Human-friendly and fast alternative to cut and (sometimes) awk
-brew "choose-rust"
 # Cross-platform make
 brew "cmake"
 # Container runtimes on MacOS (and Linux) with minimal setup
@@ -84,26 +69,16 @@ brew "git-lfs"
 brew "gitu"
 # Render markdown on the CLI
 brew "glow"
-# GNU implementation of the famous stream editor
-brew "gnu-sed"
 # Open source programming language to build simple/reliable/efficient software
 brew "go"
 # Make JSON greppable
 brew "gron"
-# GNU Ubiquitous Intelligent Language for Extensions
-brew "guile"
-# Easy, fast, and beautiful database client for the terminal
-brew "harlequin"
 # JSON diff and patch
 brew "jd"
 # Lightweight and flexible command-line JSON processor
 brew "jq"
-# Rust implementation of Jsonnet language
-brew "jrsonnet"
 # Interactive environments for writing and running code
 brew "jupyterlab"
-# Modern load testing tool, using Go and JavaScript
-brew "k6"
 # Simple terminal UI for git commands
 brew "lazygit"
 # Clone of ls with colorful output, file type icons, and more
@@ -120,8 +95,6 @@ brew "mkcert"
 brew "tree-sitter"
 # Ambitious Vim-fork focused on extensibility and agility
 brew "neovim"
-# Tiny, lightning fast, feature-packed file manager
-brew "nnn"
 # Development kit for the Java programming language
 brew "openjdk@21"
 # Object-relational database system
@@ -132,88 +105,25 @@ brew "pup"
 brew "python@3.11"
 # Interpreted, interactive, object-oriented programming language
 brew "python@3.12"
-# Software environment for statistical computing
-brew "r"
 # Search tool like grep and The Silver Searcher
 brew "ripgrep"
 # Substitute for classic 'make' tool with autoconf/automake functionality
 brew "scons"
-# Interactive find and replace in the terminal
-brew "scooter"
-# Intuitive find & replace CLI
-brew "sd"
 # Fuzzy Finder in rust!
 brew "sk"
 # Cross-shell prompt for astronauts
 brew "starship"
 # Opinionated Lua code formatter
 brew "stylua"
-# File synchronization tool
-brew "unison"
-# JavaScript package manager
-brew "yarn"
 # Blazing fast terminal file manager written in Rust, based on async I/O
 brew "yazi"
 # Shell extension to navigate your filesystem faster
 brew "zoxide"
-# OpenTelemetry Desktop Viewer
-brew "ctrlspice/otel-desktop-viewer/otel-desktop-viewer"
-# OpenTelemetry command-line tool for sending events from shell scripts & similar environments
-brew "equinix-labs/otel-cli/otel-cli"
-# Search and replace | Space Age seD
-brew "ms-jpq/sad/sad"
 # Incredibly fast JavaScript runtime, bundler, transpiler and package manager - all in one.
 brew "oven-sh/bun/bun"
 # Supabase CLI
 brew "supabase/tap/supabase"
-# GPU-accelerated terminal emulator
-cask "alacritty"
-# Open source IDE for exploring and testing APIs
-cask "bruno"
-# Column-oriented database management system
-cask "clickhouse"
-# Universal database tool and SQL client
-cask "dbeaver-community"
 # Set of tools to manage resources and applications hosted on Google Cloud
 cask "gcloud-cli"
-# Utility to provide quick look previews for files that aren't natively supported
-cask "glance-chamburr"
-# Terminal built on web technologies
-cask "hyper"
-# Open-source keystroke visualiser
-cask "keycastr"
-# Agent-centric IDE with spec-driven development
-cask "kiro"
-# Break time reminder app
-cask "lookaway"
-# Todo manager based on the todo.txt syntax
-cask "sleek-app"
-# Record screen and camera time lapses in a menu bar interface
-cask "timelapze"
-# GPU-accelerated cross-platform terminal emulator and multiplexer
-cask "wezterm"
 # Multiplayer code editor
 cask "zed"
-vscode "aaron-bond.better-comments"
-vscode "abdelhakakermi.cursorchat-downloader"
-vscode "biomejs.biome"
-vscode "bradlc.vscode-tailwindcss"
-vscode "christian-kohler.npm-intellisense"
-vscode "christian-kohler.path-intellisense"
-vscode "davidanson.vscode-markdownlint"
-vscode "dbaeumer.vscode-eslint"
-vscode "eamodio.gitlens"
-vscode "editorconfig.editorconfig"
-vscode "foxundermoon.shell-format"
-vscode "github.vscode-pull-request-github"
-vscode "graphql.vscode-graphql"
-vscode "graphql.vscode-graphql-syntax"
-vscode "mattpocock.ts-error-translator"
-vscode "ms-playwright.playwright"
-vscode "specstory.specstory-vscode"
-vscode "stylelint.vscode-stylelint"
-vscode "unifiedjs.vscode-mdx"
-vscode "usernamehw.errorlens"
-vscode "vitest.explorer"
-vscode "yoavbls.pretty-ts-errors"
-vscode "yzhang.markdown-all-in-one"

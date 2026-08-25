@@ -361,9 +361,6 @@ end
 
 
 
-# Z command. HACKY workaround for the "abbr to reomve doesn't exist.
-abbr --add z 'ls'
-abbr --add zi 'ls'
 zoxide init fish | source
 
 # adds 0.03s (30ms?) (from 0.00s)
