@@ -112,7 +112,7 @@ brew "lsd"
 brew "lua-language-server"
 # Package manager for the Lua programming language
 brew "luarocks"
-# Polyglot runtime manager (asdf rust clone)
+# Polyglot runtime manager (replaces pyenv/rbenv/volta)
 brew "mise"
 # Simple tool to make locally trusted development certificates
 brew "mkcert"
@@ -128,18 +128,12 @@ brew "openjdk@21"
 brew "postgresql@14"
 # Parse HTML at the command-line
 brew "pup"
-# Python version management
-brew "pyenv"
 # Interpreted, interactive, object-oriented programming language
 brew "python@3.11"
 # Interpreted, interactive, object-oriented programming language
 brew "python@3.12"
 # Software environment for statistical computing
 brew "r"
-# Install various Ruby versions and implementations
-brew "ruby-build"
-# Ruby version manager
-brew "rbenv"
 # Search tool like grep and The Silver Searcher
 brew "ripgrep"
 # Substitute for classic 'make' tool with autoconf/automake functionality
@@ -156,8 +150,6 @@ brew "starship"
 brew "stylua"
 # File synchronization tool
 brew "unison"
-# JavaScript toolchain manager for reproducible environments
-brew "volta"
 # JavaScript package manager
 brew "yarn"
 # Blazing fast terminal file manager written in Rust, based on async I/O

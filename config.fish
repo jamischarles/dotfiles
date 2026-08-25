@@ -66,8 +66,8 @@ end
 # Fzf
 # lsd (super powered ls)
 # coreutils (for gdate)
-# @fsouza/prettierd (via volta/npm) (prettier FAST daemon)
-# eslint_d (via volta/npm) (eslint FAST daemon)
+# @fsouza/prettierd (via npm) (prettier FAST daemon)
+# eslint_d (via npm) (eslint FAST daemon)
 ##################################
 
 
@@ -98,21 +98,8 @@ set -x PATH $PATH /usr/local/bin/
 # Needed for providers to call python3 properly in nevim in anacritty only... https://neovim.io/doc/user/provider.html
 # COMMENTED OUT: This was breaking PATH by adding a file instead of directory
 # set -x PATH $PATH /usr/bin/python3
-# Needed for some cargo build commands includes py2 in the path. means python2 execute can be called?
-# COMMENTED OUT: pyenv not installed
-# set -x PATH $PATH /Users/jacharles/.pyenv/versions/pypy2.7-7.3.9/bin
 
 set -x SHELL /opt/homebrew/bin/fish
-
-# PYTHON env var. Using pyenv makes this much simpler and fixes issues around node-gyp not finding python
-# set -x PYTHON /usr/bin/python3
-
-set -x BYOBU_PREFIX /usr/local
-
-# COMMENTED OUT: pyenv not installed
-# pyenv init - | source
-# alias python="$(pyenv which python)"
-# Had to run pyenv global python 3.9
 
 # For gdate...
 set -x PATH $PATH /usr/local/opt/coreutils/libexec/gnubin
@@ -122,11 +109,6 @@ set -x PATH $PATH $HOME/go $HOME/go/bin $HOME/.cargo/bin
 
 # path for genymotion android simulator
 set -x PATH $PATH /Applications/Genymotion.app/Contents/MacOS/tools/
-
-# For rbenv (ruby version manager)
-# COMMENTED OUT: rbenv not installed
-# set -x PATH $PATH ~/.rbenv/shims
-# set -x PATH $PATH ~/.rbenv/bin
 
 # theme for BAT... useful for vim preview etc...
 set -x BAT_THEME 'Monokai Extended'
@@ -151,7 +133,7 @@ set -g START_TIME (getTime)
 #################################################
 
 # alias pn="pnpm"
-# set -x PNPM_HOME /Users/jacharles/.volta/bin/pnpm # set pnpm home folder
+
 
 
 
@@ -409,10 +391,6 @@ test -f ~/.dotfiles/.private-env-vars-gitignored.fish; and source ~/.dotfiles/.p
 # 0.03s - 12/09
 
 # List of things I have brew installed...
-# - https://github.com/yqrashawn/GokuRakuJoudo - easy karabiner config
-# set -gx VOLTA_FEATURE_PNPM 1 # Your new line
-# set -gx VOLTA_HOME "$HOME/.volta"
-# set -gx PATH "$VOLTA_HOME/bin" $PATH
 
 
 
@@ -422,13 +400,13 @@ test -f ~/.dotfiles/.private-env-vars-gitignored.fish; and source ~/.dotfiles/.p
 set --export --prepend PATH "/Users/jacharles/.rd/bin"
 ### MANAGED BY RANCHER DESKTOP END (DO NOT EDIT)
 
-# Added by `rbenv init` on Thu Jun  5 13:31:23 MDT 2025
-# COMMENTED OUT: rbenv not installed
-# status --is-interactive; and rbenv init - --no-rehash fish | source
-
 # Added by LM Studio CLI (lms)
 set -gx PATH $PATH /Users/jacharles/.lmstudio/bin
 # End of LM Studio CLI section
+
+# mise: polyglot version manager (replaces pyenv/rbenv/volta).
+# Honor .nvmrc/.node-version/.tool-versions automatically (off by default in mise):
+#   mise settings add idiomatic_version_file_enable_tools node,python,ruby
 /opt/homebrew/opt/mise/bin/mise activate fish | source
 
 

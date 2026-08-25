@@ -305,7 +305,33 @@ whatever's current in PayPal's internal git docs before assuming either is still
 6. Set up public GitHub (`github.com`) access separately if/when a personal-repo
    workflow is needed -- lower priority, can be JIT'd.
 
+## Version manager (mise)
+
+`pyenv`/`rbenv`/`ruby-build`/`volta` were dropped from the Brewfile and shell config in
+favor of `mise` (polyglot version manager, replaces all three). `config.fish` already
+activates it (`mise activate fish`), but mise does **not** honor `.nvmrc`/`.node-version`/
+`.tool-versions` files by default -- this is the single most important post-install step:
+
+```
+mise settings add idiomatic_version_file_enable_tools node,python,ruby
+```
+
+Run this once after `brew bundle` installs `mise` on the new machine, before relying on
+per-project version files to work.
+
+## Claude Code install
+
+Install Claude Code via the native installer, not `npm install -g`:
+
+```
+curl -fsSL https://claude.ai/install.sh | bash
+```
+
+This decouples Claude Code's own Node runtime from whatever mise/node version is active
+in the shell, so switching project Node versions can't break the `claude` CLI itself.
+
 ## Not yet decided
 
-- Brewfile (`~/.dotfiles/Brewfile`, 107 entries) has not been pruned -- review before
-  running `brew bundle` on the new machine.
+- Brewfile (`~/.dotfiles/Brewfile`) has the pyenv/rbenv/volta cluster resolved (see
+  above); the remaining ~100 entries have not been individually reviewed -- review
+  before running `brew bundle` on the new machine.
