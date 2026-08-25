@@ -330,8 +330,22 @@ curl -fsSL https://claude.ai/install.sh | bash
 This decouples Claude Code's own Node runtime from whatever mise/node version is active
 in the shell, so switching project Node versions can't break the `claude` CLI itself.
 
-## Not yet decided
+## Brewfile audit (complete)
 
-- Brewfile (`~/.dotfiles/Brewfile`) has the pyenv/rbenv/volta cluster resolved (see
-  above); the remaining ~100 entries have not been individually reviewed -- review
-  before running `brew bundle` on the new machine.
+Full package-by-package review done 2026-08-25. Trimmed from 219 to 129 lines.
+Removed: pyenv/rbenv/ruby-build/volta (superseded by mise), broot (superseded by
+yazi), alacritty/wezterm/hyper (superseded by Rio), all `vscode "..."` extension
+lines (superseded by zed/nvim), yarn (superseded by bun), nnn, unison, scooter,
+choose-rust, sd, gnu-sed, harlequin/dbeaver-community/clickhouse (cask), bruno,
+kiro, glance-chamburr, keycastr, lookaway, sleek-app, timelapze, awscli,
+bigquery-emulator, k6, guile, jrsonnet, r, and several dead taps
+(`domq/gdb`, `homebrew/aliases`, `ms-jpq/sad`, `ctrlspice/otel-desktop-viewer`,
+`equinix-labs/otel-cli`, `nextdns/tap`, `fsouza/prettierd`).
+
+Also removed the now-unused `/clickhouse` Claude command (depended on the
+`clickhouse` CLI client, dropped in the same pass).
+
+Left as-is pending later review: the media/codec library cluster (`aom`,
+`jpeg-xl`, `cairo`, `gnutls`, `harfbuzz`, `libass`, `pango`, `tesseract`)
+alongside `ffmpeg` -- these look like build dependencies rather than directly
+invoked tools, but weren't confirmed either way.
