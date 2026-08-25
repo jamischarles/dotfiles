@@ -1,0 +1,14 @@
+node_modules/
+.git/
+build/
+dist/
+.next/
+target/
+DerivedData/
+*.xcarchive
+*.xcframework
+*.ipa
+*.pck
+venv/
+.venv/
+__pycache__/
