@@ -7,3 +7,5 @@ TAGS
 tags
 .tags
 !tags/
+
+**/.claude/settings.local.json
