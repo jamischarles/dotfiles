@@ -248,6 +248,63 @@ than a fresh clone + build on the new machine. Default: **don't bring build outp
 (`.xcarchive`, `.xcframework`, `.ipa`, `DerivedData`) -- source + fresh build is the
 normal path. `TestBuilds` and `dev_games`'s built artifacts fall under this rule.
 
+## Git setup (EMU / work + public GitHub)
+
+`gitconfig.sym` (symlinked to `~/.gitconfig` by `makesymlinks.sh`) covers identity and
+git behavior, but **not** SSH keys or the SSH-level host routing -- those live in
+`~/.ssh/`, which isn't part of the dotfiles repo (private key material should never be
+committed) and needs manual setup on the new machine.
+
+### What's in gitconfig.sym
+
+- `user.email` is `jacharles@paypal.com` (work identity, used for everything by default
+  -- there's no per-directory `includeIf` split between work/personal repos currently)
+- `url "git@github.paypal.com:".insteadOf = https://github.paypal.com/` -- this is the
+  key EMU piece. Any `https://github.paypal.com/...` clone/fetch URL gets silently
+  rewritten to use SSH via the `github.paypal.com` host, so cloning by HTTPS URL still
+  works without prompting for a password
+- `http.postBuffer` / `http.maxRequestBuffer` bumped up -- needed for large repo pushes
+  (e.g. `dev_xo` monorepos), not strictly required but avoids "RPC failed" errors on push
+
+### SSH keys needed
+
+- **`paypal_github`** -- the EMU/work key. Referenced by the `github.paypal.com` SSH
+  host below. This is the one that actually matters day-to-day; regenerate or securely
+  copy this one first.
+- Other keys present on the old machine (`github_rsa` for public github.com, `id_rsa` as
+  a generic fallback) exist but weren't prioritized here -- reconcile those as needed
+  when a specific personal/public-repo workflow comes up.
+
+### SSH config (`~/.ssh/config`)
+
+The relevant host entry to recreate:
+
+```
+Host github.com-paypal
+  HostName github.com
+  IdentityFile ~/.ssh/paypal_github
+  User git
+```
+
+Note the live `~/.ssh/config` on the old machine has `Host github.com-paypal` (SSH
+alias) while `gitconfig.sym`'s URL rewrite points at `git@github.paypal.com:` (a
+different literal host). Verify on the new machine which one your EMU setup actually
+expects -- GitHub Enterprise Managed User orgs sometimes use a dedicated hostname
+(`github.paypal.com`) rather than `github.com` with a custom alias. Confirm with
+whatever's current in PayPal's internal git docs before assuming either is still correct.
+
+### Setup steps on new machine
+
+1. Generate a new SSH key (or securely transfer `paypal_github` + `paypal_github.pub`)
+   for EMU/work GitHub access.
+2. Add the corresponding `Host` block to `~/.ssh/config` (see above, verify hostname).
+3. Add the public key to the EMU GitHub account/org settings.
+4. Confirm `~/.gitconfig` (symlinked from `gitconfig.sym`) has the correct
+   `url.insteadOf` rewrite for the org's actual GHE hostname.
+5. Test with a clone of a known-small work repo before relying on it for real work.
+6. Set up public GitHub (`github.com`) access separately if/when a personal-repo
+   workflow is needed -- lower priority, can be JIT'd.
+
 ## Not yet decided
 
 - Brewfile (`~/.dotfiles/Brewfile`, 107 entries) has not been pruned -- review before

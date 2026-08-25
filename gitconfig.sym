@@ -1,6 +1,6 @@
 [user]
 	name = Jamis Charles
-	email = jamis82@webutah.com
+	email = jacharles@paypal.com
 [mergetool]
 	keepBackup = true
 [alias]
@@ -78,3 +78,10 @@
 	required = true
 [init]
 	defaultBranch = main
+[url "git@github.paypal.com:"]
+	insteadOf = https://github.paypal.com/
+[http]
+	postBuffer = 524288000
+	maxRequestBuffer = 100M
+[gc]
+	auto = 256
