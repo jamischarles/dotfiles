@@ -345,7 +345,8 @@ bigquery-emulator, k6, guile, jrsonnet, r, and several dead taps
 Also removed the now-unused `/clickhouse` Claude command (depended on the
 `clickhouse` CLI client, dropped in the same pass).
 
-Left as-is pending later review: the media/codec library cluster (`aom`,
-`jpeg-xl`, `cairo`, `gnutls`, `harfbuzz`, `libass`, `pango`, `tesseract`)
-alongside `ffmpeg` -- these look like build dependencies rather than directly
-invoked tools, but weren't confirmed either way.
+Also removed (2026-08-25, follow-up): the media/codec library cluster (`aom`,
+`jpeg-xl`, `cairo`, `gnutls`, `harfbuzz`, `libass`, `pango`, `tesseract`) and
+`ffmpeg` itself -- not directly used day-to-day. JIT-reinstall
+(`brew install ffmpeg`, which pulls the rest back in as deps) if a future
+project needs audio/video/OCR processing.

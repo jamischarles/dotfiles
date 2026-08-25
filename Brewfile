@@ -3,10 +3,6 @@ tap "oven-sh/bun"
 tap "supabase/tap"
 # Asciicast to GIF converter
 brew "agg"
-# New file format for still image compression
-brew "jpeg-xl"
-# Codec library for encoding and decoding AV1 video streams
-brew "aom"
 # Compression/decompression library aiming for high speed
 brew "snappy"
 # Record and share terminal sessions
@@ -17,8 +13,6 @@ brew "ast-grep"
 brew "bat"
 # GNU internationalization (i18n) and localization (l10n) library
 brew "gettext"
-# Vector graphics library with cross-device output support
-brew "cairo"
 # Cross-platform make
 brew "cmake"
 # Container runtimes on MacOS (and Linux) with minimal setup
@@ -41,18 +35,6 @@ brew "duckdb"
 brew "dust"
 # Simple, fast and user-friendly alternative to find
 brew "fd"
-# GNU Transport Layer Security (TLS) Library
-brew "gnutls"
-# OpenType text shaping engine
-brew "harfbuzz"
-# Subtitle renderer for the ASS/SSA subtitle format
-brew "libass"
-# Framework for layout and rendering of i18n text
-brew "pango"
-# OCR (Optical Character Recognition) engine
-brew "tesseract"
-# Play, record, convert, and stream audio and video
-brew "ffmpeg"
 # User-friendly command-line shell for UNIX-like operating systems
 brew "fish"
 # Command-line fuzzy finder written in Go
